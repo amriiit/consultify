@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres:17.4
+    container_name: consultify-postgres
+
+    ports:
+      - "127.0.0.1:5433:5432"
+
+    environment:
+      POSTGRES_DB: consultify
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
