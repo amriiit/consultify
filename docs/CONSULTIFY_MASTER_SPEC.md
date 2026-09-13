@@ -6,19 +6,19 @@
 
 | Audit metadata | Value |
 | --- | --- |
-| Last audited against repository | 2026-09-13, Asia/Kolkata |
+| Last audited against repository | 2026-09-14, Asia/Kolkata |
 | Repository | `CONSULTIFY`, local directory `consultify/` |
 | Git branch | `main` |
-| Audited commit | `59553f5fe6f73c5424d26be76f520aa451b72537` |
-| Commit subject | Add PostgreSQL database foundation and users schema |
-| Master document revision | Initial repository audit; this documentation change is subsequent to the audited commit |
+| Audited commit | `74aeec62c37863c8c72ded88c836121766113923`, plus the scoped working-tree changes described below |
+| Commit subject | Improve repository security and ignore macOS files |
+| Master document revision | Day 3 registration maintenance and current-state correction |
 | Package version | `1.0.0` in `package.json`; this does **not** mean product V1 is complete |
-| Product readiness | [PARTIALLY IMPLEMENTED] Backend/database foundation; approximately **10–15% toward V1**, midpoint estimate 12%; see section 31 |
-| Audit scope | All 11 tracked files, first-party directory structure, package/lockfile metadata, installed direct dependency versions, both local commits, ignore rules, working-tree status, and local CLI versions |
-| Source preservation | This task wrote only this master document. No application code, dependency, migration, environment file, or Compose configuration was edited by the audit. An independent working-tree Compose change appeared during the task and was preserved; see C-12 |
-| Verification limits | JavaScript syntax checks passed for all five existing source files. No application test suite exists. No server or database was started by this audit. Final working-tree Compose validation failed; see next row |
-| Final working-tree discrepancy | [PARTIALLY IMPLEMENTED] `docker-compose.yml:7` changed after initial inspection from a valid ports list item to `-"127.0.0.1:5433:5432"` without the required list spacing. `docker compose config --quiet` reports `services.postgres.ports must be a array`. Committed network design remains the intended baseline; current file needs a separately authorized correction |
-| Live infrastructure | [TBD] `docker compose ps --format json` could not access the Docker API socket because of local permission restrictions. Container state, server PostgreSQL version, applied migrations, and persisted data were not verified |
+| Product readiness | [PARTIALLY IMPLEMENTED] Backend/database foundation and registration; approximately **15–20% toward V1**, midpoint estimate 18%; see section 31 |
+| Audit scope | Registration controller/router, app wiring, users migration, relevant startup/health/pool code, dependency metadata/installation, Compose, environment example, ignore rules, and Git history/status required for this update |
+| Source preservation | This maintenance task changes only `src/controllers/auth.controller.js`, `src/app.js`, and this document. Dependencies, configuration, migrations, routes, and database data are unchanged |
+| Verification limits | Syntax checks on the two modified JavaScript files and Git diff/status review; no application tests added or run, no server/database started, and no live database data modified |
+| Compose configuration | [IMPLEMENTED] Previously reported C-12 ports syntax issue is resolved in the inspected repository; `docker compose config --no-interpolate --quiet` passes. This verifies configuration structure, not live infrastructure |
+| Live infrastructure | [TBD] Container state, server PostgreSQL version, applied migrations, and persisted data were not inspected during this maintenance task |
 | Secret handling | `.env` was not opened. Private credentials, tokens, and production connection strings are not included here |
 
 ## Table of contents
@@ -83,12 +83,12 @@
 2. SQL migration contents establish versioned schema intent, not live database state.
 3. `package.json`, `package-lock.json`, and inspected installed manifests distinguish declared, locked, and locally installed dependencies.
 4. Git history explains committed milestones; a commit message alone does not prove a complete feature.
-5. The product brief supplied for this task establishes accepted product intent and architecture choices. It cannot establish implementation that the repository does not contain.
+5. The original product brief and accepted maintenance instructions establish accepted product intent and architecture choices. They cannot establish implementation that the repository does not contain.
 6. Official technical references linked next to explanations clarify technology behavior. They do not expand product scope or override project decisions.
 
 [PLANNED V1] Every future audit must re-check the repository. Do not update an implementation checkbox based only on a plan, generated code suggestion, installed package, empty folder, or route stub. Never assume authentication, tests, migrations, hosting, AI, or middleware exist because they are customary in other applications.
 
-[TBD] When evidence and intent disagree, record **CURRENT IMPLEMENTATION**, **INTENDED IMPLEMENTATION**, **CONFLICT**, and **RECOMMENDED RESOLUTION**. A recommendation in this document is not permission to change the architecture. This task creates the reference only.
+[TBD] When evidence and intent disagree, record **CURRENT IMPLEMENTATION**, **INTENDED IMPLEMENTATION**, **CONFLICT**, and **RECOMMENDED RESOLUTION**. A recommendation in this document is not permission to change the architecture. This maintenance task updates only the explicitly authorized registration behavior and corresponding reference.
 
 ## 2. Product, domains, and version boundaries
 
@@ -98,13 +98,13 @@
 
 [PLANNED V1] The differentiator is **professional expertise plus community experience** in one product. Advisor discovery without a community, or a discussion board without a booking workflow, does not fulfill this product definition.
 
-[IMPLEMENTED] None of those business journeys is implemented yet. The existing endpoint is infrastructure diagnostics only.
+[IMPLEMENTED] Registration and infrastructure diagnostics exist. Advisor discovery, bookings, community, and the complete Finance journey remain unimplemented.
 
 ### 2.2 Versions
 
 | Version | Status | Scope | Boundary |
 | --- | --- | --- | --- |
-| V1 — Core product | [PARTIALLY IMPLEMENTED] | Finance end-to-end; clean backend, relational schema, registration/login, JWT, RBAC/ownership, advisors, bookings, community/comments/helpfulness, reviews, basic frontend, tests, deployment | Correctness and security over feature count; only foundation artifacts currently exist |
+| V1 — Core product | [PARTIALLY IMPLEMENTED] | Finance end-to-end; clean backend, relational schema, registration/login, JWT, RBAC/ownership, advisors, bookings, community/comments/helpfulness, reviews, basic frontend, tests, deployment | Correctness and security over feature count; foundation and registration artifacts currently exist |
 | V2 — Product expansion | [PLANNED V2] | Health, Astrology, advanced filters/search, availability, notifications, stronger admin tools, community reputation, advisor verification, improved dashboards, favorites, reporting | Reuse generic entities and custom backend; exact feature order and schemas pending |
 | V3 — Intelligent platform | [PLANNED V3] | Possible advisor recommendations, question categorization, duplicate detection, consultation summaries, smart FAQs, sentiment analysis, intelligent answer ranking, analytics, recommendation systems | Assistance rather than replacement for professional judgment; no AI package, provider, data pipeline, or model selected |
 | Later real-time capabilities | [DEFERRED] | Chat, voice/video calls, WebSockets, real-time notifications | Delivery mechanism, provider, security model, and version assignment are unresolved |
@@ -156,56 +156,61 @@
 
 ### 4.1 Audited files and history
 
-[IMPLEMENTED] All 11 tracked files were inspected. Source references below are relative to this document; line numbers refer to the audited commit.
+[IMPLEMENTED] The repository has 14 tracked files. The scoped inspection covered the artifacts needed to verify registration and correct related stale claims; source links are relative to this document.
 
 | File | Evidence and responsibility |
 | --- | --- |
-| [package.json](../package.json) | Package identity, CommonJS, start/dev scripts, four direct dependencies across runtime/development |
-| [package-lock.json](../package-lock.json) | Lockfile version 3; direct versions match manifest and inspected installation; 110 package entries excluding root |
-| [.gitignore](../.gitignore) | Exactly `node_modules/` and `.env` |
-| [.env.example](../.env.example) | Tracked, zero bytes; no onboarding variables documented |
-| [docker-compose.yml](../docker-compose.yml) | One PostgreSQL service, version tag, loopback port binding, local database/user setup, named volume |
-| [src/app.js](../src/app.js) | Lines 1–6: Express app, JSON parser, one mounted health router, export |
-| [src/server.js](../src/server.js) | Lines 1–23: dotenv first, application/pool imports, startup DB check, HTTP listener, failure exit |
-| [src/config/db.js](../src/config/db.js) | Lines 1–5: one exported `pg.Pool` configured from `DATABASE_URL` |
-| [src/routes/health.routes.js](../src/routes/health.routes.js) | Lines 1–5: `GET /` mapped to `getHealth`; mounted as `/api/health` by app |
-| [src/controllers/health.controller.js](../src/controllers/health.controller.js) | Lines 1–21: DB probe; 200 connected / 500 disconnected JSON |
-| [database/migrations/001_create_users.sql](../database/migrations/001_create_users.sql) | Lines 1–10: only schema migration; users fields and constraints |
+| [package.json](../package.json) | CommonJS, start/dev scripts, five direct dependencies across runtime/development, including bcrypt |
+| [package-lock.json](../package-lock.json) | Lockfile version 3; 113 package entries excluding root; bcrypt declared and installed at 6.0.0 |
+| [.gitignore](../.gitignore) | Ignores `node_modules/`, `.env`, and `.DS_Store` |
+| [.env.example](../.env.example) | Contains `PORT`, a placeholder `DATABASE_URL`, and placeholder `POSTGRES_PASSWORD` |
+| [docker-compose.yml](../docker-compose.yml) | PostgreSQL 17.4, valid loopback ports list, `${POSTGRES_PASSWORD}`, and named volume; configuration validation passes |
+| [src/app.js](../src/app.js) | JSON parser, health/auth mounts, malformed-JSON error handler after routes, app export |
+| [src/server.js](../src/server.js) | dotenv first, startup DB check, HTTP listener, failure exit |
+| [src/config/db.js](../src/config/db.js) | Shared `pg.Pool` configured from `DATABASE_URL` |
+| [src/routes/health.routes.js](../src/routes/health.routes.js) | `GET /` mapped to `getHealth`; mounted as `/api/health` |
+| [src/controllers/health.controller.js](../src/controllers/health.controller.js) | DB probe; 200 connected / 500 disconnected JSON |
+| [src/routes/auth.routes.js](../src/routes/auth.routes.js) | `POST /register` mapped to `registerUser`; mounted as `/api/auth` |
+| [src/controllers/auth.controller.js](../src/controllers/auth.controller.js) | Manual registration validation, normalization, bcrypt hashing, parameterized SQL, safe response, and duplicate/error handling |
+| [database/migrations/001_create_users.sql](../database/migrations/001_create_users.sql) | Users schema, email UNIQUE, and default USER role |
+| [CONSULTIFY_MASTER_SPEC.md](CONSULTIFY_MASTER_SPEC.md) | Current implementation evidence and planned V1 reference |
 
-[IMPLEMENTED] There are two local commits:
+[IMPLEMENTED] Local history contains four commits:
 
-| Commit | Local date | Subject | What inspection confirms |
-| --- | --- | --- | --- |
-| `75b37fe24e940ccb7ab372da069d0285368f1fab` | 2026-09-12 | Initialize Express backend with MVC structure | Express application/server/routes/controller, environment example, package files, ignore rules; commit wording does not imply a full implemented model/view layer |
-| `59553f5fe6f73c5424d26be76f520aa451b72537` | 2026-09-13 | Add PostgreSQL database foundation and users schema | `pg`, Compose, shared pool, users SQL, DB-aware startup and health check |
+| Commit | Local date | Subject |
+| --- | --- | --- |
+| `75b37fe24e940ccb7ab372da069d0285368f1fab` | 2026-09-12 | Initialize Express backend with MVC structure |
+| `59553f5fe6f73c5424d26be76f520aa451b72537` | 2026-09-13 | Add PostgreSQL database foundation and users schema |
+| `c8992c05cd4517f570da9b21c7c1a4647ecfad72` | 2026-09-14 | Add secure user registration |
+| `74aeec62c37863c8c72ded88c836121766113923` | 2026-09-14 | Improve repository security and ignore macOS files |
 
-[IMPLEMENTED] Before this task, tracked files had no working-tree modifications. Untracked `.DS_Store` and `database/.DS_Store` were present and are left untouched. `.env` and `node_modules/` exist locally and are ignored. No `AGENTS.md` was found in the repository or inspected ancestor locations. No `.openai/hosting.json`, `.agents/`, or `.codex/` project directory was present in the inspected tree.
+[IMPLEMENTED] The working tree was clean before this maintenance task. `git ls-files '*DS_Store*'` returns no tracked artifacts and ignore checks confirm `.DS_Store` is ignored at root and nested paths. `.env` remains unread. No `AGENTS.md` was found in the repository or inspected ancestor locations.
 
-[PARTIALLY IMPLEMENTED] At final verification, the hash of `docker-compose.yml` differed from the initial snapshot; the other ten original tracked files still matched. The initial Compose hash matches the audited Git commit. The only detected Compose change is malformed `ports` list syntax, observed independently of this task's document writes. Current Compose validation fails. References to the working network mapping in this document describe the **committed configuration and intended design**, not a successfully validated final working-tree configuration or verified live port publication. See C-12 for exact current/intended text. The audit did not restore or modify that file.
+[IMPLEMENTED] The prior Compose ports discrepancy (C-12) is resolved: the inspected file contains a valid list item and `docker compose config --no-interpolate --quiet` succeeds. No Compose configuration or Docker runtime state was changed by this task.
 
-[TBD] The owner reports Drizzle was briefly installed and removed during development. The two inspected committed manifests contain no Drizzle dependency; current manifest and lockfile also contain none. The intermediate install/removal is owner-provided history, not demonstrated by these commits.
+[TBD] The owner reports Drizzle was briefly installed and removed during development. Current dependency metadata contains no ORM; the intermediate install/removal remains owner-provided history.
 
 ### 4.2 CURRENT PROJECT PROGRESS
 
 | Area | Status | Evidence/File | Notes |
 | --- | --- | --- | --- |
 | Node project and CommonJS | [IMPLEMENTED] | `package.json` | Scripts launch `src/server.js`; package `main` is stale |
-| Express app and JSON parser | [IMPLEMENTED] | `src/app.js:1–6` | `express.json()` exists; parsing is not business validation |
+| Express app and JSON parser | [IMPLEMENTED] | `src/app.js` | JSON parsing and specific malformed-JSON HTTP 400 handling after routes |
 | Server entry and dotenv ordering | [IMPLEMENTED] | `src/server.js:1–23` | Environment loads before pool-dependent imports |
 | Startup DB gate | [IMPLEMENTED] | `src/server.js:10–19` | Query success precedes listen; query failure exits 1 |
-| Health route/controller | [IMPLEMENTED] | `src/routes/health.routes.js`, `src/controllers/health.controller.js` | Only explicit application API |
+| Health route/controller | [IMPLEMENTED] | `src/routes/health.routes.js`, `src/controllers/health.controller.js` | Infrastructure API alongside registration |
 | Shared database pool | [IMPLEMENTED] | `src/config/db.js` | No custom sizing, TLS, timeouts, idle-error listener, or shutdown hooks |
-| PostgreSQL Docker definition | [PARTIALLY IMPLEMENTED] | `docker-compose.yml`; C-12 | Image remains `postgres:17.4`, but final working-tree ports field fails Compose validation; runtime state unverified |
-| DB host mapping and persistence configuration | [PARTIALLY IMPLEMENTED] | `docker-compose.yml:6–18`; C-12 | Committed/intended mapping `127.0.0.1:5433:5432`; final working-tree list syntax invalid. Named volume `postgres_data` declaration unchanged |
-| Running database / applied schema | [TBD] | Docker socket unavailable to this audit | No live connectivity, catalog, or volume contents verified |
+| PostgreSQL Docker definition | [IMPLEMENTED] | `docker-compose.yml`; C-12 | `postgres:17.4`; configuration validation passes; runtime state unverified |
+| DB host mapping and persistence configuration | [IMPLEMENTED] | `docker-compose.yml`; C-12 | Valid `127.0.0.1:5433:5432` ports list and named volume `postgres_data` |
+| Running database / applied schema | [TBD] | Not inspected in this maintenance task | No live connectivity, catalog, or volume contents verified |
 | Users migration | [IMPLEMENTED] | `database/migrations/001_create_users.sql` | Matches requested schema semantically; no runner or applied-migration ledger |
-| UUID/default roles/timestamps | [IMPLEMENTED] | Users migration | SQL definition only; no registration logic |
+| UUID/default roles/timestamps | [IMPLEMENTED] | Users migration and registration controller | Registration omits these columns and uses database defaults, including USER |
 | Migration workflow | [PARTIALLY IMPLEMENTED] | One SQL migration; no migration npm script | Ordering convention begun; repeatable apply/deployment workflow pending |
-| SQL injection defenses for business queries | [PLANNED V1] | Existing queries are constant `SELECT 1` | No user-input queries exist to audit yet |
+| SQL injection defenses for business queries | [IMPLEMENTED] registration | `src/controllers/auth.controller.js` | Duplicate SELECT and INSERT use placeholders and separate value arrays |
 | Secret/dependency ignore rules | [IMPLEMENTED] | `.gitignore` | Working rules verified; remote secret scanning not verified |
-| Environment documentation | [PARTIALLY IMPLEMENTED] | Empty `.env.example`; reads in server/db files | Required variables not explained in repository onboarding file |
-| Registration and password hashing | [PLANNED V1] | No auth route/controller or bcrypt dependency | Users table alone is not authentication |
-| Login and JWT | [PLANNED V1] | No auth/JWT code or package | JWT approach accepted; details pending |
+| Environment documentation | [IMPLEMENTED] example | `.env.example` | PORT, DATABASE_URL, and POSTGRES_PASSWORD placeholders exist; required-variable validation remains planned |
+| Registration and password hashing | [IMPLEMENTED] | Auth route/controller, `bcrypt` dependency | POST /api/auth/register; manual validation, bcrypt cost 12, safe USER-only creation; no automatic login |
+| Login and JWT | [PLANNED V1] | No login handler or JWT code/package | Day 4; bcrypt.compare login flow remains planned |
 | Authenticate/RBAC/ownership | [PLANNED V1] | No `src/middleware/` directory | Database role CHECK does not enforce request access |
 | Current-user endpoint | [PLANNED V1] | No user route/controller | Not mounted |
 | Domains and Finance seed data | [PLANNED V1] | No domains migration or seed file | Finance-first product requirement only |
@@ -215,14 +220,14 @@
 | Reviews/ratings | [PLANNED V1] | No review files/schema | Completed-appointment integrity not implemented |
 | Minimal dashboards | [PLANNED V1] | No frontend or dashboard APIs | Minimal composition of core resources proposed |
 | Advanced admin/verification | [PLANNED V2] | No admin code | V1 provisioning policy still needs decision |
-| Input validation and safe global errors | [PLANNED V1] | No custom validation/error middleware | Health-specific catch is implemented; no uniform error envelope |
+| Input validation and safe global errors | [PARTIALLY IMPLEMENTED] | Auth controller and `src/app.js` | Registration validation, 409/500 JSON, malformed-JSON 400 exist; unrelated errors pass to next(error); general error/not-found policy remains planned |
 | Frontend React/Vite | [PLANNED V1] | No frontend directory/package/components | No UI, static app hosting, or frontend build script |
 | Automated tests and CI | [PLANNED V1] | No tests, test script, test dependencies, or workflow files | Syntax checks during audit are not a maintained test suite |
 | CORS/rate limits/JWT secret management | [TBD] | No configuration or middleware | Must be resolved before relevant integration/deployment |
-| Logging/monitoring | [PARTIALLY IMPLEMENTED] | `src/server.js` console messages | No request IDs, structured logs, metrics, or monitoring setup |
+| Logging/monitoring | [PARTIALLY IMPLEMENTED] | Server and auth controller console messages | Registration catch logs error.message server-side; no structured logging or monitoring |
 | Deployment | [PLANNED V1] | Local DB Compose only; no deployment config | No backend Dockerfile, hosting provider, live URL, or managed DB evidence |
 | README | [PLANNED V1] | Absent | Master spec does not replace a future concise README |
-| Master engineering reference | [IMPLEMENTED] | `docs/CONSULTIFY_MASTER_SPEC.md` | Created by this documentation task; must be re-audited as code changes |
+| Master engineering reference | [IMPLEMENTED] | `docs/CONSULTIFY_MASTER_SPEC.md` | Updated for scoped Day 3 maintenance; must be re-audited as code changes |
 | Health/Astrology and V2 expansion | [PLANNED V2] | No implementation | Do not expose unfinished domains as supported |
 | AI/ML features | [PLANNED V3] | No implementation or selected AI technology | Possibilities only |
 
@@ -230,21 +235,21 @@
 
 ### 5.1 CURRENT FILE STRUCTURE
 
-[IMPLEMENTED] Snapshot includes the document being created in this task. `.git/` internals and generated `node_modules/` contents are intentionally collapsed; these are not uninspected first-party application modules.
+[IMPLEMENTED] Snapshot includes the existing master document and registration files. `.git/` internals and generated `node_modules/` contents are intentionally collapsed; these are not uninspected first-party application modules.
 
 ```text
 consultify/
 ├── .git/                         # existing version-control metadata
-├── .DS_Store                     # existing untracked local artifact
+├── .DS_Store                     # ignored local OS artifact; not tracked
 ├── .env                          # local, ignored; contents not inspected
-├── .env.example                  # tracked, empty
+├── .env.example                  # tracked, safe environment placeholders
 ├── .gitignore
-├── docker-compose.yml            # current ports syntax invalid; see C-12
+├── docker-compose.yml            # valid configuration; C-12 resolved
 ├── package.json
 ├── package-lock.json
 ├── node_modules/                 # ignored generated dependency installation
 ├── database/
-│   ├── .DS_Store                 # existing untracked local artifact
+│   ├── .DS_Store                 # ignored local OS artifact; not tracked
 │   └── migrations/
 │       └── 001_create_users.sql
 ├── src/
@@ -253,11 +258,13 @@ consultify/
 │   ├── config/
 │   │   └── db.js
 │   ├── controllers/
+│   │   ├── auth.controller.js
 │   │   └── health.controller.js
 │   └── routes/
+│       ├── auth.routes.js
 │       └── health.routes.js
 └── docs/
-    └── CONSULTIFY_MASTER_SPEC.md # only deliverable added by this task
+    └── CONSULTIFY_MASTER_SPEC.md # updated for current Day 3 implementation
 ```
 
 ### 5.2 TARGET V1 FILE STRUCTURE
@@ -273,7 +280,7 @@ consultify/
 │   │   └── db.js                            [existing]
 │   ├── controllers/
 │   │   ├── health.controller.js             [existing]
-│   │   ├── auth.controller.js               [planned]
+│   │   ├── auth.controller.js               [existing; registration only]
 │   │   ├── user.controller.js               [planned]
 │   │   ├── advisor.controller.js            [planned]
 │   │   ├── appointment.controller.js        [planned]
@@ -281,7 +288,7 @@ consultify/
 │   │   └── review.controller.js             [planned]
 │   ├── routes/
 │   │   ├── health.routes.js                 [existing]
-│   │   ├── auth.routes.js                   [planned]
+│   │   ├── auth.routes.js                   [existing; registration only]
 │   │   ├── user.routes.js                   [planned]
 │   │   ├── advisor.routes.js                [planned]
 │   │   ├── appointment.routes.js            [planned]
@@ -311,10 +318,10 @@ consultify/
 │       └── main.jsx                         [planned]
 ├── tests/                                   [planned; location/framework TBD]
 ├── docs/
-│   └── CONSULTIFY_MASTER_SPEC.md             [existing after this task]
-├── docker-compose.yml                       [existing; local DB only; C-12 correction needed]
+│   └── CONSULTIFY_MASTER_SPEC.md             [existing]
+├── docker-compose.yml                       [existing; local DB only; configuration validated]
 ├── .env                                     [local ignored file only]
-├── .env.example                             [existing; needs content]
+├── .env.example                             [existing; safe placeholders]
 ├── .gitignore                               [existing]
 ├── package.json                             [existing]
 ├── package-lock.json                        [existing]
@@ -323,10 +330,11 @@ consultify/
 
 ## 6. Technology stack and dependency inventory
 
-[IMPLEMENTED] The audited backend is Node.js + Express 5 + JavaScript/CommonJS + PostgreSQL through `pg` and raw SQL. [PARTIALLY IMPLEMENTED] Docker Compose is intended to configure the local database, not a containerized backend; the final working-tree file fails configuration validation as recorded in C-12.
+[IMPLEMENTED] The audited backend is Node.js + Express 5 + JavaScript/CommonJS + PostgreSQL through `pg` and raw SQL, with `bcrypt` for registration hashing. Docker Compose configures the local database; configuration validation passes (C-12 resolved). No containerized backend exists.
 
 | Package | package.json requirement | Locked version | Locally installed version | Kind and purpose |
 | --- | --- | --- | --- | --- |
+| `bcrypt` | `^6.0.0` | `6.0.0` | `6.0.0` | Runtime; asynchronous registration password hashing at cost 12 |
 | `dotenv` | `^17.4.2` | `17.4.2` | `17.4.2` | Runtime; environment loading at startup |
 | `express` | `^5.2.1` | `5.2.1` | `5.2.1` | Runtime; HTTP app, router, JSON responses/parser |
 | `pg` | `^8.23.0` | `8.23.0` | `8.23.0` | Runtime; PostgreSQL driver and connection pool |
@@ -351,11 +359,11 @@ consultify/
 | PostgreSQL image | `postgres:17.4` | [IMPLEMENTED] Configured tag; actual running server/version unverified |
 | PostgreSQL application schema | Users migration only | [PARTIALLY IMPLEMENTED] No other tables or live schema confirmed |
 | React, Vite, frontend JavaScript | No dependencies/files | [PLANNED V1] Chosen frontend direction; versions not selected |
-| bcrypt-compatible hashing package | Absent | [PLANNED V1] / [TBD] Choose package and cost before registration |
+| bcrypt hashing package | `bcrypt` 6.0.0 | [IMPLEMENTED] Installed and used by registration at cost 12; D-05 accepted |
 | JWT implementation package | Absent | [PLANNED V1] / [TBD] JWT mechanism chosen, library/algorithm/lifetime pending |
-| Validation/test/logging libraries | No selected packages | [TBD] Do not silently add Zod, Joi, express-validator, a test runner, or logging package |
+| Validation/test/logging libraries | No selected packages | [IMPLEMENTED] Explicit manual registration validation (D-08); test/logging library selection remains [TBD] |
 
-[IMPLEMENTED] Drizzle, Prisma, Sequelize, TypeORM, bcrypt/bcryptjs, JWT libraries, React, and Vite are absent from current dependency/lockfile inventory. [PLANNED V1] The deliberate database strategy is:
+[IMPLEMENTED] Drizzle, Prisma, Sequelize, TypeORM, bcryptjs, JWT libraries, React, and Vite are absent from current dependency/lockfile inventory. [PLANNED V1] The deliberate database strategy is:
 
 ```text
 Node.js → one shared pg pool per process → parameterized raw SQL → PostgreSQL
@@ -370,7 +378,7 @@ Node.js → one shared pg pool per process → parameterized raw SQL → Postgre
 [IMPLEMENTED] `src/server.js` executes these steps:
 
 1. Runs `require("dotenv").config()` before importing modules that read environment variables.
-2. Imports `./app`. That app imports the health router, which imports the controller, which imports the shared pool.
+2. Imports `./app`. That app imports health and auth routers, whose controllers use the shared pool; the auth controller also imports bcrypt.
 3. Imports the same cached pool module directly.
 4. Selects `process.env.PORT || 8000`.
 5. Calls asynchronous `startServer()` and awaits `pool.query("SELECT 1")`.
@@ -383,9 +391,9 @@ Node.js → one shared pg pool per process → parameterized raw SQL → Postgre
 
 ### 7.2 Express configuration
 
-[IMPLEMENTED] `src/app.js` creates an Express instance, enables `express.json()`, mounts the router at `/api/health`, and exports the app. It does not itself listen on a port. `src/routes/health.routes.js` maps its local `/` path to `getHealth`; mount path plus router path yields `GET /api/health`.
+[IMPLEMENTED] `src/app.js` creates an Express instance, enables `express.json()`, mounts `/api/health` and `/api/auth`, adds malformed-JSON error handling after routes, and exports the app without listening. Health maps `GET /` to `getHealth`; auth maps `POST /register` to `registerUser`, yielding `POST /api/auth/register`.
 
-[IMPLEMENTED] There are no custom authentication, authorization, validation, CORS, request-logging, global error, or not-found handlers. Unmatched requests and uncaught/parser errors rely on Express behavior; do not document them as a consistent project JSON contract.
+[IMPLEMENTED] Registration performs manual validation in its controller. The app error handler recognizes `SyntaxError` with `status === 400` and a `body` property and returns HTTP 400 with `{"message":"Invalid JSON body"}`; unrelated errors go to `next(error)`. Authentication, authorization, CORS, request logging, general safe error handling, and a custom not-found handler remain absent; other framework errors are not a uniform project JSON contract.
 
 ### 7.3 Existing health contract
 
@@ -411,7 +419,7 @@ Node.js → one shared pg pool per process → parameterized raw SQL → Postgre
 
 ### 7.4 Layer responsibilities and communications
 
-[PARTIALLY IMPLEMENTED] The health request follows the backend code path below. The database connection shown assumes the committed/intended Compose mapping; final working-tree configuration is invalid (C-12), and live operation was not verified. [PLANNED V1] A React client and protected business middleware will extend it; the frontend shown here does not exist today.
+[PARTIALLY IMPLEMENTED] Health and registration use the backend layers below. The configured Compose mapping passes validation; live operation was not verified. [PLANNED V1] A React client and protected business middleware will extend this path; the frontend does not exist today.
 
 ```mermaid
 sequenceDiagram
@@ -436,9 +444,9 @@ sequenceDiagram
 | Frontend | [PLANNED V1] | Collects input and displays responses | React REST client; never direct DB access |
 | `server.js` | [IMPLEMENTED] | Starts the process listening | Bootstrap, environment order, initial connectivity gate |
 | `app.js` | [IMPLEMENTED] | Configures how HTTP is handled | Middleware ordering and router mounting |
-| Router | [IMPLEMENTED] health; [PLANNED V1] business | Connects URL/method to handler | Transport-level endpoint mapping |
-| Middleware | [IMPLEMENTED] JSON parser; [PLANNED V1] custom security | Checks/augments requests before handlers | Authentication, role policy, validation, error handling |
-| Controller | [IMPLEMENTED] health; [PLANNED V1] business | Decides what work the request requires | Application flow, ownership checks, query orchestration, safe response |
+| Router | [IMPLEMENTED] health and registration; [PLANNED V1] other business | Connects URL/method to handler | Transport-level endpoint mapping |
+| Middleware | [IMPLEMENTED] JSON parser and malformed-JSON error handler; [PLANNED V1] custom security | Checks/augments requests before handlers | Authentication, role policy, validation, error handling |
+| Controller | [IMPLEMENTED] health and registration; [PLANNED V1] other business | Decides what work the request requires | Application flow, ownership checks, query orchestration, safe response |
 | Pool/driver | [IMPLEMENTED] | Sends database requests using reusable connections | Resource management and PostgreSQL wire protocol |
 | PostgreSQL | [IMPLEMENTED] configured; runtime [TBD] | Stores data and enforces schema rules | Relational integrity, transactions, query execution |
 
@@ -446,9 +454,9 @@ sequenceDiagram
 
 ### 8.1 Port boundaries
 
-[IMPLEMENTED] The backend's default port is `8000`, overridable with `PORT`. It is normally reached locally at `http://localhost:8000`. `app.listen(PORT)` does not explicitly bind the HTTP server to loopback; do not confuse that with the committed/intended Compose database loopback restriction.
+[IMPLEMENTED] The backend's default port is `8000`, overridable with `PORT`. It is normally reached locally at `http://localhost:8000`. `app.listen(PORT)` does not explicitly bind the HTTP server to loopback; do not confuse that with the configured Compose database loopback restriction.
 
-[IMPLEMENTED] The **committed** `docker-compose.yml` declares the PostgreSQL service mapping `127.0.0.1:5433:5432`. [PARTIALLY IMPLEMENTED] Final working-tree line 7 retains that text but has invalid list syntax, so current Compose configuration cannot be used as-is. The diagram shows the committed/intended communication model, conditional on valid configuration and running services:
+[IMPLEMENTED] Current `docker-compose.yml` declares a valid PostgreSQL ports list with `127.0.0.1:5433:5432`; C-12 is resolved. The diagram shows this configured communication model, conditional on running services; live port publication is unverified:
 
 ```text
 HTTP client / planned frontend
@@ -463,7 +471,7 @@ Express app → router → controller
                  PostgreSQL container :5432
 ```
 
-[PLANNED V1] In the committed/intended local model, Docker itself is not “running on port 5432.” PostgreSQL listens on port 5432 inside the container; Docker publishes that service through host port 5433. An HTTP request is not redirected from 8000 to 5433. The controller uses `pg` to make a separate database communication, and later returns an HTTP response. This explanation does not certify the current working-tree Compose configuration or live services.
+[PLANNED V1] In the configured local model, Docker itself is not “running on port 5432.” PostgreSQL listens on port 5432 inside the container; Docker publishes that service through host port 5433. An HTTP request is not redirected from 8000 to 5433. The controller uses `pg` to make a separate database communication, and later returns an HTTP response. Configuration validation passed; live services remain unverified.
 
 [TBD] If `localhost` resolves to IPv6 while only `127.0.0.1` is published, verify host resolution and use the explicit loopback address when appropriate. If the backend is containerized later, `localhost` inside it would mean that backend container. On a shared Compose network, a backend would normally reach the `postgres` service on port `5432`; no such backend container exists now.
 
@@ -481,20 +489,21 @@ postgresql://USERNAME:PASSWORD@HOST:PORT/DATABASE
 | `USERNAME` | PostgreSQL login role | [IMPLEMENTED] Compose defines `postgres` locally |
 | `PASSWORD` | Password for that database role | [TBD] Supply private value via environment; never reproduce production credentials |
 | `HOST` | Database network address as seen by backend process | [PLANNED V1] `localhost` for host-running backend |
-| `PORT` | PostgreSQL service's host-facing port | [IMPLEMENTED] committed mapping specifies `5433`; final working-tree configuration [PARTIALLY IMPLEMENTED] due to C-12 |
+| `PORT` | PostgreSQL service's host-facing port | [IMPLEMENTED] Validated mapping specifies `5433`; live publication unverified |
 | `DATABASE` | Named database, separate from login role | [IMPLEMENTED] Compose configures `consultify` |
 
 [PLANNED V1] Safe local onboarding illustration; placeholders are not working credentials:
 
 ```bash
-# Conceptual .env entries; .env.example is currently empty.
+# Safe placeholders from the current .env.example; replace locally.
 PORT=8000
-DATABASE_URL=postgresql://postgres:<LOCAL_DEV_PASSWORD>@localhost:5433/consultify
+DATABASE_URL=postgresql://postgres:<LOCAL_PASSWORD>@localhost:5433/consultify
+POSTGRES_PASSWORD=<LOCAL_PASSWORD>
 ```
 
-[IMPLEMENTED] Compose contains a development password literal. The brief identifies the simple local development credential; its value is deliberately not repeated here. This is not a production credential strategy. [PLANNED V1] Production credentials must be distinct, strong, environment-managed, and supplied to the backend only. Encode reserved characters properly when constructing a URI; never log the full URI. A frontend environment variable is not an appropriate place for database credentials or a JWT signing secret.
+[IMPLEMENTED] Compose reads `${POSTGRES_PASSWORD}` from the environment; `.env.example` contains only a placeholder. [PLANNED V1] Production credentials must be distinct, strong, environment-managed, and supplied to the backend only. Encode reserved URI characters properly and never log the full connection URI. Frontend variables must not contain database credentials or JWT signing material.
 
-[PARTIALLY IMPLEMENTED] `.env.example` exists but has no content. There is no validation that `DATABASE_URL` is present; `pg` can use other defaults/environment settings when a connection string is not provided. A successful `SELECT 1` alone therefore does not prove the intended database was selected. Future startup should validate configuration and operators should verify database identity separately.
+[IMPLEMENTED] `.env.example` documents PORT, DATABASE_URL, and POSTGRES_PASSWORD with placeholders. [PARTIALLY IMPLEMENTED] Required-variable validation is still absent; `pg` can use other defaults/environment settings without a connection string. A successful `SELECT 1` alone does not prove the intended database was selected. Future startup validation and separate database-identity verification remain planned.
 
 ### 8.3 Docker and Compose concepts
 
@@ -537,7 +546,7 @@ module.exports = pool;
 
 ### 9.2 Parameterized SQL — mandatory invariant
 
-[PLANNED V1] All user-controlled **values** must use placeholders and separately supplied parameters. No current business query exists; both current queries use constant `SELECT 1` and therefore require no user-value parameters.
+[IMPLEMENTED] Registration passes normalized email to `SELECT id FROM users WHERE email=$1` and clean name, normalized email, and password hash to a parameterized INSERT. Health/startup use constant `SELECT 1`. [PLANNED V1] All future user-controlled SQL values must likewise use placeholders and separate parameters.
 
 ```javascript
 // [PLANNED V1] Educational safe pattern, not an implemented controller.
@@ -558,7 +567,7 @@ pool.query(`SELECT * FROM users WHERE email = '${email}'`);
 
 ### 9.3 Understanding pg results
 
-[IMPLEMENTED] The project uses `pg`, although current health/startup code ignores query rows. [PLANNED V1] Business controllers will inspect the result:
+[IMPLEMENTED] Registration checks `existingUser.rows.length` and returns `result.rows[0]` from an explicit safe INSERT projection. Health/startup ignore query rows. The following example explains the result shape:
 
 ```javascript
 // Educational shape: illustrative values, not a query executed by this audit.
@@ -579,7 +588,7 @@ const name = firstUser ? firstUser.name : null;
 
 [PLANNED V1] A transaction makes several database operations succeed or fail together. When a future workflow requires one, acquire one client with `pool.connect()`, run `BEGIN`, all statements, and `COMMIT` on that same client; roll back on failure and release in `finally`. Independent `pool.query()` calls must not be used to assemble a transaction because they may use different connections. See [node-postgres transactions](https://node-postgres.com/features/transactions).
 
-[PLANNED V1] Duplicate registration, appointment transitions, and review eligibility require concurrency-aware handling. A preliminary read can become stale before a later write. Use database uniqueness, conditional updates, and appropriate transactional checks. Exact booking overlap constraints await the duration/availability decision; do not claim a frontend disabled button prevents racing requests.
+[IMPLEMENTED] Registration keeps its preliminary duplicate SELECT and relies on `users.email UNIQUE` as final protection; PostgreSQL `23505` becomes HTTP 409. [PLANNED V1] Appointment transitions and review eligibility will also require concurrency-aware handling with appropriate constraints, conditional writes, and transactions. Exact booking overlap rules remain undecided.
 
 ### 9.5 Migration approach
 
@@ -632,7 +641,7 @@ CREATE TABLE users(
 
 [IMPLEMENTED] PostgreSQL 17 provides `gen_random_uuid()` for random version-4 UUIDs. No extension installation is present or required by this migration for that built-in function. IDs are still subject to primary-key enforcement; UUIDs do not substitute for ownership checks. See [PostgreSQL UUID functions](https://www.postgresql.org/docs/17/functions-uuid.html).
 
-[TBD] Email normalization/case-insensitive uniqueness, password limits, user deletion, future update timestamps, and advisor role assignment remain decisions. Do not claim these rules are enforced by the current users schema. There is no `domains` table, seeded advisor/admin, registration handler, or persisted authentication session merely because users have roles.
+[IMPLEMENTED] Registration trims/lowercases email, validates password and field limits, hashes passwords, and inserts only name/email/password_hash, relying on the USER default. Normalization and password policy are backend rules, not additional schema constraints; email UNIQUE protects stored values without independently lowercasing direct SQL writes. [TBD] User deletion, future update timestamps, advisor provisioning, and any broader database canonicalization remain unresolved. Domains, seeded advisor/admin accounts, and authenticated sessions are not implemented.
 
 ## 11. Target relational model and integrity rules
 
@@ -736,7 +745,7 @@ erDiagram
 
 ### 12.1 Registration and email integrity
 
-[PLANNED V1] Registration target is `POST /api/auth/register` with name, email, and password. The backend must validate types/required fields, trim/validate name, normalize email according to the selected policy, check for duplicates, hash the password, insert the user using parameters, and return an explicit safe user projection with HTTP 201.
+[IMPLEMENTED] `POST /api/auth/register` is mounted through `src/routes/auth.routes.js` and handled by `registerUser` in `src/controllers/auth.controller.js`. It accepts name, email, and password:
 
 ```json
 {
@@ -746,17 +755,23 @@ erDiagram
 }
 ```
 
-[PLANNED V1] This is an example request only. Backend validation is the security/data boundary; frontend validation improves feedback. A pre-insert duplicate email lookup gives a helpful response, but two requests can pass it simultaneously. Handle the database unique violation as a controlled HTTP 409 as well. Never return `password` or `password_hash` and never allow the registration payload to assign a privileged role.
+[IMPLEMENTED] Explicit manual backend checks require nonblank string name/email and a nonempty string password. Name is trimmed and rejected above 100 characters. Email is trimmed, lowercased, rejected above 255 characters, and checked with the existing email pattern. D-07 accepts surrounding-whitespace trimming plus lowercase only: Gmail dots and +tags are preserved, with no provider-specific rewriting.
 
-[TBD] **TBD — DECISION REQUIRED:** email normalization (including case treatment), database uniqueness alignment, password minimum/maximum, bcrypt package/cost, and whether registration also signs in. Recommended initial flow creates a USER and requires a separate login; no token is assumed in the registration response below.
+[IMPLEMENTED] Registration performs a parameterized duplicate-email SELECT before hashing/inserting. `users.email UNIQUE` remains the final database protection when concurrent requests both pass that SELECT. Both an early duplicate and PostgreSQL `error.code === "23505"` return HTTP 409 with `{"message":"Email is already registered"}`. Other errors caught during registration are logged server-side and return only HTTP 500 with `{"message":"Internal server error"}`.
+
+[IMPLEMENTED] The parameterized INSERT writes only name, normalized email, and password_hash. It omits role, ID, and timestamp so database defaults create a USER. Extra payload fields are ignored; supplying `role: "ADMIN"` or `role: "ADVISOR"` cannot change the created role. No blanket unknown-field rejection is implemented. The response is HTTP 201 with `{"message":"User registered successfully","user":{...}}`; only id, name, email, role, and created_at are returned. Neither password nor password_hash is returned.
+
+[IMPLEMENTED] Registration does not issue a JWT or automatically log in. Login remains [PLANNED V1] for Day 4; authentication, RBAC middleware, and the current-user endpoint remain planned.
 
 ### 12.2 Password hashing
 
-[PLANNED V1] Target is bcrypt or a compatible Node package; neither `bcrypt` nor `bcryptjs` is installed. Registration uses asynchronous hashing and stores only `password_hash`. Login fetches the hash internally and compares the entered password with `bcrypt.compare()` or the compatible API.
+[IMPLEMENTED] D-05 selects the installed `bcrypt` package (6.0.0), used asynchronously as `bcrypt.hash(password, 12)`. Cost factor is 12. The database receives the resulting password_hash instead of plaintext.
 
-[PLANNED V1] Hashing is a one-way verification operation, while encryption is designed to be reversible with a key. A salt is random per-password input that makes equal passwords produce different stored hashes and makes precomputed attacks less reusable. bcrypt stores the salt and cost parameters in the hash representation; comparison recomputes the candidate using those parameters rather than decrypting anything. Higher cost deliberately increases work and makes guessing more expensive, but must be benchmarked for the deployed server. Standard bcrypt uses only the first 72 input bytes: choose and test an explicit input-length policy and do not silently truncate passwords. See the [bcrypt project documentation](https://github.com/kelektiv/node.bcrypt.js).
+[IMPLEMENTED] D-06 sets a minimum password length of 12 characters, checked using JavaScript `password.length`, and a maximum input of 72 UTF-8 bytes, checked using `Buffer.byteLength(password, "utf8")`. Excess input is rejected, not silently truncated. Passwords are not trimmed, lowercased, or otherwise normalized. Name/email character limits likewise use JavaScript string `.length`.
 
-[TBD] Recommended default for selection: benchmark a supported bcrypt-compatible package, use asynchronous APIs, choose a sensible minimum (12 characters is a proposal, not an accepted requirement), and reject input exceeding the selected implementation's safe byte limit. Do not trim, lowercase, log, return, or otherwise silently transform passwords. A password hashing library choice does not by itself provide abuse prevention or account recovery.
+[IMPLEMENTED] bcrypt produces salted password hashes with embedded cost parameters. Hashing supports one-way verification; encryption is reversible with a key. Higher cost increases work. [PLANNED V1] Login will use `bcrypt.compare()`; no comparison/login flow exists yet. Deployment capacity checks remain future verification, not an unresolved package/cost choice. See the [bcrypt project documentation](https://github.com/kelektiv/node.bcrypt.js).
+
+[IMPLEMENTED] D-08 selects explicit manual backend validation for the current V1 stage. No validation library is selected or installed. Abuse prevention and account recovery remain separate planned/TBD work.
 
 ### 12.3 Login and JWT
 
@@ -799,7 +814,8 @@ function authorize(...allowedRoles) {
 
 | Operation | Status | Proposed role policy | Required relationship |
 | --- | --- | --- | --- |
-| Register/login | [PLANNED V1] | Public | New registration cannot self-assign ADVISOR/ADMIN |
+| Register | [IMPLEMENTED] | Public | Creates USER only; extra role fields ignored |
+| Login | [PLANNED V1] | Public | Day 4 credential verification and JWT work |
 | Read current user | [PLANNED V1] | USER, ADVISOR, ADMIN | Identity from authentication only |
 | Read advisor/post/review public data | [PLANNED V1] / [TBD] | Public reads recommended | Expose only public fields |
 | Create/update own advisor profile | [PLANNED V1] / [TBD] | ADVISOR only | `profile.user_id` equals authenticated ID; role provisioning handled separately |
@@ -816,7 +832,7 @@ function authorize(...allowedRoles) {
 
 ### 13.1 Contract maturity and shared conventions
 
-[IMPLEMENTED] Only API-01 (`GET /api/health`) exists. [PLANNED V1] Registration/login paths are specified product targets. All other paths, payload field names, response envelopes, role defaults, and handler names below are **proposed contracts** for review before implementation. Each pending choice remains **[TBD] — DECISION REQUIRED**, even when a concrete recommendation makes the contract reviewable.
+[IMPLEMENTED] API-01 (`GET /api/health`) and API-02 (`POST /api/auth/register`) exist with the exact contracts in section 14. [PLANNED V1] Login and other endpoints remain proposed; pending paths, payloads, response envelopes, policies, and handler names require review. Proposed conventions do not change the existing registration response.
 
 [PLANNED V1] These conventions apply to every proposed contract below:
 
@@ -828,7 +844,7 @@ function authorize(...allowedRoles) {
 - All business queries use parameters and explicit safe output columns; authenticated identity is derived server-side.
 - Unless a route explicitly needs a body/query parameter, none is part of its proposed contract.
 - Every proposed endpoint can return a safe 500 for unexpected server errors. Protected routes also have 401/403. Other per-route errors are listed explicitly.
-- Common errors are proposed as `{"error":{"code":"VALIDATION_ERROR","message":"Invalid request"}}`. This format is not used by current health and is not implemented globally.
+- Common errors are proposed as `{"error":{"code":"VALIDATION_ERROR","message":"Invalid request"}}`. This format is not used by current health or registration and is not implemented globally. Registration uses `{ "message": "..." }` errors; malformed JSON uses the same simple message shape.
 - Collection proposal: `{ "data": [...], "pagination": { "limit": 20, "offset": 0 } }`; defaults/max limits and offset vs cursor are [TBD]. A count query/`total` is not required unless approved.
 - Resource proposal: `{ "data": { ...safe selected fields... } }`; exact field optionality awaits schema approval. Examples are not evidence of implemented responses.
 
@@ -836,7 +852,7 @@ function authorize(...allowedRoles) {
 
 | Projection | Candidate fields | Exclusions/decision boundaries |
 | --- | --- | --- |
-| `SafeUser` | `id`, `name`, `email`, `role`, `created_at` | Own/auth response only; never password/hash; public content must not include author email |
+| `SafeUser` | `id`, `name`, `email`, `role`, `created_at` | [IMPLEMENTED] registration projection; own/auth response only; never password/hash; public content must not include author email |
 | `AdvisorPublic` | Profile `id`, display name, domain, specialization, bio, experience, fee if selected, derived rating/count | No credentials, private email, verification documents, or invented verification badge |
 | `AppointmentPrivate` | `id`, customer/advisor references or minimal names, `scheduled_at`, `status`, timestamps | Only parties; optional notes visibility not decided; no hashes/private account data |
 | `PostPublic` | `id`, author display identity, domain, title, body, timestamps, helpful count if selected | No author email or private profile data |
@@ -850,7 +866,7 @@ function authorize(...allowedRoles) {
 | ID | Method | Endpoint | Auth / proposed roles | Purpose | Status |
 | --- | --- | --- | --- | --- | --- |
 | API-01 | GET | `/api/health` | No; public | Database connectivity diagnostic | [IMPLEMENTED] |
-| API-02 | POST | `/api/auth/register` | No; public | Create USER account | [PLANNED V1] |
+| API-02 | POST | `/api/auth/register` | No; public | Create USER account without automatic login | [IMPLEMENTED] |
 | API-03 | POST | `/api/auth/login` | No; public | Verify credentials and establish JWT auth | [PLANNED V1] |
 | API-04 | GET | `/api/users/me` | Yes; all three roles | Read safe current user | [PLANNED V1] / [TBD] path |
 | API-05 | GET | `/api/advisors` | Public proposed | Discover Finance advisors | [PLANNED V1] / [TBD] |
@@ -879,7 +895,7 @@ function authorize(...allowedRoles) {
 
 ## 14. Detailed API contracts and V1 request flows
 
-[IMPLEMENTED] API-01 is the full current application endpoint inventory. [PLANNED V1] All remaining entries inherit the proposed conventions in section 13; route/controller paths explicitly marked planned do not exist. Handler names, exact JSON envelopes, role defaults, and all numeric/content limits await contract review. An error status listed as proposed is not evidence of a handler implementing it.
+[IMPLEMENTED] API-01 and API-02 are the current endpoint inventory. [PLANNED V1] All remaining contracts are proposed. The auth route/controller files already exist for registration; login itself is still planned. Other paths explicitly marked planned do not exist. Proposed statuses and envelopes do not imply implementation.
 
 ### API-01 — GET /api/health
 
@@ -893,7 +909,7 @@ function authorize(...allowedRoles) {
 | Request body | None required. |
 | Validation | No business validation. Express JSON parser runs globally when applicable. |
 | Success / HTTP code | 200: exact {"status":"ok","database":"connected"}. |
-| Possible errors / HTTP codes | 500 on rejected DB probe: exact {"status":"error","database":"disconnected"}. Framework-level parser/unmatched-route behavior is not normalized by this handler. |
+| Possible errors / HTTP codes | 500 on rejected DB probe: exact {"status":"error","database":"disconnected"}. Malformed JSON is handled globally as 400 with {"message":"Invalid JSON body"}; other framework errors/unmatched routes retain default behavior. |
 | Route file → controller file | src/routes/health.routes.js → src/controllers/health.controller.js#getHealth (existing). |
 | Database tables touched | No application tables; SELECT 1 through shared pool. |
 | Ownership rules | No resource ownership applies. |
@@ -904,20 +920,36 @@ function authorize(...allowedRoles) {
 
 | Contract field | Definition |
 | --- | --- |
-| Status | [PLANNED V1] |
-| Purpose | Register an ordinary USER. |
-| Authentication / roles | Public; caller cannot request ADVISOR/ADMIN. |
+| Status | [IMPLEMENTED] |
+| Purpose | Register an ordinary USER without automatic login. |
+| Authentication / roles | Public; caller cannot assign ADVISOR/ADMIN. |
 | Path parameters | None. |
-| Query parameters | None. |
-| Request body | {name, email, password}; role/ID/hash fields forbidden. |
-| Validation | Required typed nonblank name/email/password; name ≤100 characters; email ≤255 and valid format; normalize by selected policy; password minimum/byte maximum TBD; reject duplicate normalized email. |
-| Success / HTTP code | 201: {data: SafeUser}; registration auto-login is TBD and not assumed. |
-| Possible errors / HTTP codes | 400 invalid input; 409 duplicate email including concurrent unique violation; 500 safe unexpected failure. |
-| Route file → controller file | src/routes/auth.routes.js → src/controllers/auth.controller.js#register (both planned). |
-| Database tables touched | users: duplicate lookup, INSERT with password_hash; DB-generated id/default USER. |
-| Ownership rules | New identity created by backend; reject all client attempts to set privileged roles or another identity. |
+| Query parameters | None used by controller. |
+| Request body | {name, email, password}; only these fields are read. Extra fields, including role/ID/hash, are ignored. |
+| Validation | Required string name/email, nonblank after trim; nonempty string password. Trim name; trim/lowercase email. Name ≤100, email ≤255, valid existing email pattern; password ≥12 characters and ≤72 UTF-8 bytes. String lengths use JavaScript .length. |
+| Success / HTTP code | 201: {"message":"User registered successfully","user":SafeUser}. SafeUser contains only id, name, email, role, created_at. No password/hash, JWT, or automatic login. |
+| Possible errors / HTTP codes | 400 validation or malformed JSON; 409 duplicate email from SELECT or PostgreSQL 23505; 500 for other caught registration errors, with no error.message sent to the client. Exact bodies below. |
+| Route file → controller file | src/routes/auth.routes.js → src/controllers/auth.controller.js#registerUser (existing); app mounts /api/auth. |
+| Database tables touched | users: parameterized duplicate SELECT and INSERT of name, email, password_hash; DB-generated id, default USER, and created_at. |
+| Ownership rules | Database creates the new identity; payload role/ID fields are not used. Public registration creates USER only. |
 
-[PLANNED V1] **Flow:** Validate → normalize email → duplicate lookup → asynchronous bcrypt hash → parameterized INSERT → handle uniqueness race → explicit safe projection → 201.
+[IMPLEMENTED] Registration error responses contain only a `message` field. Validation runs in the order below; malformed JSON is caught by app error middleware before a controller can process it.
+
+| Condition | HTTP code | Exact message |
+| --- | --- | --- |
+| Name missing, wrong type, or blank after trimming | 400 | Name is required |
+| Email missing, wrong type, or blank after trimming | 400 | Email is required |
+| Password missing, wrong type, or empty | 400 | Password is required |
+| Trimmed name length >100 | 400 | Name must not exceed 100 characters |
+| Normalized email length >255 | 400 | Email must not exceed 255 characters |
+| Email fails existing pattern | 400 | Invalid email format |
+| Password length <12 | 400 | Password must be at least 12 characters long |
+| Password exceeds 72 UTF-8 bytes | 400 | Password is too long |
+| Duplicate SELECT finds email, or catch receives PostgreSQL 23505 | 409 | Email is already registered |
+| Other error caught during registration | 500 | Internal server error |
+| Malformed JSON parsing error | 400 | Invalid JSON body |
+
+[IMPLEMENTED] **Flow:** Required-field checks → trim name and trim/lowercase email → length/email/password validation → parameterized duplicate lookup → asynchronous bcrypt hash at cost 12 → parameterized INSERT with safe RETURNING fields → 201. The catch logs `Registration error:` and error.message server-side, maps 23505 to 409, and returns a generic 500 for other caught errors.
 
 ### API-03 — POST /api/auth/login
 
@@ -932,7 +964,7 @@ function authorize(...allowedRoles) {
 | Validation | Required strings; same email normalization as registration; valid format/length; accepted password input bounds; do not silently alter password. |
 | Success / HTTP code | 200: safe user and authentication established. Exact body/cookie/access-token fields TBD pending transport; never return hash. |
 | Possible errors / HTTP codes | 400 malformed input; 401 invalid credentials for unknown email or wrong password; 500 safe unexpected failure. |
-| Route file → controller file | src/routes/auth.routes.js → src/controllers/auth.controller.js#login (both planned). |
+| Route file → controller file | src/routes/auth.routes.js → src/controllers/auth.controller.js#login (planned handler/route in existing registration files). |
 | Database tables touched | users: internal lookup includes password_hash for compare only. |
 | Ownership rules | JWT identity derived from matched database account; no role from payload. |
 
@@ -1337,7 +1369,7 @@ function authorize(...allowedRoles) {
 
 [PLANNED V1] / [TBD] proposed minimal dashboard read **Flow:** authenticate → validate mine scope → ownership-constrained review query → minimal dashboard collection.
 
-[PLANNED V1] These contracts cover registration, login, current user, advisor discovery/detail/profile management, booking/list/detail/cancellation/advisor updates, posts, comments, helpful interaction, and review creation/listing. No logout, refresh, password reset, email verification, domain-administration, payment, video, or AI endpoint is claimed; those require the explicit decisions/version scope described elsewhere.
+[PARTIALLY IMPLEMENTED] These contracts cover implemented registration and planned login, current user, advisors, appointments, community, and reviews. No logout, refresh, password reset, email verification, domain-administration, payment, video, or AI endpoint is implemented; those retain their explicit decisions/version boundaries.
 
 ## 15. Appointments and state transitions
 
@@ -1421,11 +1453,12 @@ stateDiagram-v2
 
 ### 17.1 Validation boundary
 
-[IMPLEMENTED] Only JSON parsing exists in `src/app.js`; no business validation functions or validation library are present. [PLANNED V1] Validate body, parameters, and query data on the backend before it affects SQL or permissions. Type-check before invoking string methods. Treat arrays, objects, nulls, empty strings, unexpectedly large values, and malformed encodings as real inputs to test.
+[IMPLEMENTED] `src/controllers/auth.controller.js` performs explicit manual registration validation, and `src/app.js` parses JSON and returns a specific safe malformed-JSON response. No validation library is installed. [PLANNED V1] Future endpoints must validate body, parameters, and query data before SQL or permission decisions; broad input-shape handling and automated coverage remain pending.
 
 | Input family | Status | Required validation direction | Pending specifics |
 | --- | --- | --- | --- |
-| Registration/login | [PLANNED V1] | Required types/fields, email format/normalization, password policy, safe role assignment | Password limits, normalization/database alignment, abuse controls |
+| Registration | [IMPLEMENTED] | Typed required fields; trimmed name ≤100; trimmed/lowercase email ≤255 and valid pattern; password ≥12 characters and ≤72 UTF-8 bytes; USER-only insert | See API-02; general unknown-field policy and abuse controls remain TBD |
+| Login | [PLANNED V1] | Required types/fields and the accepted registration normalization/password policy | Day 4 implementation and verification |
 | UUID route/body IDs | [PLANNED V1] | Syntax, existence, and separate relationship authorization | Consistent 403 vs concealed 404 policy |
 | Advisor profile | [PLANNED V1] | Approved fields only, valid domain, bounded text, nonnegative experience/fee if included | Field requiredness, text lengths, currency |
 | Appointments | [PLANNED V1] | Eligible advisor, unambiguous future time, valid state transition, ownership | Duration, delivery, cutoff, scheduling conflicts |
@@ -1434,27 +1467,27 @@ stateDiagram-v2
 | Reviews | [PLANNED V1] | Own completed appointment, bounded integer rating, duplicate prevention, text policy | Exact rating range/text constraints |
 | List filters/paging | [PLANNED V1] | Supported enums, bounded numeric paging, fixed sort allowlist, bounded search | Default/max values, cursor vs offset |
 
-[TBD] Validation library is **TBD — DECISION REQUIRED**. Manual validation may be enough initially. Do not introduce Zod, Joi, or express-validator solely because they are common elsewhere. Database constraints remain mandatory for critical integrity even if a library is selected.
+[IMPLEMENTED] D-08 accepts explicit manual backend validation for the current V1 stage; no validation library is selected. Database constraints remain the final protection for critical integrity. A future library change requires a separate decision.
 
 ### 17.2 HTTP status code policy
 
 | Code | Meaning in intended project contract | Status |
 | --- | --- | --- |
 | 200 OK | Successful retrieval/update; current healthy diagnostic; proposed idempotent helpful mutation | [IMPLEMENTED] health / [PLANNED V1] business |
-| 201 Created | Successful user/profile/appointment/post/comment/review creation | [PLANNED V1] |
-| 400 Bad Request | Malformed/invalid input, UUID syntax, unsupported filters, disallowed body fields | [PLANNED V1] uniform project behavior |
+| 201 Created | Successful user/profile/appointment/post/comment/review creation | [IMPLEMENTED] registration / [PLANNED V1] others |
+| 400 Bad Request | Invalid registration input and malformed JSON; future UUID/filter/body checks | [IMPLEMENTED] registration and malformed JSON / [PLANNED V1] broader validation |
 | 401 Unauthorized | Missing, invalid, expired authentication; invalid login credentials | [PLANNED V1] |
 | 403 Forbidden | Authenticated caller lacks role/ownership/policy permission | [PLANNED V1]; resource concealment alternative [TBD] |
 | 404 Not Found | Valid request target does not exist/is unavailable under visibility policy | [PLANNED V1] safe JSON contract; current unmatched routes use framework default |
-| 409 Conflict | Duplicate email/profile/review, invalid appointment state, defined scheduling conflict | [PLANNED V1] |
-| 500 Internal Server Error | Unexpected failure; current DB-disconnected health response | [IMPLEMENTED] health / [PLANNED V1] global safe behavior |
+| 409 Conflict | Duplicate email; future profile/review/state/scheduling conflicts | [IMPLEMENTED] registration SELECT and 23505 handling / [PLANNED V1] others |
+| 500 Internal Server Error | Unexpected failure; health disconnection or generic registration message | [IMPLEMENTED] health and registration catch / [PLANNED V1] global safe behavior |
 | 429 Too Many Requests | Would apply if rate limiting is selected | [TBD] No limiter or status policy implemented |
 
-[PLANNED V1] SQL integrity exceptions should be mapped deliberately, not all labeled “bad request” or exposed verbatim. A known duplicate-email unique violation belongs to 409; an unexpected SQL programming error belongs to a safe 500 plus restricted diagnostic logging. A returned 500 must not contain a raw SQL statement, PostgreSQL credentials, stack trace, or driver error details.
+[IMPLEMENTED] Registration maps PostgreSQL `23505` to 409 and logs other caught errors server-side while returning only `{"message":"Internal server error"}` with 500. [PLANNED V1] Future SQL integrity mappings must remain deliberate; driver messages, SQL, stack traces, or credentials must not be sent to clients.
 
 ### 17.3 Error architecture
 
-[IMPLEMENTED] Health has an explicit safe failure body; startup logs an error message then exits. [PLANNED V1] Add consistent error handling after routes once implemented, with a separately considered not-found handler and safe malformed-JSON behavior. Proposed file `src/middleware/error.middleware.js` does not exist. Express error middleware uses the error-handling signature `(err, req, res, next)`.
+[IMPLEMENTED] Health and the registration catch have safe failure bodies. After routes, `src/app.js` checks `error instanceof SyntaxError`, `error.status === 400`, and `"body" in error`, returning HTTP 400 with `{"message":"Invalid JSON body"}`. Unrelated errors pass to `next(error)`. [PLANNED V1] General safe error/not-found handling remains pending; `src/middleware/error.middleware.js` does not exist.
 
 [TBD] Standard error codes/envelope and validation detail shape must be approved. Recommended response example, not a current contract:
 
@@ -1471,7 +1504,7 @@ stateDiagram-v2
 
 ## 18. NON-NEGOTIABLE SECURITY INVARIANTS
 
-[PLANNED V1] These accepted requirements apply to future implementation. Current enforcement is limited to the specific repository evidence in section 4.
+[PARTIALLY IMPLEMENTED] These accepted requirements apply across V1. Registration already enforces manual validation, bcrypt hashing at cost 12, the 12-character minimum/72-UTF-8-byte maximum, trimmed name/email limits, parameterized queries, safe user output, USER-only creation, and duplicate-email 409 handling. Malformed JSON receives a safe JSON 400. Login/JWT, authentication, RBAC, ownership, and other business protections remain planned.
 
 1. `.env` must never be committed; keep real secrets out of examples and documentation.
 2. `node_modules/` must never be committed; commit manifest and lockfile instead.
@@ -1496,7 +1529,7 @@ stateDiagram-v2
 21. Do not trust client vote counts, review advisor IDs, appointment owners, or lifecycle transitions.
 22. Keep browser code away from PostgreSQL; the only application data boundary for the frontend is the backend REST API.
 
-[IMPLEMENTED] `.gitignore` currently excludes `.env` and `node_modules/`; neither is tracked in the inspected current file list or listed in the two commit file inventories. This narrow check is not a complete historical secret scan. Compose includes local-only development configuration, not a secure production secret setup.
+[IMPLEMENTED] `.gitignore` excludes `.env`, `node_modules/`, and `.DS_Store`; none is in the current tracked file list. This is not a complete historical secret scan. Compose reads POSTGRES_PASSWORD from the environment and restricts database publication to loopback; production security configuration remains planned.
 
 ### GitHub security expectations
 
@@ -1590,7 +1623,7 @@ stateDiagram-v2
 
 ### 21.1 Current verification versus target suite
 
-[IMPLEMENTED] This audit ran `node --check` successfully on the five existing source files. It compared manifest/lockfile/installed direct versions and inspected Git/ignore rules and original-file hashes. Final `docker compose config --quiet` rejected an independently changed working-tree ports field (C-12). These are audit checks, not a committed automated test suite. [TBD] Runtime DB state could not be inspected because Docker API socket access was denied. No application integration, SQL execution, frontend, end-to-end, load, vulnerability, or deployment test was performed.
+[IMPLEMENTED] This maintenance task ran `node --check` successfully on `src/controllers/auth.controller.js` and `src/app.js`, checked Git diff/status and whitespace, and verified relevant dependency/ignore metadata. `docker compose config --no-interpolate --quiet` passes; C-12 is resolved. These are maintenance checks, not an automated application test suite. No server/database was started, no live data was modified, and no application integration, SQL execution, frontend, end-to-end, load, vulnerability, or deployment test was performed.
 
 [PLANNED V1] No `test` script or test dependencies currently exist; test framework and directory layout remain [TBD]. Do not claim coverage or passing application tests without executable evidence.
 
@@ -1633,7 +1666,7 @@ stateDiagram-v2
 
 ### 22.1 Logging and observability
 
-[IMPLEMENTED] `src/server.js` logs DB connection success, listening port, and startup database error message. The health controller sends safe JSON but does not log its failure. No structured logger, request ID, request log middleware, metrics endpoint, tracing, uptime service, or production log configuration exists.
+[IMPLEMENTED] `src/server.js` logs DB connection success, listening port, and startup database error message. Registration catch logs `Registration error:` plus error.message server-side while sending safe messages to the client. Health sends safe JSON without logging its failure. No structured logger, request IDs, request middleware, metrics, tracing, or production log configuration exists.
 
 [PLANNED V1] Provide enough safe operational diagnostics to distinguish startup failure, validation failure, authorization denial, unexpected exception, and database errors. [TBD] Structured logging, request IDs, health monitoring, metrics, retention, and package choices must be selected when operational needs require them. Redact tokens, passwords, hashes, connection strings, and private consultation content. Avoid logging entire request bodies by default.
 
@@ -1645,9 +1678,9 @@ stateDiagram-v2
 | Indexes | [PARTIALLY IMPLEMENTED] users constraints only | Add query-justified indexes in migrations; inspect actual query plans |
 | Pagination | [PLANNED V1] | Bound collection responses and avoid unbounded comment/review embedding |
 | N+1 queries | [PLANNED V1] | Use suitable joins/aggregates instead of one extra DB query per advisor/post/review |
-| Selected fields | [PLANNED V1] | Avoid unnecessary `SELECT *`; retrieve only required internal/public columns |
+| Selected fields | [IMPLEMENTED] registration / [PLANNED V1] other queries | Registration SELECT retrieves id only; INSERT returns id, name, email, role, created_at |
 | Frontend API traffic | [PLANNED V1] | Centralize requests; avoid repeated requests caused by component structure; use suitable request timing for basic search |
-| Password cost | [TBD] | Benchmark secure hashing cost and concurrent login load; use asynchronous API |
+| Password cost | [IMPLEMENTED] cost 12 | Asynchronous bcrypt.hash; deployment/concurrent login benchmarking remains planned |
 | Transactions | [PLANNED V1] | Keep necessary transactions short and release clients; enforce concurrency correctly |
 | Caching | [DEFERRED] | Add only for measured bottlenecks with explicit invalidation rules |
 | Redis | [DEFERRED] | No dependency, server, or requirement today |
@@ -1671,13 +1704,13 @@ stateDiagram-v2
 
 ### 23.1 Current supported scripts and intended startup
 
-[IMPLEMENTED] `npm start` launches `node src/server.js`; `npm run dev` launches `nodemon src/server.js`. No build/test/migrate/seed script exists. [PLANNED V1] The following is an operator runbook based on current files, **not commands executed as part of this documentation task**.
+[IMPLEMENTED] `npm start` launches `node src/server.js`; `npm run dev` launches `nodemon src/server.js`. No build/test/migrate/seed script exists. [PLANNED V1] The following is an operator runbook based on current files, **not startup commands executed as part of this maintenance task**.
 
-[PARTIALLY IMPLEMENTED] **Current prerequisite failure:** the final working-tree `docker-compose.yml` fails validation due to C-12. The Compose commands below require correcting that file in a separately authorized task. Confirm with `docker compose config --quiet` before startup; do not assume these commands currently succeed or reset volumes to address a configuration-type error.
+[IMPLEMENTED] Current Compose configuration passes `docker compose config --no-interpolate --quiet`; C-12 is resolved. [TBD] Live services and applied schema remain unverified. The following startup commands are an operator runbook, not work performed by this maintenance task.
 
 1. Ensure Docker Desktop/Engine is running and your shell can reach the daemon.
 2. Install locked dependencies for a clean checkout; use `npm install` when intentionally updating dependencies, and review lockfile changes.
-3. Create/configure the ignored `.env` manually using the structural example in section 8. Copying the current empty `.env.example` alone is insufficient. Do not overwrite an existing working `.env`.
+3. Configure the ignored `.env` using `.env.example` and section 8. Replace password placeholders consistently in DATABASE_URL and POSTGRES_PASSWORD. Do not overwrite an existing working `.env`.
 4. Start the local PostgreSQL service and confirm container readiness.
 5. Verify intended database/schema separately; apply migrations with the selected workflow. Current health does not require the users table.
 6. Start the backend using its existing script.
@@ -1742,9 +1775,9 @@ docker compose down
 docker compose down -v
 ```
 
-[TBD] This audit's Docker access failed with permission denied at the Docker API socket. That means live state is unverified, not that PostgreSQL is necessarily stopped or broken. No container/volume reset was attempted. Avoid diagnosing missing migration state from `SELECT 1` or diagnosing server failure solely from a Compose file.
+[TBD] The initial audit reported a Docker API socket permission failure. This maintenance task validates Compose configuration only and does not inspect live Docker or database state. No container/volume reset was attempted. A configuration file or `SELECT 1` alone does not prove applied schema.
 
-[PARTIALLY IMPLEMENTED] The later Compose validation failure is a **separate confirmed configuration problem**. It can be diagnosed without daemon access. An already-running container could still reflect the older valid configuration; this audit cannot infer its runtime state from the current file.
+[IMPLEMENTED] The previously reported Compose syntax failure is resolved and configuration validation passes without starting containers. Runtime state cannot be inferred from that configuration-only check.
 
 ## 24. Deployment and Git workflow
 
@@ -1792,14 +1825,14 @@ git commit -m "Document Consultify architecture and V1 implementation plan"
 git push
 ```
 
-[PLANNED V1] `git add .` is an available workflow only after checking the entire working tree and ignore rules; current untracked `.DS_Store` files make blind staging inappropriate. This document does not change `.gitignore` or remove local artifacts.
+[PLANNED V1] Review the complete working tree and ignore rules before staging. [IMPLEMENTED] `.DS_Store` is ignored and not tracked; this maintenance task does not change ignore rules, remove artifacts, commit, or push.
 
 | Commit to repository | Do not commit | Status |
 | --- | --- | --- |
 | `package.json`, `package-lock.json` | `node_modules/` | [IMPLEMENTED] current package/ignore arrangement |
-| Source, migrations, Compose configuration | Private secrets or production passwords in any file | [PLANNED V1] continuous review requirement; current Compose local credential must stay local-only |
-| Safe `.env.example`, `.gitignore` | `.env` or private env variants | [PARTIALLY IMPLEMENTED] example is empty; only exact current ignore rules verified |
-| Documentation and future README | Local OS artifacts, secret-bearing logs, generated private test data | [PLANNED V1] review practice; `.DS_Store` currently untracked, not ignored |
+| Source, migrations, Compose configuration | Private secrets or production passwords in any file | [PLANNED V1] continuous review requirement; current Compose references POSTGRES_PASSWORD from the environment |
+| Safe `.env.example`, `.gitignore` | `.env` or private env variants | [IMPLEMENTED] safe placeholders exist; exact current ignore rules verified |
+| Documentation and future README | Local OS artifacts, secret-bearing logs, generated private test data | [IMPLEMENTED] `.DS_Store` ignored and not tracked; broader staging review remains [PLANNED V1] |
 
 [TBD] Remote branch protections, push protection, secret scanning, Dependabot settings, and CI requirements are not discoverable from the inspected local files and have not been checked through GitHub. Do not mark them enabled. Preserve intentional history and coordinate any exceptional history rewrite.
 
@@ -1809,9 +1842,9 @@ git push
 
 | Day | Focus and planned work | Current evidence/status | Exit evidence / dependencies |
 | --- | --- | --- | --- |
-| 1 | Backend foundation: Node setup, Express, app/server separation, routes/controllers, health, env, nodemon, Git | [PARTIALLY IMPLEMENTED] Core source/scripts/Git exist; environment example incomplete; no maintained tests | Existing sources parse; reproducible startup and health demonstrated; document variables |
+| 1 | Backend foundation: Node setup, Express, app/server separation, routes/controllers, health, env, nodemon, Git | [PARTIALLY IMPLEMENTED] Core source/scripts/Git and environment placeholders exist; required-variable validation and maintained tests remain pending | Existing sources parse; reproducible startup and health demonstrated; document variables |
 | 2 | Database foundation: PostgreSQL, Docker/Compose, ports, persistent volume, DATABASE_URL, pg pool, raw SQL, migrations/users, parameters, DB health | [PARTIALLY IMPLEMENTED] Compose/pool/users SQL/probes exist; live database/apply state unverified; migration runner absent | Verify correct DB and applied schema; reproducible migration process; explain separate HTTP/DB communication |
-| 3 | Registration: endpoint/router/controller, backend validation, normalization, bcrypt package/hash, duplicate checks, tests | [PLANNED V1] No implementation | Resolve email/password/package decisions; valid 201 plus invalid/duplicate/concurrent cases; safe hash handling |
+| 3 | Registration: endpoint/router/controller, backend validation, normalization, bcrypt package/hash, duplicate checks, tests | [PARTIALLY IMPLEMENTED] Registration code implemented, including field limits, bcrypt cost 12, password bounds, duplicate SELECT/23505 handling, safe USER-only output, and malformed-JSON 400; automated tests remain [PLANNED V1] | D-05–D-08 accepted; valid/invalid/duplicate/concurrent runtime verification remains pending; no automatic login |
 | 4 | Login + JWT: compare password, sign token, expiry, safe response, tests | [PLANNED V1] No implementation | Registration/users; token library/algorithm/storage/expiry decisions; valid/invalid credential tests |
 | 5 | Authentication + authorization: authenticate, req.user, current user, role middleware, 401/403, ownership | [PLANNED V1] No implementation | Trusted identity and role policy; cross-account tests; no public privilege escalation |
 | 6 | Advisor system: generic domain model, Finance data, profile schema and profile APIs | [PLANNED V1] No implementation | Profile cardinality/provisioning decisions; domains/users FKs; own-profile permissions |
@@ -1824,7 +1857,7 @@ git push
 | 13 | React/Vite frontend integration: auth, advisors, appointments, community, reviews, minimal dashboards | [PLANNED V1] No implementation | Stable APIs, selected token/CORS topology; loading/empty/error states and full Finance journeys |
 | 14 | Finalization: tests, debugging, security audit, justified refactoring, README, deployment, GitHub cleanup, master-spec audit | [PLANNED V1] Master reference created only | Definition of done in section 35; deploy and verify; update actual evidence/status rather than marking routes alone complete |
 
-[PLANNED V1] If decisions or correctness work exceed a day, extend the schedule rather than remove security/ownership checks. No roadmap item authorizes coding during this documentation-only task.
+[PLANNED V1] If decisions or correctness work exceed a day, extend the schedule rather than remove security/ownership checks. No roadmap item expands this maintenance task beyond the explicitly authorized Day 3 fixes.
 
 ## 26. Implementation checklist
 
@@ -1839,7 +1872,8 @@ git push
 - [x] [IMPLEMENTED] dotenv loads before environment-dependent imports.
 - [x] [IMPLEMENTED] Start/dev scripts and nodemon.
 - [x] [IMPLEMENTED] Startup queries DB before HTTP listen and exits on query failure.
-- [ ] [PLANNED V1] Required environment validation and usable `.env.example`.
+- [x] [IMPLEMENTED] Usable `.env.example` with PORT, DATABASE_URL, and POSTGRES_PASSWORD placeholders.
+- [ ] [PLANNED V1] Required environment validation.
 - [ ] [TBD] Listener errors, graceful shutdown, pool idle errors and timeout policy.
 - [ ] [PLANNED V1] Correct stale package entry metadata after an authorized code/config task.
 - [ ] [PLANNED V1] Consistent safe error/not-found handling.
@@ -1847,8 +1881,8 @@ git push
 ### Database
 
 - [x] [IMPLEMENTED] PostgreSQL 17.4 image declared in Compose.
-- [x] [IMPLEMENTED] Named volume declared; committed baseline contains intended loopback `5433:5432` mapping.
-- [ ] [PARTIALLY IMPLEMENTED] Correct/validate final working-tree Compose ports list syntax (C-12); not changed by this documentation task.
+- [x] [IMPLEMENTED] Named volume and valid loopback `127.0.0.1:5433:5432` mapping declared.
+- [x] [IMPLEMENTED] Compose ports list syntax is valid; configuration validation passes (C-12 resolved).
 - [x] [IMPLEMENTED] Shared `pg.Pool` module.
 - [x] [IMPLEMENTED] Users migration with UUID/defaults/constraints.
 - [x] [IMPLEMENTED] Table-independent health/startup DB probes.
@@ -1858,14 +1892,23 @@ git push
 - [ ] [PLANNED V1] Advisor/appointment/post/comment/review migrations.
 - [ ] [TBD] Helpful interaction persistence decision and selected migration.
 - [ ] [PLANNED V1] Foreign keys, critical uniqueness/CHECK constraints and query-driven indexes.
-- [ ] [PLANNED V1] Parameterized business queries and concurrent integrity handling.
+- [x] [IMPLEMENTED] Parameterized registration SELECT/INSERT and email UNIQUE/23505 race handling.
+- [ ] [PLANNED V1] Parameterized queries and concurrent integrity handling for future business workflows.
 - [ ] [TBD] Time/deletion/retention policies reflected consistently in schema.
 
 ### Authentication and authorization
 
-- [ ] [TBD] Select password limits/normalization/hash package/cost.
-- [ ] [PLANNED V1] Registration route/controller with safe USER-only creation.
-- [ ] [PLANNED V1] Password hashing and duplicate-email race handling.
+- [x] [IMPLEMENTED] D-05: bcrypt package, cost 12.
+- [x] [IMPLEMENTED] D-06: password minimum 12 characters, maximum 72 UTF-8 bytes.
+- [x] [IMPLEMENTED] D-07: trim/lowercase email only; preserve dots and +tags.
+- [x] [IMPLEMENTED] D-08: explicit manual backend validation; no validation library.
+- [x] [IMPLEMENTED] POST /api/auth/register route/controller with USER-only creation; supplied role fields ignored.
+- [x] [IMPLEMENTED] Required-field/email-pattern checks; trimmed name ≤100 and normalized email ≤255.
+- [x] [IMPLEMENTED] Exact success message/user response with id, name, email, role, created_at only; no password/hash, JWT, or automatic login.
+- [x] [IMPLEMENTED] Malformed-JSON HTTP 400 with only {"message":"Invalid JSON body"}; unrelated errors passed onward.
+- [x] [IMPLEMENTED] bcrypt hash storage, early duplicate SELECT, database UNIQUE protection, and 23505 → 409.
+- [x] [IMPLEMENTED] Other caught registration failures log server-side and return generic 500 only.
+- [ ] [PLANNED V1] Automated registration validation/hash/concurrency tests.
 - [ ] [PLANNED V1] Login and password comparison.
 - [ ] [TBD] JWT library/algorithm/expiry/storage/key strategy.
 - [ ] [PLANNED V1] JWT signing/verification with no secret payload fields.
@@ -1906,7 +1949,7 @@ git push
 - [ ] [PLANNED V1] Manual API evidence and selected automated test tooling.
 - [ ] [PLANNED V1] Integration/database/auth/ownership/concurrency tests.
 - [ ] [PLANNED V1] Frontend and end-to-end Finance acceptance evidence.
-- [x] [IMPLEMENTED] `.gitignore` excludes `.env` and `node_modules/`.
+- [x] [IMPLEMENTED] `.gitignore` excludes `.env`, `node_modules/`, and `.DS_Store`; OS artifacts are not tracked.
 - [ ] [PLANNED V1] Full secret/dependency/security review with findings recorded.
 - [ ] [TBD] Public deployment rate limits, TLS, connection budgets, safe logging.
 - [ ] [TBD] Select frontend/backend/managed DB providers and recovery process.
@@ -1924,12 +1967,12 @@ git push
 
 ## 27. Feature dependency graph
 
-[PARTIALLY IMPLEMENTED] Only the users migration and foundation in this graph exist. [PLANNED V1] Arrows describe prerequisites; they are not proof of completed modules. Password/JWT/schema decisions must precede the dependent implementations.
+[PARTIALLY IMPLEMENTED] Foundation, the users migration, registration, and hashing exist. [PLANNED V1] Arrows describe prerequisites for the remaining modules. Accepted password decisions are recorded; JWT and future schema decisions remain pending.
 
 ```mermaid
 flowchart TD
     F[Existing backend and pg foundation] --> M[Existing users migration; application unverified]
-    M --> R[Planned registration and hashing]
+    M --> R[Existing registration and hashing]
     R --> L[Planned login and JWT]
     L --> A[Planned authentication and current user]
     A --> Z[Planned RBAC and ownership]
@@ -1966,7 +2009,7 @@ flowchart TD
 - [ ] Is the caller using the actual configured Express `PORT` (default 8000), correct method, and `/api` path?
 - [ ] Is a port-in-use error preventing the HTTP listener from starting?
 - [ ] Is Docker Engine reachable? Distinguish a daemon/socket permission problem from a stopped database.
-- [ ] Does `docker compose config --quiet` pass? C-12 currently reports that `services.postgres.ports` must be an array.
+- [x] Does Compose configuration validation pass? `docker compose config --no-interpolate --quiet` passes; C-12 resolved, live state unverified.
 - [ ] Does valid Compose configuration publish `127.0.0.1:5433:5432`, and is another service using host 5433?
 - [ ] Is the backend running on the host or inside a container? Interpret `localhost` from that process's network context.
 - [ ] Does `localhost` resolve to an address compatible with the IPv4 loopback publication?
@@ -1992,7 +2035,7 @@ flowchart TD
 
 ### Express and application layering
 
-- [ ] Is the route file mounted in `src/app.js`? At this audit only health is mounted.
+- [ ] Is the route file mounted in `src/app.js`? Health and auth are mounted; auth currently exposes registration only.
 - [ ] Is the method correct, and do mount path plus router-local path produce the intended URL?
 - [ ] Does middleware run in the required order: parsing, relevant auth/validation/role checks, controller, error handling?
 - [ ] Are imports/exports compatible with CommonJS and exact filenames/case?
@@ -2073,7 +2116,7 @@ flowchart TD
 
 ## 30. Current implementation conflicts and recommended resolutions
 
-[PARTIALLY IMPLEMENTED] This register distinguishes actual mismatches, missing target work, and unverified facts. A planned feature missing at this early stage is a gap, not necessarily evidence of architectural drift. No resolution below was applied to application/configuration files in this task.
+[PARTIALLY IMPLEMENTED] This register distinguishes actual mismatches, missing target work, and unverified facts. C-02 environment placeholders, C-11 OS ignore rules, and C-12 Compose syntax are updated from the inspected repository; those configuration files were not modified by this task.
 
 ### C-01 — Package entry points disagree
 
@@ -2085,15 +2128,15 @@ flowchart TD
 
 **RECOMMENDED RESOLUTION:** [TBD] In an authorized configuration task, align or remove the unused `main` field appropriately for an application package. Do not create a redundant `index.js` simply to satisfy stale metadata.
 
-### C-02 — Environment example exists but documents nothing
+### C-02 — Environment example populated; startup validation pending
 
-**CURRENT IMPLEMENTATION:** [IMPLEMENTED] `.env.example` is zero bytes. The code reads `DATABASE_URL` and optional `PORT`; there is no explicit required-variable validation.
+**CURRENT IMPLEMENTATION:** [IMPLEMENTED] `.env.example` contains PORT, DATABASE_URL, and POSTGRES_PASSWORD placeholders. Compose reads POSTGRES_PASSWORD from the environment.
 
-**INTENDED IMPLEMENTATION:** [PLANNED V1] Reproducible setup with safe environment-variable documentation and clear configuration failures.
+**INTENDED IMPLEMENTATION:** [PLANNED V1] Reproducible setup with safe variable documentation and clear configuration failures.
 
-**CONFLICT:** [PARTIALLY IMPLEMENTED] Copying the example cannot configure a fresh checkout; missing connection configuration may cause driver defaults or confusing startup errors.
+**CONFLICT:** [IMPLEMENTED] The empty-example issue is resolved. [PARTIALLY IMPLEMENTED] Required-variable validation is still absent.
 
-**RECOMMENDED RESOLUTION:** [PLANNED V1] Populate safe placeholders/comments and validate required config in a later task. Never copy private `.env` values or production secrets into the example.
+**RECOMMENDED RESOLUTION:** [PLANNED V1] Address required configuration validation in a separately authorized task. No environment file was modified or private `.env` read during this maintenance.
 
 ### C-03 — SQL migration file is not an applied/tracked schema
 
@@ -2117,11 +2160,11 @@ flowchart TD
 
 ### C-05 — Finance/domain business architecture is entirely pending
 
-**CURRENT IMPLEMENTATION:** [IMPLEMENTED] Five backend source files and one users migration; no domains, advisors, bookings, community, reviews, frontend, or auth files.
+**CURRENT IMPLEMENTATION:** [IMPLEMENTED] Seven backend source files and one users migration; registration exists, but domains, advisors, bookings, community, reviews, frontend, login, and JWT do not.
 
 **INTENDED IMPLEMENTATION:** [PLANNED V1] Complete Finance journey with generic entities, security, tests, and deployment.
 
-**CONFLICT:** [PARTIALLY IMPLEMENTED] Product vision and package version `1.0.0` can be mistaken for delivered functionality. There are no evidence-backed business APIs.
+**CONFLICT:** [PARTIALLY IMPLEMENTED] Product vision and package version `1.0.0` can be mistaken for delivered functionality. Registration is the only implemented business API; complete Finance journeys remain planned.
 
 **RECOMMENDED RESOLUTION:** [PLANNED V1] Follow dependencies/roadmap, preserve labels, and change status only after code plus appropriate tests/integration evidence exist.
 
@@ -2137,7 +2180,7 @@ flowchart TD
 
 ### C-07 — Local database credentials versus production security
 
-**CURRENT IMPLEMENTATION:** [IMPLEMENTED] Compose includes a simple development password literal and uses `postgres` locally; the committed mapping binds DB publication to loopback. [PARTIALLY IMPLEMENTED] Final working-tree ports syntax is invalid (C-12). Actual `.env` was not read.
+**CURRENT IMPLEMENTATION:** [IMPLEMENTED] Compose uses `${POSTGRES_PASSWORD}` and local `postgres` role, with a valid loopback ports mapping. Configuration validation passes (C-12 resolved). Actual `.env` was not read.
 
 **INTENDED IMPLEMENTATION:** [PLANNED V1] These credentials are local-only; production uses separate secure environment credentials and restricted database access.
 
@@ -2157,7 +2200,7 @@ flowchart TD
 
 ### C-09 — Role schema exists, role provisioning and combined abilities do not
 
-**CURRENT IMPLEMENTATION:** [IMPLEMENTED] `users.role` stores one of USER/ADVISOR/ADMIN. No role middleware, provisioning, or account/profile workflow exists.
+**CURRENT IMPLEMENTATION:** [IMPLEMENTED] `users.role` stores one of USER/ADVISOR/ADMIN. Public registration creates USER using the database default and ignores supplied role fields. Role middleware, advisor/admin provisioning, and profile workflows remain absent.
 
 **INTENDED IMPLEMENTATION:** [PLANNED V1] Advisors are users with ADVISOR role plus profiles; public registration must remain safe; V2 contains stronger verification/admin tools.
 
@@ -2167,7 +2210,7 @@ flowchart TD
 
 ### C-10 — Drizzle history is owner-provided, current absence is verified
 
-**CURRENT IMPLEMENTATION:** [IMPLEMENTED] Current manifest/lockfile and both committed manifests contain no ORM. `pg` is used directly.
+**CURRENT IMPLEMENTATION:** [IMPLEMENTED] Current manifest/lockfile contain no ORM. `pg` is used directly.
 
 **INTENDED IMPLEMENTATION:** [PLANNED V1] Owner explicitly chose raw SQL after briefly trying/removing Drizzle during development.
 
@@ -2175,35 +2218,30 @@ flowchart TD
 
 **RECOMMENDED RESOLUTION:** [IMPLEMENTED] Record both sources accurately; do not claim a removal commit exists or treat absent ORM metadata as permission to reintroduce one.
 
-### C-11 — Clean staging and runtime reproducibility are incomplete
+### C-11 — OS artifact ignore resolved; runtime reproducibility pending
 
-**CURRENT IMPLEMENTATION:** [IMPLEMENTED] `.DS_Store` files are untracked and not ignored. Local Node/npm versions are discoverable but unpinned in project metadata.
+**CURRENT IMPLEMENTATION:** [IMPLEMENTED] `.gitignore` includes `.DS_Store`; ignore checks succeed and no matching file is tracked. Node/npm remain unpinned in project metadata.
 
 **INTENDED IMPLEMENTATION:** [PLANNED V1] Clean meaningful commits and reproducible onboarding/deployment.
 
-**CONFLICT:** [PARTIALLY IMPLEMENTED] Blind `git add .` may stage OS artifacts; another developer may select a different Node runtime without guidance.
+**CONFLICT:** [IMPLEMENTED] The `.DS_Store` issue is resolved. [PARTIALLY IMPLEMENTED] Runtime guidance/pinning is still pending.
 
-**RECOMMENDED RESOLUTION:** [TBD] Review explicit staging now; decide ignore/runtime pin changes in an authorized task. Existing artifacts are left unchanged.
+**RECOMMENDED RESOLUTION:** [TBD] Decide runtime guidance in an authorized task. Continue reviewing explicit staging; no ignore rules or OS artifacts were modified here.
 
-### C-12 — Compose ports field changed during the audit and now fails validation
+### C-12 — Compose ports syntax resolved
 
-**CURRENT IMPLEMENTATION:** [PARTIALLY IMPLEMENTED] At the initial read, `docker-compose.yml` matched the committed file. Final hash/diff verification detected an independent change to line 7. The working-tree excerpt is:
-
-```yaml
-    ports:
-     -"127.0.0.1:5433:5432"
-```
-
-**INTENDED IMPLEMENTATION:** [IMPLEMENTED] Committed baseline and accepted local design use a YAML list item with a space after the dash:
+**CURRENT IMPLEMENTATION:** [IMPLEMENTED] The inspected file has a space after the list dash:
 
 ```yaml
     ports:
-      - "127.0.0.1:5433:5432"
+     - "127.0.0.1:5433:5432"
 ```
 
-**CONFLICT:** [PARTIALLY IMPLEMENTED] `docker compose config --quiet` fails with `services.postgres.ports must be a array`. The value is not represented as the expected ports array. This is distinct from the earlier Docker socket permission restriction. Other ten original tracked files still matched their initial hashes at final verification; the Compose change did not come from this task's document-only writes.
+**INTENDED IMPLEMENTATION:** [IMPLEMENTED] PostgreSQL remains published on host IPv4 loopback port 5433 to container port 5432, with the existing named volume.
 
-**RECOMMENDED RESOLUTION:** [PLANNED V1] Correct the ports list spacing to the committed/intended form in a separately authorized configuration task and rerun Compose validation. No port redesign, password change, or volume deletion is needed to address this finding. This task preserves the current file and records the discrepancy, as instructed.
+**CONFLICT:** [IMPLEMENTED] Resolved. `docker compose config --no-interpolate --quiet` passes against the current repository. This is configuration validation only; live services, volume contents, and schema remain [TBD].
+
+**RECOMMENDED RESOLUTION:** No configuration correction is needed for the previous syntax finding. This maintenance task leaves Compose and Docker runtime state unchanged.
 
 ## 31. CURRENT STATE → V1 TARGET GAP ANALYSIS
 
@@ -2211,9 +2249,9 @@ flowchart TD
 
 | System | Current state | V1 target state | Missing work | Dependencies | Priority |
 | --- | --- | --- | --- | --- | --- |
-| Foundation | [IMPLEMENTED] Express/app/server/router/controller, dotenv, health, start/dev | [PLANNED V1] Reliable, understandable modular backend | Env example/validation, metadata correction, selected operational error/shutdown handling | Configuration decisions | P0 |
-| Database | [PARTIALLY IMPLEMENTED] Pool/users SQL and committed Compose baseline; final working-tree Compose invalid; no verified live schema | [PLANNED V1] Reproducible generic relational schema and constraints | C-12 ports correction/validation, apply/tracking process, live verification, domains/profiles/bookings/community/reviews/helpful SQL, indexes | Raw SQL decisions, per-entity schema approval | P0 |
-| Authentication | [PLANNED V1] No auth implementation | [PLANNED V1] Safe registration/login/JWT/current user | Hash package/policy, normalization, auth routes/controllers, token decisions/tests | Users schema, env/secrets | P0 |
+| Foundation | [IMPLEMENTED] Express/app/server/router/controller, dotenv, health, start/dev | [PLANNED V1] Reliable, understandable modular backend | Required environment validation, metadata correction, selected operational error/shutdown handling | Configuration decisions | P0 |
+| Database | [PARTIALLY IMPLEMENTED] Pool/users SQL and validated Compose configuration; no verified live schema | [PLANNED V1] Reproducible generic relational schema and constraints | Apply/tracking process, live verification, future business migrations/indexes | Raw SQL decisions, per-entity schema approval | P0 |
+| Authentication | [PARTIALLY IMPLEMENTED] Registration, normalization, bcrypt cost 12, validation, safe response, duplicate handling | [PLANNED V1] Safe registration/login/JWT/current user | Day 4 login/bcrypt.compare/JWT; authentication middleware/current user; tests and runtime verification | Users schema, env/secrets, token decisions | P0 |
 | Authorization | [PLANNED V1] Role CHECK only; no request checks | [PLANNED V1] Auth middleware, RBAC, ownership/assignment | Middleware, role freshness/provisioning rules, scoped queries, negative tests | Authentication, relationship design | P0 |
 | Advisors | [PLANNED V1] Absent | [PLANNED V1] Finance profiles/discovery/detail/basic filters | Domain seed, profile schema/APIs, safe projections, query/paging tests | Users/domains/auth/provisioning | P1 |
 | Appointments | [PLANNED V1] Absent | [PLANNED V1] Booking/tracking/cancellation/assigned-advisor lifecycle | Schema/time rules, transition matrix, ownership, atomic changes, delivery/conflict decisions | Advisors/auth, scheduling decisions | P0 integrity / P1 feature |
@@ -2221,18 +2259,18 @@ flowchart TD
 | Reviews | [PLANNED V1] Absent | [PLANNED V1] Eligible completed-consultation reviews and ratings | Schema/uniqueness/range, ownership/eligibility, list/aggregate queries/tests | Completed appointment lifecycle | P0 integrity / P1 feature |
 | Frontend | [PLANNED V1] Absent | [PLANNED V1] React/Vite Finance journey and minimal dashboards | Frontend setup/pages/API client/auth UI/loading/error/time display | Stable APIs, auth transport/CORS | P1 |
 | Testing | [PLANNED V1] No suite; audit syntax checks only | [PLANNED V1] Critical automated and manual acceptance evidence | Select tools; unit/integration/DB/security/frontend/E2E tests and fixtures | Implement incrementally with each feature; isolated test DB | P0 |
-| Security | [PARTIALLY IMPLEMENTED] Ignore rules, intended DB loopback mapping (C-12), safe health error; no business boundary | [PLANNED V1] Enforced invariants and safe public deployment | Auth/ownership/validation, secret review, safe errors, selected abuse/CORS/TLS policies | All protected features and deployment topology | P0 |
+| Security | [PARTIALLY IMPLEMENTED] Ignore rules, validated DB loopback mapping, safe health/registration errors, registration validation/hash/parameters/USER-only output, malformed-JSON 400 | [PLANNED V1] Enforced invariants and safe public deployment | Auth/ownership, broader safe errors, secret review, selected abuse/CORS/TLS policies | Protected features and deployment topology | P0 |
 | Deployment | [PLANNED V1] Local DB config only | [PLANNED V1] Hosted frontend/backend/managed DB, verified setup | Provider/runtime/secrets decisions, migration apply, HTTPS, smoke tests/recovery | Integrated tested app | P1 release gate |
 | Documentation | [PARTIALLY IMPLEMENTED] This master spec; README absent | [PLANNED V1] Accurate spec, concise setup README, explainable architecture | README, decision closure, actual test/deployment evidence, re-audits | Every implementation milestone | P2 ongoing / release gate |
 
 ### 31.1 Completion estimate and reasoning
 
-[PARTIALLY IMPLEMENTED] **Estimated V1 progress: about 12%, with a reasonable planning range of 10–15%.** This is a subjective scope-weighted engineering estimate, not measured hours, test coverage, route-count completion, or a guarantee about work remaining. Product journeys implemented end-to-end: **zero confirmed**.
+[PARTIALLY IMPLEMENTED] **Estimated V1 progress: about 18%, with a reasonable planning range of 15–20%.** This is a subjective scope-weighted engineering estimate, not measured hours, test coverage, route-count completion, or a guarantee about work remaining. Product journeys implemented end-to-end: **zero confirmed**.
 
 | V1 work group | Estimated share of full V1 | Approximate completion within group | Contribution |
 | --- | --- | --- | --- |
-| Backend/database foundation | 15% | 70%: concrete code/users SQL/committed config; C-12 correction plus reproducibility/live verification/hardening incomplete | 10.5 percentage points |
-| Authentication/authorization | 15% | 0% | 0 |
+| Backend/database foundation | 15% | 70%: code/users SQL/validated config and env placeholders; reproducibility/live verification/hardening incomplete | 10.5 percentage points |
+| Authentication/authorization | 15% | 40%: registration implemented; login/JWT/middleware/ownership and tests pending | 6 percentage points |
 | Advisor system/discovery | 10% | 0% | 0 |
 | Appointments | 15% | 0% | 0 |
 | Community/comments/helpfulness | 10% | 0% | 0 |
@@ -2241,23 +2279,23 @@ flowchart TD
 | Maintained tests/security hardening | 10% | 0% beyond foundation practices counted above | 0 |
 | Deployment | 5% | 0% | 0 |
 | Documentation/explainability | 5% | 30%: master reference exists, README/final evidence/understanding checks pending | 1.5 percentage points |
-| Total | 100% | Approximate weighted estimate | **12%** |
+| Total | 100% | Approximate weighted estimate | **18%** |
 
-[PARTIALLY IMPLEMENTED] Days 1–2 have substantial repository artifacts, but 2/14 calendar rows are not an effort model. Most remaining risk lies in authentication, ownership, relational business workflows, integration, and deployment. New document length does not materially substitute for implemented product scope. Re-estimate after meaningful tested milestones, keeping the weighting rationale visible.
+[PARTIALLY IMPLEMENTED] Days 1–3 have repository artifacts, but roadmap day counts are not an effort model. Most remaining risk lies in authentication, ownership, relational business workflows, integration, and deployment. New document length does not materially substitute for implemented product scope. Re-estimate after meaningful tested milestones, keeping the weighting rationale visible.
 
-[PARTIALLY IMPLEMENTED] The newly detected C-12 configuration regression is small relative to overall product scope, so the coarse 10–15% estimate is unchanged; it is nevertheless a current local-startup blocker and must not be hidden by the percentage.
+[PARTIALLY IMPLEMENTED] The estimate now includes implemented registration and accepted Day 3 policies. Resolved Compose syntax is recorded separately; no live or automated verification is implied by this subjective estimate.
 
 ## 32. ARCHITECTURE DECISION LOG
 
 [PARTIALLY IMPLEMENTED] “Accepted” means selected by the owner's brief or directly established as the current architecture, not fully implemented in every subsystem. Implementation status remains separate. Alternatives below are non-selected comparisons; unless stated otherwise, this audit does not claim a historical evaluation of them took place. Pending API/schema proposals are intentionally excluded from accepted decisions.
 
-[PARTIALLY IMPLEMENTED] ADR-002/ADR-013 describe the accepted and committed Docker setup. C-12 records the final working-tree regression; it is not a new architecture decision or a successfully applied network change.
+[IMPLEMENTED] ADR-002/ADR-013 match the current validated Docker configuration. C-12 is resolved; live infrastructure remains [TBD].
 
 | ADR | Decision | Reason | Alternatives / tradeoffs | Decision and implementation status | Evidence |
 | --- | --- | --- | --- | --- | --- |
 | ADR-001 — PostgreSQL selected | Use PostgreSQL as relational system of record | Users/advisors/bookings/posts/comments/reviews have strong relationships and integrity needs; SQL supports learning/interviews | MongoDB is a conceptual alternative, not selected; relational design requires deliberate schema/migrations | Accepted; [IMPLEMENTED] local configuration/users SQL, broader schema [PLANNED V1] | Owner brief; `docker-compose.yml`; users migration; `pg` dependency |
 | ADR-002 — Dockerized local PostgreSQL | Run local PostgreSQL through Docker Compose using configured image | Isolation, repeatability, controlled version, simpler setup/reset, professional workflow practice | Native macOS PostgreSQL would work; hosted DB initially would reduce local infrastructure learning; Docker daemon adds a local prerequisite | Accepted; [IMPLEMENTED] configuration, live runtime [TBD] | `docker-compose.yml`, owner rationale |
-| ADR-003 — Raw SQL + pg instead of Drizzle | Use shared `pg` pool and parameterized PostgreSQL SQL; no ORM without explicit change | SQL familiarity, query visibility, direct DB control, no second abstraction, DBMS interview preparation | Drizzle was briefly tried/removed per owner; Prisma/Sequelize/TypeORM not chosen; ORM convenience/type/schema/migration support is a tradeoff | Accepted; [IMPLEMENTED] `pg`/pool/SQL, business queries [PLANNED V1] | `package.json`, lockfile, `src/config/db.js`, migrations; intermediate Drizzle history owner-provided |
+| ADR-003 — Raw SQL + pg instead of Drizzle | Use shared `pg` pool and parameterized PostgreSQL SQL; no ORM without explicit change | SQL familiarity, query visibility, direct DB control, no second abstraction, DBMS interview preparation | Drizzle was briefly tried/removed per owner; Prisma/Sequelize/TypeORM not chosen; ORM convenience/type/schema/migration support is a tradeoff | Accepted; [IMPLEMENTED] `pg`/pool/SQL and parameterized registration; other business queries [PLANNED V1] | `package.json`, lockfile, `src/config/db.js`, migrations; intermediate Drizzle history owner-provided |
 | ADR-004 — Finance-first generic architecture | Deliver Finance end-to-end in V1 with generic users/domains/profiles/appointments/community | Manage scope while retaining multi-domain extension without duplicate architectures | Separate per-domain apps/tables are explicitly rejected; launching every domain immediately expands correctness/security workload | Accepted; [PLANNED V1] business implementation | Owner product/version requirements |
 | ADR-005 — UUID identifiers | Prefer PostgreSQL-generated UUID primary keys | Consistent opaque identity across generic entities; controller avoids manual ID generation | Sequential integers are a conceptual alternative; UUID storage/index cost and random ordering are tradeoffs; UUID is not access control | Accepted; [IMPLEMENTED] users migration, future entities [PLANNED V1] | `001_create_users.sql` and owner identifier requirement |
 | ADR-006 — JWT authentication for V1 | Use custom backend login and JWT verification | Chosen API authentication direction with middleware-populated identity | Session-based alternatives not selected; transport/expiry/revocation still need design; Supabase Auth is not chosen | Accepted mechanism; [PLANNED V1], details [TBD] | Owner auth requirements; no current JWT implementation |
@@ -2268,13 +2306,23 @@ flowchart TD
 | ADR-011 — React/Vite JavaScript frontend | Build a basic REST-consuming React frontend using Vite | Selected frontend direction for V1 integration | No styling/routing/state package selected; frontend never gets direct PostgreSQL access | Accepted stack direction; [PLANNED V1] | Owner brief; current frontend absent |
 | ADR-012 — Modular monolith and minimal abstraction | Grow one modular Express service; add layers/services only when real complexity requires | Correctness, learning, maintainability, and explainability over infrastructure/abstraction count | Premature microservices/Kubernetes/Redis/search clusters explicitly outside V1 | Accepted; [IMPLEMENTED] small foundation; growth [PLANNED V1] | Owner architecture principles, current tree |
 | ADR-013 — Separate local HTTP and DB communication | Backend defaults to 8000; host DB publication 127.0.0.1:5433 to container PostgreSQL 5432 | Explicit service boundaries and loopback-restricted local DB access | Native default host 5432 or containerized backend networking would be different configurations; no HTTP-to-DB redirect | Accepted current configuration; [IMPLEMENTED], actual runtime values [TBD] | `src/server.js:6`, `docker-compose.yml:6–7` |
-| ADR-014 — Backend and DB enforce security/integrity | Use backend validation/auth/roles/ownership plus DB constraints; frontend never trusted | APIs are directly callable; concurrent requests can bypass frontend/precheck assumptions | Client-only validation/permission checks are explicitly rejected | Accepted requirement; [PARTIALLY IMPLEMENTED] limited foundation constraints only | Owner invariants; users migration; missing middleware/business code |
+| ADR-014 — Backend and DB enforce security/integrity | Use backend validation/auth/roles/ownership plus DB constraints; frontend never trusted | APIs are directly callable; concurrent requests can bypass frontend/precheck assumptions | Client-only validation/permission checks are explicitly rejected | Accepted requirement; [PARTIALLY IMPLEMENTED] users constraints and registration validation/hash/parameters/safe output | Users migration, auth controller, app; protected middleware/business flows remain planned |
+
+[IMPLEMENTED] Accepted Day 3 decisions, confirmed by the owner and current registration code:
+
+| Decision | Accepted choice | Implementation evidence / boundary |
+| --- | --- | --- |
+| D-05 — Password package and cost | bcrypt; cost factor 12 | Installed dependency and asynchronous bcrypt.hash(password, 12) |
+| D-06 — Password limits | Minimum 12 characters; maximum 72 UTF-8 bytes; reject excess | password.length and Buffer.byteLength checks; no password normalization |
+| D-07 — Email normalization | Trim surrounding whitespace and lowercase | Preserve Gmail dots and +tags; no provider-specific rewriting; UNIQUE protects stored values |
+| D-08 — Validation style | Explicit manual backend validation for current V1; no library selected | Registration checks in controller; current errors use message only; broader error schema remains TBD |
+| Registration behavior | Create USER only; no JWT or automatic login | INSERT omits role; safe message/user response; login remains planned for Day 4 |
 
 [PLANNED V1] To change an accepted decision: identify the problem and affected files/contracts, document current versus intended behavior, review alternatives/tradeoffs, record the intentional decision, then update implementation/migrations/tests/spec together in an authorized task. An AI suggestion is not an accepted ADR. Do not backdate or invent approvals/history.
 
 ## 33. TBD DECISIONS
 
-[TBD] **Every row below is TBD — DECISION REQUIRED.** Recommended defaults are proposals, not selected technologies, finalized schemas, approved features, or permission to implement. Resolve only the decisions needed for the active version/milestone; deferred topics do not block foundation work. The project owner decides intentional architecture changes; the implementing developer records concrete evidence and consequences.
+[TBD] **Every open row below is TBD — DECISION REQUIRED.** D-05–D-08 are accepted and recorded in section 32; they are no longer open decisions. The broader shared API error schema remains TBD in section 17. Recommended defaults are proposals, not selected technologies, finalized schemas, approved features, or permission to implement. Resolve only the decisions needed for the active version/milestone; deferred topics do not block foundation work. The project owner decides intentional architecture changes; the implementing developer records concrete evidence and consequences.
 
 | ID / decision | Why it matters | Recommended default for review, not accepted | When decision is needed |
 | --- | --- | --- | --- |
@@ -2282,10 +2330,6 @@ flowchart TD
 | D-02 — JWT package, algorithm, claims, expiry | Verification correctness and compatibility | Select a maintained compatible package; restrict algorithms; minimal identity claims and finite expiry; validate issuer/audience as selected | Before login/JWT implementation |
 | D-03 — Refresh tokens, logout, revocation, role freshness | Stolen/copied JWTs and role/deletion changes outlive client UI state | Start with the smallest explicit lifetime/reauthentication model that meets V1; do not add refresh storage without a selected need; define role-change behavior | Before auth is declared complete/publicly deployed |
 | D-04 — JWT signing material and rotation | Token integrity depends on private key/secret handling | Secure backend environment secret/key, explicit rotation plan; exact variable/key management approach pending | Before JWT implementation/deployment |
-| D-05 — Password package and cost | Hash security, runtime compatibility, CPU capacity | Benchmark supported bcrypt-compatible asynchronous APIs and select cost based on deployment capacity | Before day 3 registration |
-| D-06 — Password minimum/maximum | User experience, guessing resistance, bcrypt byte truncation | Consider minimum 12 characters; explicit UTF-8 byte maximum consistent with selected bcrypt behavior; reject excess instead of silent truncation | Before registration validation/tests |
-| D-07 — Email normalization and uniqueness | Registration/login consistency and case-variant duplicates | Trim surrounding email whitespace; explicitly select case policy and enforce the same canonical identity in DB uniqueness; do not silently strip dots or plus tags | Before registration and any corrective users migration |
-| D-08 — Validation style and API error schema | Consistency without unnecessary dependencies | Simple explicit boundary validation initially if sufficient; one safe JSON error envelope; select a library only for demonstrated need | Before first business endpoints |
 | D-09 — Migration apply/tracking process | Reproducibility, repeated deploys, failure recovery | Small ordered raw-SQL process with recorded applied versions and documented failure behavior; no ORM | Before applying additional shared migrations/deployment |
 | D-10 — Advisor profile cardinality | Determines uniqueness, self-profile APIs, future multi-domain participation | One profile per user for minimal V1; compare per-user/domain or join-table design before V2; keep one auth identity | Before advisor migration/API approval |
 | D-11 — Advisor/admin provisioning and customer abilities | Need Finance advisors without public role escalation; single role affects who can book | Controlled trusted provisioning; explicitly decide whether ADVISOR can also perform customer actions | Before day 6 profile system and day 9 booking |
@@ -2327,13 +2371,13 @@ flowchart TD
 
 [PARTIALLY IMPLEMENTED] These answers distinguish architecture understanding from implementation claims. Say “we plan” for unbuilt features and “the repository contains” for inspected code. Technical explanations describe why the chosen architecture is suitable; they do not imply undocumented historical benchmarks or production experience.
 
-[PARTIALLY IMPLEMENTED] Docker/network answers describe the committed/intended setup. Mention C-12 when discussing the actual final working tree: its ports field currently fails Compose validation, and live services were not verified.
+[IMPLEMENTED] Docker/network answers describe the current validated configuration; C-12 is resolved. Live services and applied schema remain unverified.
 
 ### 34.1 Runtime, architecture, and networking
 
 | Question | Concise answer | Status / project anchor |
 | --- | --- | --- |
-| What is Consultify? | A planned hybrid platform combining professional consultation, community advice, and consultation tracking. V1 delivers Finance through generic entities, with Health/Astrology expansion later. | [PLANNED V1] Business journeys; current code is foundation only |
+| What is Consultify? | A planned hybrid platform combining professional consultation, community advice, and consultation tracking. V1 delivers Finance through generic entities, with Health/Astrology expansion later. | [PLANNED V1] Business journeys; current code includes foundation and registration |
 | Why Node.js? | It provides the JavaScript server runtime and asynchronous I/O model suitable for an HTTP backend waiting on database/network requests. CPU-heavy work still requires attention. | [IMPLEMENTED] `package.json`/server |
 | Why Express? | It provides a small HTTP routing/middleware layer, letting the project keep request flow explicit without a large application framework. | [IMPLEMENTED] `src/app.js`, health router |
 | Why PostgreSQL? | The product has related identities, advisors, consultations, content, and reviews. SQL joins, transactions, and integrity constraints fit those relationships. | [IMPLEMENTED] configured DB/users SQL; business schema [PLANNED V1] |
@@ -2356,24 +2400,24 @@ flowchart TD
 | Question | Concise answer | Status / project anchor |
 | --- | --- | --- |
 | Why pg? | It is the selected Node PostgreSQL driver. It sends explicit SQL and provides the Pool used by the backend without an ORM query abstraction. | [IMPLEMENTED] dependency and `src/config/db.js` |
-| Why raw SQL instead of ORM? | The owner is comfortable with SQL and prioritizes direct query control, first-principles learning, and DBMS interview understanding. ORM convenience is a known tradeoff, not a missing dependency. | [IMPLEMENTED] strategy; business queries [PLANNED V1] |
+| Why raw SQL instead of ORM? | The owner is comfortable with SQL and prioritizes direct query control, first-principles learning, and DBMS interview understanding. ORM convenience is a known tradeoff, not a missing dependency. | [IMPLEMENTED] strategy and registration queries; other queries [PLANNED V1] |
 | What is connection pooling? | Reusing a bounded set of DB connections across queries instead of creating a fresh connection for each request. Each server process owns its configured pool. | [IMPLEMENTED] shared pool |
 | Why one shared pool? | It centralizes resource use and configuration. Many per-request/controller pools can create far more connections than intended. | [IMPLEMENTED] one exported module |
 | Why not pool.end() in a controller? | It closes the shared pool, preventing later request use. Close it during intentional process/script shutdown, not after a normal query. | [PLANNED V1] invariant; no controller does this today |
 | What does pool.query() return? | A promise resolving to a pg result with returned rows and command metadata. Current health ignores rows because success alone is enough for connectivity. | [IMPLEMENTED] current call sites |
-| What is result.rows[0].name? | `rows` is the result array, index zero is the first row, and `name` is a selected column. Check for an empty array before dereferencing. | [PLANNED V1] business-query use |
+| What is result.rows[0].name? | `rows` is the result array, index zero is the first row, and `name` is a selected column. Check for an empty array before dereferencing. | [IMPLEMENTED] registration uses result.rows[0] |
 | What is a migration? | A versioned schema change saved as SQL so environments can reproduce structure and reviewers can understand its history. The first file exists; an apply/track system does not. | [PARTIALLY IMPLEMENTED] migrations directory |
 | Does starting Compose apply users SQL? | No. Current Compose does not mount migration SQL or invoke a runner. A versioned file and an applied table are separate evidence. | [IMPLEMENTED] config; live schema [TBD] |
 | What is a UUID? | A 128-bit identifier. The users migration asks PostgreSQL for a random UUID by default. It is an identifier, not a password or authorization check. | [IMPLEMENTED] users migration |
 | PRIMARY KEY versus FOREIGN KEY? | A primary key identifies a row uniquely and non-null. A foreign key ties a reference to an existing row in another/its own table. Only the users primary key is defined currently. | [IMPLEMENTED] PK; FKs [PLANNED V1] |
 | What does DEFAULT gen_random_uuid() do? | PostgreSQL supplies an ID when INSERT omits the column or requests DEFAULT. It does not override an explicitly supplied null. | [IMPLEMENTED] users SQL |
 | What is SQL injection? | Untrusted input changes SQL syntax when code mixes data directly into a query string. It can change what the database executes. | [PLANNED V1] prevention invariant |
-| Why parameterized queries? | They pass values separately from the SQL structure. `$1` corresponds to the first supplied value; this avoids interpreting that value as query syntax. Identifier/sort fragments still need allowlists. | [PLANNED V1] all future user-value queries |
+| Why parameterized queries? | They pass values separately from the SQL structure. `$1` corresponds to the first supplied value; this avoids interpreting that value as query syntax. Identifier/sort fragments still need allowlists. | [IMPLEMENTED] registration; [PLANNED V1] all future user-value queries |
 | Why DB constraints if backend validates? | Clients can call APIs directly, code can contain mistakes, and concurrent requests can pass the same preliminary check. Constraints are the final data-integrity boundary. | [IMPLEMENTED] users constraints; broader [PLANNED V1] |
 | Why SELECT 1? | It checks whether a database query can execute without depending on a business table. It cannot prove migrations or business permissions are correct. | [IMPLEMENTED] server/health |
 | Why check DB before HTTP startup? | The intended server depends on PostgreSQL, so startup fails explicitly if the initial query fails rather than logging successful HTTP startup first. | [IMPLEMENTED] `src/server.js` |
 | How should transactions use pg? | Use one acquired client for BEGIN, statements, COMMIT/ROLLBACK, and release. A transaction cannot be spread across unrelated pool.query calls that may select different clients. | [PLANNED V1] complex writes |
-| Why can a duplicate email check race? | Two requests may both read no user before either inserts. Keep the DB UNIQUE constraint and handle the resulting duplicate violation as a controlled conflict. | [IMPLEMENTED] unique schema; registration [PLANNED V1] |
+| Why can a duplicate email check race? | Two requests may both read no user before either inserts. Keep the DB UNIQUE constraint and handle the resulting duplicate violation as a controlled conflict. | [IMPLEMENTED] UNIQUE schema plus registration 23505 → 409 |
 | Why use indexes? | Appropriate indexes reduce work for filtered/joined/ordered reads, at a storage/write cost. Users PK/email uniqueness imply indexes; other indexes must follow actual queries. | [PARTIALLY IMPLEMENTED] users migration only |
 | Why TIMESTAMPTZ? | Appointments should represent unambiguous instants and display in local time. The database type does not preserve a named timezone; recurring schedules may need additional zone information later. | [IMPLEMENTED] users timestamp; appointment policy [TBD] |
 
@@ -2381,10 +2425,10 @@ flowchart TD
 
 | Question | Concise answer | Status / project anchor |
 | --- | --- | --- |
-| What is bcrypt? | A password-hashing approach with salts and configurable computational cost. It supports verifying entered passwords without storing plaintext. The exact Node package/cost is not selected. | [PLANNED V1] / [TBD] |
+| What is bcrypt? | Password hashing with salts and configurable computational cost. Consultify uses installed bcrypt 6.0.0 and asynchronous hashing at cost 12. | [IMPLEMENTED] registration; D-05 |
 | Hashing versus encryption? | Encryption is reversible with a key. Password hashing is used for one-way verification; login compares against the hash instead of decrypting stored passwords. | [PLANNED V1] security direction |
-| What is a salt? | Per-password randomness incorporated in hashing so identical passwords can yield different hashes and precomputed guesses are less reusable. | [PLANNED V1] bcrypt target |
-| Why deliberately expensive hashing? | It raises the computational cost of password guessing. Cost must also fit the application's legitimate login workload. | [TBD] benchmark before package/cost selection |
+| What is a salt? | Per-password randomness incorporated in hashing so identical passwords can yield different hashes and precomputed guesses are less reusable. | [IMPLEMENTED] bcrypt registration hashing |
+| Why deliberately expensive hashing? | It raises the computational cost of password guessing. Cost must also fit the application's legitimate login workload. | [IMPLEMENTED] cost 12 selected; deployment benchmarking [PLANNED V1] |
 | How can bcrypt.compare work without decrypting? | The stored representation includes parameters needed to hash the candidate and verify a match; it does not contain recoverable plaintext. | [PLANNED V1] login |
 | Authentication versus authorization? | Authentication establishes identity. Authorization checks whether that identity may perform the specific action on the specific resource. | [PLANNED V1] middleware absent |
 | What is JWT? | A token format for claims; the planned signed token carries identity with verifiable integrity and expiry. The payload is readable, so it must not contain passwords, hashes, or secrets. | [PLANNED V1] no implementation |
@@ -2393,7 +2437,7 @@ flowchart TD
 | How does authorize('ADMIN') work conceptually? | It is a higher-order function returning middleware. A closure retains allowed roles for that returned function to check after authentication. | [PLANNED V1] conceptual pattern only |
 | What is ownership authorization? | Checking the caller's relationship to a resource, such as appointment.user_id matching the verified user ID or the assigned advisor profile belonging to the caller. | [PLANNED V1] required on private operations |
 | Role versus domain? | USER/ADVISOR/ADMIN describes authorization identity. FINANCE/HEALTH/ASTROLOGY describes advisory category. They should not share a field or duplicate account architecture. | [IMPLEMENTED] role field; domain [PLANNED V1] |
-| Why backend validation? | Browser checks can be bypassed. The backend must validate all request data before it influences SQL, ownership, or business state. | [PLANNED V1]; JSON parsing alone currently exists |
+| Why backend validation? | Browser checks can be bypassed. The backend must validate all request data before it influences SQL, ownership, or business state. | [IMPLEMENTED] manual registration validation; other business validation [PLANNED V1] |
 | How do reviews avoid abuse? | Require the current customer to own a completed appointment, derive its advisor, validate rating, and prevent duplicate reviews with DB-backed integrity. None is implemented yet. | [PLANNED V1] |
 | How do appointment transitions stay correct? | Define allowed source/target states and actors, then make writes conditional/transactional so concurrent operations cannot blindly overwrite newer state. | [PLANNED V1] / [TBD] final policy |
 | Why can't the frontend prevent double booking? | Another client or simultaneous request can bypass or race the UI. Any exclusive-slot guarantee needs a defined schedule model plus backend/database enforcement. | [TBD] minimal V1; availability [PLANNED V2] |
@@ -2401,7 +2445,7 @@ flowchart TD
 | Do passing syntax checks prove the app works? | No. They catch parsing errors but not database connectivity, schema, routing correctness, security, or complete user journeys. | [IMPLEMENTED] syntax checks only during audit |
 | Why integration/database tests? | They verify middleware-to-controller-to-SQL behavior and actual constraints. Mocked unit tests cannot establish PostgreSQL uniqueness or real concurrent-write behavior. | [PLANNED V1] suite absent |
 | What does V1 done mean? | The integrated Finance journeys, security/ownership, constraints, critical tests, frontend, deployment, and current documentation all work. Route existence alone is insufficient. | [PLANNED V1] section 35 |
-| What is implemented right now? | Express startup/app/router/controller, DB-aware health, shared pg pool, local PostgreSQL Compose config, users migration, package/ignore files, and this reference. No business journey is confirmed. | [IMPLEMENTED] evidence in section 4 |
+| What is implemented right now? | Backend/DB foundation, validated local Compose, users migration, registration with manual validation/bcrypt/parameterized SQL/safe USER-only response/duplicate handling, malformed-JSON 400, environment placeholders, ignore rules, and this reference. Complete Finance journeys remain planned. | [IMPLEMENTED] evidence in section 4; live operation unverified |
 
 ## 35. VERSION 1 DEFINITION OF DONE
 
@@ -2444,12 +2488,12 @@ flowchart TD
 
 ## 36. Documentation maintenance and README relationship
 
-[IMPLEMENTED] This file is the detailed internal engineering source of truth created by the current task. [PLANNED V1] `README.md` should be the concise public repository introduction and onboarding entry point; it is currently absent. Do not replace the README with this entire document or claim an existing README was updated.
+[IMPLEMENTED] This file is the detailed internal engineering source of truth, updated for current Day 3 registration maintenance. [PLANNED V1] `README.md` should be the concise public repository introduction and onboarding entry point; it is currently absent. Do not replace the README with this entire document or claim an existing README was updated.
 
 | Document/artifact | Status | Responsibility |
 | --- | --- | --- |
 | `README.md` | [PLANNED V1] | Short product description, actual stack, safe setup/run commands, current scope/limitations, link to master reference |
-| `docs/CONSULTIFY_MASTER_SPEC.md` | [IMPLEMENTED] this task | Implementation evidence, target contracts, architecture/decision history, audit/debug/testing/deployment guidance, version boundaries |
+| `docs/CONSULTIFY_MASTER_SPEC.md` | [IMPLEMENTED] updated this task | Implementation evidence, target contracts, architecture/decision history, audit/debug/testing/deployment guidance, version boundaries |
 | SQL migrations | [PARTIALLY IMPLEMENTED] users file only | Executable schema history; master spec explains it but cannot substitute for actual migration files |
 | Tests | [PLANNED V1] | Executable evidence for behavior; prose acceptance cases do not count as passing tests |
 | Package metadata | [IMPLEMENTED] | Dependency/scripts/package version; `1.0.0` does not certify product V1 readiness |
@@ -2460,7 +2504,8 @@ flowchart TD
 
 | Revision | Audited code | Change | Status |
 | --- | --- | --- | --- |
-| Initial audit, 2026-09-13 | `main` at `59553f5fe6f73c5424d26be76f520aa451b72537`, plus final working-tree C-12 discrepancy | Added this reference; inspected all current first-party files; documented missing business systems, conflicts, decisions, roadmap, and ~12% estimate; preserved independently changed Compose file | [IMPLEMENTED] documentation; no application/configuration edits by this task |
+| Initial audit, 2026-09-13 | `main` at `59553f5fe6f73c5424d26be76f520aa451b72537`, plus final working-tree C-12 discrepancy | Added this reference; inspected all current first-party files; documented missing business systems, conflicts, decisions, roadmap, and ~12% estimate; preserved independently changed Compose file | [IMPLEMENTED] historical documentation-only audit; no application/configuration edits by that audit |
+| Day 3 maintenance, 2026-09-14 | `main` at `74aeec62c37863c8c72ded88c836121766113923` plus scoped working-tree changes | Added name/email bounds, PostgreSQL 23505 → 409, and malformed-JSON 400; synchronized registration contract, accepted D-05–D-08, progress, and resolved config/ignore findings | [IMPLEMENTED] two JS files and this spec; login and automated tests remain planned |
 | Next feature milestone | [TBD] actual future commit | Record only work actually implemented/verified and intentionally revised decisions | [PLANNED V1] |
 
 [PLANNED V1] Official references linked throughout this document explain PostgreSQL, pg, JWT, bcrypt, and Docker behavior. They are not substitutes for local implementation evidence. Re-check version-specific technical behavior when changing dependency/runtime versions; never infer that current upstream documentation means Consultify has adopted a new version.

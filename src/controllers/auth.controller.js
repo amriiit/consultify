@@ -24,6 +24,18 @@ async function registerUser(req, res) {
     const cleanName = name.trim();
     const normalizedEmail = email.trim().toLowerCase();
 
+    if (cleanName.length > 100) {
+        return res.status(400).json({
+            message: "Name must not exceed 100 characters"
+        });
+    }
+
+    if (normalizedEmail.length > 255) {
+        return res.status(400).json({
+            message: "Email must not exceed 255 characters"
+        });
+    }
+
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailPattern.test(normalizedEmail)) {
@@ -67,6 +79,11 @@ async function registerUser(req, res) {
     }
     catch(error){
         console.error("Registration error:",error.message)
+        if (error.code === "23505") {
+            return res.status(409).json({
+                message: "Email is already registered"
+            });
+        }
         return res.status(500).json({
             message:"Internal server error"
         });
