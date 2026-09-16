@@ -2,13 +2,14 @@ const express = require("express");
 
 const healthRouter = require("./routes/health.routes");
 const authRouter = require("./routes/auth.routes");
-
+const advisorRouter=require("./routes/advisor.routes.js");
 const app = express();
 
 app.use(express.json());
 
 app.use("/api/health", healthRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/advisors", advisorRouter);
 
 app.use((error, req, res, next) => {
     if (

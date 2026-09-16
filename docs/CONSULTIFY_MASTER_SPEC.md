@@ -9,14 +9,14 @@
 | Last audited against repository | 2026-09-14, Asia/Kolkata |
 | Repository | `CONSULTIFY`, local directory `consultify/` |
 | Git branch | `main` |
-| Audited commit | `74aeec62c37863c8c72ded88c836121766113923`, plus the scoped working-tree changes described below |
-| Commit subject | Improve repository security and ignore macOS files |
-| Master document revision | Day 3 registration maintenance and current-state correction |
+| Audited commit | `4a9384cecc9a2a21994e1bd8a5b58b03405b1694` |
+| Commit subject | Add authentication and role authorization middleware |
+| Master document revision | Day 5 middleware implementation audit; documentation-only update |
 | Package version | `1.0.0` in `package.json`; this does **not** mean product V1 is complete |
-| Product readiness | [PARTIALLY IMPLEMENTED] Backend/database foundation and registration; approximately **15–20% toward V1**, midpoint estimate 18%; see section 31 |
-| Audit scope | Registration controller/router, app wiring, users migration, relevant startup/health/pool code, dependency metadata/installation, Compose, environment example, ignore rules, and Git history/status required for this update |
-| Source preservation | This maintenance task changes only `src/controllers/auth.controller.js`, `src/app.js`, and this document. Dependencies, configuration, migrations, routes, and database data are unchanged |
-| Verification limits | Syntax checks on the two modified JavaScript files and Git diff/status review; no application tests added or run, no server/database started, and no live database data modified |
+| Product readiness | [PARTIALLY IMPLEMENTED] Foundation, registration/login, JWT issuance, and authentication/role middleware functions; approximately **20–25% toward V1**, rounded estimate 23%; route protection is not integrated; see section 31 |
+| Audit scope | Authentication/authorization middleware, login/registration controller, all current route wiring, app, role schema, relevant dependency metadata, and Git state |
+| Source preservation | Only this master spec was modified by the Day 5 documentation task. The existing middleware file and all source/configuration files were preserved |
+| Verification limits | Source inspection, `git diff --check`, diff review, and before/after repository-file hashes. No runtime authentication tests or database operations were performed; middleware is not wired into any current route |
 | Compose configuration | [IMPLEMENTED] Previously reported C-12 ports syntax issue is resolved in the inspected repository; `docker compose config --no-interpolate --quiet` passes. This verifies configuration structure, not live infrastructure |
 | Live infrastructure | [TBD] Container state, server PostgreSQL version, applied migrations, and persisted data were not inspected during this maintenance task |
 | Secret handling | `.env` was not opened. Private credentials, tokens, and production connection strings are not included here |
@@ -88,7 +88,7 @@
 
 [PLANNED V1] Every future audit must re-check the repository. Do not update an implementation checkbox based only on a plan, generated code suggestion, installed package, empty folder, or route stub. Never assume authentication, tests, migrations, hosting, AI, or middleware exist because they are customary in other applications.
 
-[TBD] When evidence and intent disagree, record **CURRENT IMPLEMENTATION**, **INTENDED IMPLEMENTATION**, **CONFLICT**, and **RECOMMENDED RESOLUTION**. A recommendation in this document is not permission to change the architecture. This maintenance task updates only the explicitly authorized registration behavior and corresponding reference.
+[TBD] When evidence and intent disagree, record **CURRENT IMPLEMENTATION**, **INTENDED IMPLEMENTATION**, **CONFLICT**, and **RECOMMENDED RESOLUTION**. A recommendation in this document is not permission to change the architecture. This Day 5 task updates documentation only, based on inspected implementation.
 
 ## 2. Product, domains, and version boundaries
 
@@ -98,13 +98,13 @@
 
 [PLANNED V1] The differentiator is **professional expertise plus community experience** in one product. Advisor discovery without a community, or a discussion board without a booking workflow, does not fulfill this product definition.
 
-[IMPLEMENTED] Registration and infrastructure diagnostics exist. Advisor discovery, bookings, community, and the complete Finance journey remain unimplemented.
+[IMPLEMENTED] Registration, login/JWT issuance, and infrastructure diagnostics exist. Authentication and role middleware functions also exist, but no current route uses them. Advisor discovery, bookings, community, and the complete Finance journey remain unimplemented.
 
 ### 2.2 Versions
 
 | Version | Status | Scope | Boundary |
 | --- | --- | --- | --- |
-| V1 — Core product | [PARTIALLY IMPLEMENTED] | Finance end-to-end; clean backend, relational schema, registration/login, JWT, RBAC/ownership, advisors, bookings, community/comments/helpfulness, reviews, basic frontend, tests, deployment | Correctness and security over feature count; foundation and registration artifacts currently exist |
+| V1 — Core product | [PARTIALLY IMPLEMENTED] | Finance end-to-end; clean backend, relational schema, registration/login, JWT, RBAC/ownership, advisors, bookings, community/comments/helpfulness, reviews, basic frontend, tests, deployment | Correctness and security over feature count; foundation, registration/login, and authentication/role middleware artifacts currently exist |
 | V2 — Product expansion | [PLANNED V2] | Health, Astrology, advanced filters/search, availability, notifications, stronger admin tools, community reputation, advisor verification, improved dashboards, favorites, reporting | Reuse generic entities and custom backend; exact feature order and schemas pending |
 | V3 — Intelligent platform | [PLANNED V3] | Possible advisor recommendations, question categorization, duplicate detection, consultation summaries, smart FAQs, sentiment analysis, intelligent answer ranking, analytics, recommendation systems | Assistance rather than replacement for professional judgment; no AI package, provider, data pipeline, or model selected |
 | Later real-time capabilities | [DEFERRED] | Chat, voice/video calls, WebSockets, real-time notifications | Delivery mechanism, provider, security model, and version assignment are unresolved |
@@ -156,12 +156,12 @@
 
 ### 4.1 Audited files and history
 
-[IMPLEMENTED] The repository has 14 tracked files. The scoped inspection covered the artifacts needed to verify registration and correct related stale claims; source links are relative to this document.
+[IMPLEMENTED] The repository has 15 tracked files, including `src/middlewares/auth.middleware.js`. The scoped inspection covered the artifacts needed to verify login, authentication, authorization, and route integration; source links are relative to this document.
 
 | File | Evidence and responsibility |
 | --- | --- |
-| [package.json](../package.json) | CommonJS, start/dev scripts, five direct dependencies across runtime/development, including bcrypt |
-| [package-lock.json](../package-lock.json) | Lockfile version 3; 113 package entries excluding root; bcrypt declared and installed at 6.0.0 |
+| [package.json](../package.json) | CommonJS, start/dev scripts, six direct dependencies across runtime/development, including bcrypt and jsonwebtoken |
+| [package-lock.json](../package-lock.json) | Lockfile version 3; 126 package entries excluding root; jsonwebtoken locked at 9.0.3; bcrypt at 6.0.0 |
 | [.gitignore](../.gitignore) | Ignores `node_modules/`, `.env`, and `.DS_Store` |
 | [.env.example](../.env.example) | Contains `PORT`, a placeholder `DATABASE_URL`, and placeholder `POSTGRES_PASSWORD` |
 | [docker-compose.yml](../docker-compose.yml) | PostgreSQL 17.4, valid loopback ports list, `${POSTGRES_PASSWORD}`, and named volume; configuration validation passes |
@@ -170,12 +170,13 @@
 | [src/config/db.js](../src/config/db.js) | Shared `pg.Pool` configured from `DATABASE_URL` |
 | [src/routes/health.routes.js](../src/routes/health.routes.js) | `GET /` mapped to `getHealth`; mounted as `/api/health` |
 | [src/controllers/health.controller.js](../src/controllers/health.controller.js) | DB probe; 200 connected / 500 disconnected JSON |
-| [src/routes/auth.routes.js](../src/routes/auth.routes.js) | `POST /register` mapped to `registerUser`; mounted as `/api/auth` |
-| [src/controllers/auth.controller.js](../src/controllers/auth.controller.js) | Manual registration validation, normalization, bcrypt hashing, parameterized SQL, safe response, and duplicate/error handling |
+| [src/routes/auth.routes.js](../src/routes/auth.routes.js) | Public POST /register → registerUser and POST /login → loginUser; no authentication/authorization middleware attached |
+| [src/controllers/auth.controller.js](../src/controllers/auth.controller.js) | Registration and login; bcrypt.hash/compare, parameterized SQL, safe user responses, and JWT issuance |
+| [src/middlewares/auth.middleware.js](../src/middlewares/auth.middleware.js) | Tracked file exporting authenticate and authorize(...allowedRoles); verification and role checks are separate functions |
 | [database/migrations/001_create_users.sql](../database/migrations/001_create_users.sql) | Users schema, email UNIQUE, and default USER role |
 | [CONSULTIFY_MASTER_SPEC.md](CONSULTIFY_MASTER_SPEC.md) | Current implementation evidence and planned V1 reference |
 
-[IMPLEMENTED] Local history contains four commits:
+[IMPLEMENTED] Local history contains seven commits:
 
 | Commit | Local date | Subject |
 | --- | --- | --- |
@@ -183,8 +184,11 @@
 | `59553f5fe6f73c5424d26be76f520aa451b72537` | 2026-09-13 | Add PostgreSQL database foundation and users schema |
 | `c8992c05cd4517f570da9b21c7c1a4647ecfad72` | 2026-09-14 | Add secure user registration |
 | `74aeec62c37863c8c72ded88c836121766113923` | 2026-09-14 | Improve repository security and ignore macOS files |
+| `5fc1c0c738dab8fbc027e05163acef1b22435d2e` | 2026-09-14 | Complete secure user registration |
+| `43e886e7e20defeea16bccb8e1437b68484d4c76` | 2026-09-14 | Add JWT based user login |
+| `4a9384cecc9a2a21994e1bd8a5b58b03405b1694` | 2026-09-14 | Add authentication and role authorization middleware |
 
-[IMPLEMENTED] The working tree was clean before this maintenance task. `git ls-files '*DS_Store*'` returns no tracked artifacts and ignore checks confirm `.DS_Store` is ignored at root and nested paths. `.env` remains unread. No `AGENTS.md` was found in the repository or inspected ancestor locations.
+[IMPLEMENTED] At task start, tracked files were clean and `src/middlewares/auth.middleware.js` existed as an untracked file. During this documentation review, an external commit (`4a9384c`) tracked that file without changing its contents. Final implementation evidence includes that commit. This task modified only the spec; before/after hashes confirm all source files were preserved. `.env` was not opened.
 
 [IMPLEMENTED] The prior Compose ports discrepancy (C-12) is resolved: the inspected file contains a valid list item and `docker compose config --no-interpolate --quiet` succeeds. No Compose configuration or Docker runtime state was changed by this task.
 
@@ -210,8 +214,10 @@
 | Secret/dependency ignore rules | [IMPLEMENTED] | `.gitignore` | Working rules verified; remote secret scanning not verified |
 | Environment documentation | [IMPLEMENTED] example | `.env.example` | PORT, DATABASE_URL, and POSTGRES_PASSWORD placeholders exist; required-variable validation remains planned |
 | Registration and password hashing | [IMPLEMENTED] | Auth route/controller, `bcrypt` dependency | POST /api/auth/register; manual validation, bcrypt cost 12, safe USER-only creation; no automatic login |
-| Login and JWT | [PLANNED V1] | No login handler or JWT code/package | Day 4; bcrypt.compare login flow remains planned |
-| Authenticate/RBAC/ownership | [PLANNED V1] | No `src/middleware/` directory | Database role CHECK does not enforce request access |
+| Login and JWT | [IMPLEMENTED] | Auth route/controller; jsonwebtoken | POST /api/auth/login, bcrypt.compare, JWT_SECRET signing, JWT_EXPIRES_IN or 1h, safe user response |
+| JWT authentication middleware | [IMPLEMENTED] function; route integration [PLANNED V1] | `src/middlewares/auth.middleware.js` (tracked) | Authorization/Bearer parsing, jwt.verify with JWT_SECRET, 401 errors, decoded req.user, next after verification |
+| Role authorization middleware | [IMPLEMENTED] function; route integration [PLANNED V1] | Same middleware file | authorize(...allowedRoles), one/multiple roles, 403 for a disallowed req.user.role; expects authenticate first |
+| Protected routes and ownership | [PLANNED V1] | No middleware imports/use in current routes | No authenticate → authorize → controller route chain, current-user endpoint, or resource ownership checks |
 | Current-user endpoint | [PLANNED V1] | No user route/controller | Not mounted |
 | Domains and Finance seed data | [PLANNED V1] | No domains migration or seed file | Finance-first product requirement only |
 | Advisor profiles and discovery | [PLANNED V1] | No advisor files/schema | All API contracts below are proposed |
@@ -223,11 +229,11 @@
 | Input validation and safe global errors | [PARTIALLY IMPLEMENTED] | Auth controller and `src/app.js` | Registration validation, 409/500 JSON, malformed-JSON 400 exist; unrelated errors pass to next(error); general error/not-found policy remains planned |
 | Frontend React/Vite | [PLANNED V1] | No frontend directory/package/components | No UI, static app hosting, or frontend build script |
 | Automated tests and CI | [PLANNED V1] | No tests, test script, test dependencies, or workflow files | Syntax checks during audit are not a maintained test suite |
-| CORS/rate limits/JWT secret management | [TBD] | No configuration or middleware | Must be resolved before relevant integration/deployment |
-| Logging/monitoring | [PARTIALLY IMPLEMENTED] | Server and auth controller console messages | Registration catch logs error.message server-side; no structured logging or monitoring |
+| CORS/rate limits/JWT secret management | [PARTIALLY IMPLEMENTED] | Auth controller and middleware read JWT_SECRET | CORS/rate limiting, secret validation/rotation, and production configuration remain TBD |
+| Logging/monitoring | [PARTIALLY IMPLEMENTED] | Server and auth controller console messages | Registration/login catches log error.message server-side; no structured logging or monitoring |
 | Deployment | [PLANNED V1] | Local DB Compose only; no deployment config | No backend Dockerfile, hosting provider, live URL, or managed DB evidence |
 | README | [PLANNED V1] | Absent | Master spec does not replace a future concise README |
-| Master engineering reference | [IMPLEMENTED] | `docs/CONSULTIFY_MASTER_SPEC.md` | Updated for scoped Day 3 maintenance; must be re-audited as code changes |
+| Master engineering reference | [IMPLEMENTED] | `docs/CONSULTIFY_MASTER_SPEC.md` | Updated for Day 5 middleware evidence and remaining integration gaps |
 | Health/Astrology and V2 expansion | [PLANNED V2] | No implementation | Do not expose unfinished domains as supported |
 | AI/ML features | [PLANNED V3] | No implementation or selected AI technology | Possibilities only |
 
@@ -260,11 +266,13 @@ consultify/
 │   ├── controllers/
 │   │   ├── auth.controller.js
 │   │   └── health.controller.js
+│   ├── middlewares/
+│   │   └── auth.middleware.js     # existing, tracked; authenticate and authorize
 │   └── routes/
 │       ├── auth.routes.js
 │       └── health.routes.js
 └── docs/
-    └── CONSULTIFY_MASTER_SPEC.md # updated for current Day 3 implementation
+    └── CONSULTIFY_MASTER_SPEC.md # updated for current Day 5 implementation
 ```
 
 ### 5.2 TARGET V1 FILE STRUCTURE
@@ -280,7 +288,7 @@ consultify/
 │   │   └── db.js                            [existing]
 │   ├── controllers/
 │   │   ├── health.controller.js             [existing]
-│   │   ├── auth.controller.js               [existing; registration only]
+│   │   ├── auth.controller.js               [existing; registration and login]
 │   │   ├── user.controller.js               [planned]
 │   │   ├── advisor.controller.js            [planned]
 │   │   ├── appointment.controller.js        [planned]
@@ -288,16 +296,15 @@ consultify/
 │   │   └── review.controller.js             [planned]
 │   ├── routes/
 │   │   ├── health.routes.js                 [existing]
-│   │   ├── auth.routes.js                   [existing; registration only]
+│   │   ├── auth.routes.js                   [existing; registration and login]
 │   │   ├── user.routes.js                   [planned]
 │   │   ├── advisor.routes.js                [planned]
 │   │   ├── appointment.routes.js            [planned]
 │   │   ├── post.routes.js                   [planned]
 │   │   └── review.routes.js                 [planned]
-│   └── middleware/
-│       ├── auth.middleware.js               [planned]
-│       ├── role.middleware.js               [planned]
-│       └── error.middleware.js              [planned]
+│   └── middlewares/
+│       ├── auth.middleware.js               [existing, tracked; authenticate and authorize]
+│       └── error.middleware.js              [planned only; no new file required by this audit]
 ├── database/
 │   └── migrations/
 │       ├── 001_create_users.sql             [existing]
@@ -338,6 +345,7 @@ consultify/
 | `dotenv` | `^17.4.2` | `17.4.2` | `17.4.2` | Runtime; environment loading at startup |
 | `express` | `^5.2.1` | `5.2.1` | `5.2.1` | Runtime; HTTP app, router, JSON responses/parser |
 | `pg` | `^8.23.0` | `8.23.0` | `8.23.0` | Runtime; PostgreSQL driver and connection pool |
+| `jsonwebtoken` | `^9.0.3` | `9.0.3` | Not rechecked in this documentation audit | Runtime; login JWT signing and authentication verification |
 | `nodemon` | `^3.1.14` | `3.1.14` | `3.1.14` | Development; restart server during editing |
 
 [IMPLEMENTED] Lockfile format is 3. `package.json` specifies `type: "commonjs"`, `license: "ISC"`, empty description/author/keywords, and `main: "index.js"`. There is no root `index.js`. The actual scripts are:
@@ -360,10 +368,10 @@ consultify/
 | PostgreSQL application schema | Users migration only | [PARTIALLY IMPLEMENTED] No other tables or live schema confirmed |
 | React, Vite, frontend JavaScript | No dependencies/files | [PLANNED V1] Chosen frontend direction; versions not selected |
 | bcrypt hashing package | `bcrypt` 6.0.0 | [IMPLEMENTED] Installed and used by registration at cost 12; D-05 accepted |
-| JWT implementation package | Absent | [PLANNED V1] / [TBD] JWT mechanism chosen, library/algorithm/lifetime pending |
+| JWT implementation package | jsonwebtoken 9.0.3 (manifest ^9.0.3; lockfile 9.0.3) | [IMPLEMENTED] jwt.sign in login; jwt.verify in authentication middleware |
 | Validation/test/logging libraries | No selected packages | [IMPLEMENTED] Explicit manual registration validation (D-08); test/logging library selection remains [TBD] |
 
-[IMPLEMENTED] Drizzle, Prisma, Sequelize, TypeORM, bcryptjs, JWT libraries, React, and Vite are absent from current dependency/lockfile inventory. [PLANNED V1] The deliberate database strategy is:
+[IMPLEMENTED] Drizzle, Prisma, Sequelize, TypeORM, bcryptjs, React, and Vite are absent from current dependency/lockfile inventory. [PLANNED V1] The deliberate database strategy is:
 
 ```text
 Node.js → one shared pg pool per process → parameterized raw SQL → PostgreSQL
@@ -391,9 +399,9 @@ Node.js → one shared pg pool per process → parameterized raw SQL → Postgre
 
 ### 7.2 Express configuration
 
-[IMPLEMENTED] `src/app.js` creates an Express instance, enables `express.json()`, mounts `/api/health` and `/api/auth`, adds malformed-JSON error handling after routes, and exports the app without listening. Health maps `GET /` to `getHealth`; auth maps `POST /register` to `registerUser`, yielding `POST /api/auth/register`.
+[IMPLEMENTED] `src/app.js` creates an Express instance, enables `express.json()`, mounts `/api/health` and `/api/auth`, adds malformed-JSON error handling after routes, and exports the app without listening. Health maps `GET /` to `getHealth`; auth maps `POST /register` to `registerUser`, yielding `POST /api/auth/register`; auth also maps `POST /login` to `loginUser`.
 
-[IMPLEMENTED] Registration performs manual validation in its controller. The app error handler recognizes `SyntaxError` with `status === 400` and a `body` property and returns HTTP 400 with `{"message":"Invalid JSON body"}`; unrelated errors go to `next(error)`. Authentication, authorization, CORS, request logging, general safe error handling, and a custom not-found handler remain absent; other framework errors are not a uniform project JSON contract.
+[IMPLEMENTED] Registration/login perform manual validation. App middleware returns the specific malformed-JSON 400 and passes unrelated errors onward. Authentication and role authorization functions exist in `src/middlewares/auth.middleware.js`, but app/routes do not import or use them. Current health/register/login endpoints are public. CORS, request logging, general safe error handling, and a custom not-found handler remain absent.
 
 ### 7.3 Existing health contract
 
@@ -419,7 +427,7 @@ Node.js → one shared pg pool per process → parameterized raw SQL → Postgre
 
 ### 7.4 Layer responsibilities and communications
 
-[PARTIALLY IMPLEMENTED] Health and registration use the backend layers below. The configured Compose mapping passes validation; live operation was not verified. [PLANNED V1] A React client and protected business middleware will extend this path; the frontend does not exist today.
+[PARTIALLY IMPLEMENTED] Health, registration, and login use the backend layers below. Authentication/role helpers exist but are not on the current request path. Live operation was not verified. [PLANNED V1] Protected-route integration and the React frontend will extend this path.
 
 ```mermaid
 sequenceDiagram
@@ -445,7 +453,7 @@ sequenceDiagram
 | `server.js` | [IMPLEMENTED] | Starts the process listening | Bootstrap, environment order, initial connectivity gate |
 | `app.js` | [IMPLEMENTED] | Configures how HTTP is handled | Middleware ordering and router mounting |
 | Router | [IMPLEMENTED] health and registration; [PLANNED V1] other business | Connects URL/method to handler | Transport-level endpoint mapping |
-| Middleware | [IMPLEMENTED] JSON parser and malformed-JSON error handler; [PLANNED V1] custom security | Checks/augments requests before handlers | Authentication, role policy, validation, error handling |
+| Middleware | [IMPLEMENTED] JSON parser/error handler and separate authenticate/authorize helpers | Parser/error handler are wired; auth/role functions are not | Verify identity before role checks; protected-route integration remains planned |
 | Controller | [IMPLEMENTED] health and registration; [PLANNED V1] other business | Decides what work the request requires | Application flow, ownership checks, query orchestration, safe response |
 | Pool/driver | [IMPLEMENTED] | Sends database requests using reusable connections | Resource management and PostgreSQL wire protocol |
 | PostgreSQL | [IMPLEMENTED] configured; runtime [TBD] | Stores data and enforces schema rules | Relational integrity, transactions, query execution |
@@ -641,7 +649,7 @@ CREATE TABLE users(
 
 [IMPLEMENTED] PostgreSQL 17 provides `gen_random_uuid()` for random version-4 UUIDs. No extension installation is present or required by this migration for that built-in function. IDs are still subject to primary-key enforcement; UUIDs do not substitute for ownership checks. See [PostgreSQL UUID functions](https://www.postgresql.org/docs/17/functions-uuid.html).
 
-[IMPLEMENTED] Registration trims/lowercases email, validates password and field limits, hashes passwords, and inserts only name/email/password_hash, relying on the USER default. Normalization and password policy are backend rules, not additional schema constraints; email UNIQUE protects stored values without independently lowercasing direct SQL writes. [TBD] User deletion, future update timestamps, advisor provisioning, and any broader database canonicalization remain unresolved. Domains, seeded advisor/admin accounts, and authenticated sessions are not implemented.
+[IMPLEMENTED] Registration trims/lowercases email, validates password and field limits, hashes passwords, and inserts only name/email/password_hash, relying on the USER default. Normalization and password policy are backend rules, not additional schema constraints; email UNIQUE protects stored values without independently lowercasing direct SQL writes. [TBD] User deletion, future update timestamps, advisor provisioning, and any broader database canonicalization remain unresolved. Domains and seeded advisor/admin accounts remain planned. Login issues JWTs; no persisted session store exists.
 
 ## 11. Target relational model and integrity rules
 
@@ -761,7 +769,7 @@ erDiagram
 
 [IMPLEMENTED] The parameterized INSERT writes only name, normalized email, and password_hash. It omits role, ID, and timestamp so database defaults create a USER. Extra payload fields are ignored; supplying `role: "ADMIN"` or `role: "ADVISOR"` cannot change the created role. No blanket unknown-field rejection is implemented. The response is HTTP 201 with `{"message":"User registered successfully","user":{...}}`; only id, name, email, role, and created_at are returned. Neither password nor password_hash is returned.
 
-[IMPLEMENTED] Registration does not issue a JWT or automatically log in. Login remains [PLANNED V1] for Day 4; authentication, RBAC middleware, and the current-user endpoint remain planned.
+[IMPLEMENTED] Registration does not issue a JWT or automatically log in. A separate login endpoint now issues JWTs. Authentication and role middleware functions exist; route integration and the current-user endpoint remain [PLANNED V1].
 
 ### 12.2 Password hashing
 
@@ -769,53 +777,43 @@ erDiagram
 
 [IMPLEMENTED] D-06 sets a minimum password length of 12 characters, checked using JavaScript `password.length`, and a maximum input of 72 UTF-8 bytes, checked using `Buffer.byteLength(password, "utf8")`. Excess input is rejected, not silently truncated. Passwords are not trimmed, lowercased, or otherwise normalized. Name/email character limits likewise use JavaScript string `.length`.
 
-[IMPLEMENTED] bcrypt produces salted password hashes with embedded cost parameters. Hashing supports one-way verification; encryption is reversible with a key. Higher cost increases work. [PLANNED V1] Login will use `bcrypt.compare()`; no comparison/login flow exists yet. Deployment capacity checks remain future verification, not an unresolved package/cost choice. See the [bcrypt project documentation](https://github.com/kelektiv/node.bcrypt.js).
+[IMPLEMENTED] bcrypt produces salted password hashes with embedded cost parameters. Hashing supports one-way verification; encryption is reversible with a key. Higher cost increases work. [IMPLEMENTED] Login uses `bcrypt.compare()` against the stored hash. Deployment capacity checks remain future verification, not an unresolved package/cost choice. See the [bcrypt project documentation](https://github.com/kelektiv/node.bcrypt.js).
 
 [IMPLEMENTED] D-08 selects explicit manual backend validation for the current V1 stage. No validation library is selected or installed. Abuse prevention and account recovery remain separate planned/TBD work.
 
 ### 12.3 Login and JWT
 
-[PLANNED V1] Target is `POST /api/auth/login`: validate email/password, use the same email normalization as registration, find the user, compare against the stored hash, reject invalid credentials, then issue a JWT and safe user response. Unknown email and wrong password should use the same public invalid-credentials message. Exact timing mitigation and rate limits remain [TBD].
+[IMPLEMENTED] `POST /api/auth/login` maps to `loginUser` in the existing auth controller. It requires a nonblank string email and a nonempty string password, trims/lowercases email, performs a parameterized lookup, and uses `bcrypt.compare(password, user.password_hash)`. Unlike registration, login does not repeat email-pattern, email-length, or password-length checks. Unknown email and wrong password both return 401 with `{"message":"Invalid email or password"}`.
 
-[PLANNED V1] A typical signed JWT has a header describing token type/algorithm, a payload containing claims, and a signature covering the encoded content. The payload is readable; a signature protects integrity, not secrecy. Use a user identifier such as `sub` and an expiration such as `exp`; never embed password/hash/secrets. The signing secret/key must be privately configured. Verification must check the signature and expiration before trusting claims. See [JWT specification, RFC 7519](https://www.rfc-editor.org/rfc/rfc7519).
+[IMPLEMENTED] On valid credentials, `jwt.sign({ userID: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || "1h" })` issues a JWT. HTTP 200 returns `{"message":"Login credentials valid","token":"...","user":{"id":"...","name":"...","email":"...","role":"..."}}`. No password/hash is returned. Other caught login errors log server-side and return only `{"message":"Internal server error"}` with 500.
 
-[PLANNED V1] Verification must restrict accepted algorithms/configuration rather than trust an arbitrary token header. Select and validate issuer/audience where appropriate, and define how role changes/deleted users affect already-issued tokens. Decoding a token is not verification. See [JWT best practices, RFC 8725](https://www.rfc-editor.org/rfc/rfc8725).
+[IMPLEMENTED] JWT signing and verification both use JWT_SECRET from the environment; no private value was inspected. The application payload uses `userID` and `role`, not `sub`. Signing configures expiry with a 1h fallback. Authentication middleware consumes an Authorization Bearer token; no current route invokes it.
 
-```text
-[PLANNED V1]
-Login succeeds → sign JWT → client supplies JWT on protected request
-→ authenticate verifies token → populate req.user
-→ role check → resource ownership check → controller operation
-```
-
-[TBD] Token transport/storage, signing library and algorithm, expiry, signing-key rotation, refresh strategy, logout/revocation, issuer/audience, and role freshness are unresolved. Recommended evaluation: secure HttpOnly cookie with an explicit CSRF policy for the deployment topology, versus an in-memory access token with an explicitly designed persistence/refresh flow. Do not silently choose browser localStorage or claim HttpOnly alone solves CSRF. A JWT is not inherently immediately revocable, and removing a client copy does not invalidate other copies.
+[TBD] Explicit algorithm restrictions, issuer/audience, signing-key validation/rotation, refresh/logout/revocation, role freshness, and browser token storage remain unresolved. The current sign/verify calls do not pass explicit algorithm or issuer/audience options. JWT payloads are readable and must not contain secrets. A token-held role is not refreshed from the database by this middleware.
 
 ### 12.4 Authentication, RBAC, and ownership
 
-[PLANNED V1] Authentication answers “Who are you?” and authorization answers “What are you allowed to do?” Missing/invalid authentication yields 401. A validly authenticated caller blocked by policy yields 403; deliberate 404 resource concealment, if selected, must be documented and consistent.
+[IMPLEMENTED] The existing, tracked `src/middlewares/auth.middleware.js` exports two separate functions: `authenticate` establishes verified identity; `authorize(...allowedRoles)` checks the verified role. They share a file but separate authentication from authorization.
 
-[PLANNED V1] Proposed middleware names/files are `authenticate` in planned `src/middleware/auth.middleware.js` and `authorize(...allowedRoles)` in planned `src/middleware/role.middleware.js`. Neither file exists. `authenticate` should populate a minimal verified `req.user` identity; its exact shape is pending. Role checks must use trusted server/token verification context, never a role supplied in the request body.
+[IMPLEMENTED] `authenticate` reads `req.headers.authorization`, checks for the case-sensitive `"Bearer "` prefix using `startsWith`, extracts `authHeader.split(" ")[1]`, and calls `jwt.verify(token, process.env.JWT_SECRET)`. On success it attaches the decoded payload to `req.user` and then calls `next()`. It does not advance on missing headers, prefix failures, or token verification failures. The prefix/split check is not a strict validation of exactly two header segments.
 
-```javascript
-// [PLANNED V1] Conceptual closure explanation, not implementation.
-function authorize(...allowedRoles) {
-  return function roleMiddleware(req, res, next) {
-    // authenticate must have run first and established trusted req.user.
-    if (!req.user) return res.sendStatus(401);
-    if (!allowedRoles.includes(req.user.role)) return res.sendStatus(403);
-    next();
-  };
-}
-// authorize("ADMIN") returns a function retaining allowedRoles via closure.
-// Actual middleware must use the selected safe project error format.
-```
+| Authentication condition | Status | HTTP response |
+| --- | --- | --- |
+| Missing Authorization header | [IMPLEMENTED] | 401: {"message":"Authentication token required"} |
+| Header does not start with Bearer followed by a space | [IMPLEMENTED] | 401: {"message":"Invalid authorization format"} |
+| Missing extracted JWT, invalid/tampered token, expired token, or other jwt.verify failure | [IMPLEMENTED] catch behavior | 401: {"message":"Invalid or expired token"} |
+| Verification succeeds | [IMPLEMENTED] | req.user = decoded; next() follows successful verification |
+
+[IMPLEMENTED] `authorize(...allowedRoles)` returns reusable middleware and uses `allowedRoles.includes(req.user.role)`. One role (for example `authorize("ADMIN")`) or multiple roles (for example `authorize("ADVISOR", "ADMIN")`) are supported. A disallowed role returns HTTP 403 with `{"message":"You do not have permission to access this resource"}`; an allowed role calls `next()`. The helper assumes `req.user` already exists and does not itself authenticate or guard missing identity. Database roles remain `USER`, `ADVISOR`, and `ADMIN`; the helper does not introduce new roles.
+
+[PLANNED V1] Required protected-route order is **authenticate → authorize(...allowedRoles) → controller**. This order is not implemented in any current route: neither app nor the health/auth routers imports these functions. Current endpoints remain public. The middleware functions are implemented, but protected-route integration, a current-user endpoint, and resource ownership checks are not. No runtime or automated middleware test evidence was produced by this documentation task.
 
 [PLANNED V1] Role-based access control (RBAC) is necessary but insufficient. User A and User B may both be USER; that does not allow A to read/cancel B's appointment. Check the relationship, for example `appointment.user_id === req.user.id`. For an advisor, resolve `appointment.advisor_id` through the chosen profile reference and compare the profile's `user_id` to authenticated identity.
 
 | Operation | Status | Proposed role policy | Required relationship |
 | --- | --- | --- | --- |
 | Register | [IMPLEMENTED] | Public | Creates USER only; extra role fields ignored |
-| Login | [PLANNED V1] | Public | Day 4 credential verification and JWT work |
+| Login | [IMPLEMENTED] | Public | Credential verification and JWT issuance; does not accept a client-supplied role |
 | Read current user | [PLANNED V1] | USER, ADVISOR, ADMIN | Identity from authentication only |
 | Read advisor/post/review public data | [PLANNED V1] / [TBD] | Public reads recommended | Expose only public fields |
 | Create/update own advisor profile | [PLANNED V1] / [TBD] | ADVISOR only | `profile.user_id` equals authenticated ID; role provisioning handled separately |
@@ -832,7 +830,7 @@ function authorize(...allowedRoles) {
 
 ### 13.1 Contract maturity and shared conventions
 
-[IMPLEMENTED] API-01 (`GET /api/health`) and API-02 (`POST /api/auth/register`) exist with the exact contracts in section 14. [PLANNED V1] Login and other endpoints remain proposed; pending paths, payloads, response envelopes, policies, and handler names require review. Proposed conventions do not change the existing registration response.
+[IMPLEMENTED] API-01 (health), API-02 (registration), and API-03 (login) exist with the contracts in section 14. All three are public. [PLANNED V1] Remaining endpoints are proposed; authentication/authorization route integration and current-user access are not implemented.
 
 [PLANNED V1] These conventions apply to every proposed contract below:
 
@@ -840,7 +838,7 @@ function authorize(...allowedRoles) {
 - Parse JSON, validate `req.body`, `req.params`, and `req.query`; reject unexpected sensitive fields (`user_id`, `author_id`, `role`, hash, status where server-controlled). Exact general unknown-field policy is [TBD].
 - ID parameters must be syntactically valid UUIDs before SQL; valid UUID does not prove the resource exists or caller can access it.
 - Required strings must have the correct type and be nonblank with documented length bounds. Numeric/time/filter validation is server-side.
-- Protected means the selected JWT transport plus `authenticate`, then role and relationship checks. Until transport is selected, do not imply an `Authorization` header or cookie is implemented.
+- Protected routes must use the implemented Authorization Bearer authentication function before role and relationship checks. [PLANNED V1] No current route is protected; browser storage and cookie transport are not implemented.
 - All business queries use parameters and explicit safe output columns; authenticated identity is derived server-side.
 - Unless a route explicitly needs a body/query parameter, none is part of its proposed contract.
 - Every proposed endpoint can return a safe 500 for unexpected server errors. Protected routes also have 401/403. Other per-route errors are listed explicitly.
@@ -867,7 +865,7 @@ function authorize(...allowedRoles) {
 | --- | --- | --- | --- | --- | --- |
 | API-01 | GET | `/api/health` | No; public | Database connectivity diagnostic | [IMPLEMENTED] |
 | API-02 | POST | `/api/auth/register` | No; public | Create USER account without automatic login | [IMPLEMENTED] |
-| API-03 | POST | `/api/auth/login` | No; public | Verify credentials and establish JWT auth | [PLANNED V1] |
+| API-03 | POST | `/api/auth/login` | No; public | Verify credentials and issue JWT | [IMPLEMENTED] |
 | API-04 | GET | `/api/users/me` | Yes; all three roles | Read safe current user | [PLANNED V1] / [TBD] path |
 | API-05 | GET | `/api/advisors` | Public proposed | Discover Finance advisors | [PLANNED V1] / [TBD] |
 | API-06 | GET | `/api/advisors/:id` | Public proposed | Advisor detail | [PLANNED V1] / [TBD] |
@@ -895,7 +893,7 @@ function authorize(...allowedRoles) {
 
 ## 14. Detailed API contracts and V1 request flows
 
-[IMPLEMENTED] API-01 and API-02 are the current endpoint inventory. [PLANNED V1] All remaining contracts are proposed. The auth route/controller files already exist for registration; login itself is still planned. Other paths explicitly marked planned do not exist. Proposed statuses and envelopes do not imply implementation.
+[IMPLEMENTED] API-01, API-02, and API-03 are the current public endpoint inventory. [PLANNED V1] All remaining contracts are proposed; current-user/protected business routes remain absent. Middleware functions alone do not implement these endpoints.
 
 ### API-01 — GET /api/health
 
@@ -955,20 +953,20 @@ function authorize(...allowedRoles) {
 
 | Contract field | Definition |
 | --- | --- |
-| Status | [PLANNED V1] |
-| Purpose | Verify credentials and issue JWT authentication. |
-| Authentication / roles | Public; successful account may have any valid stored role. |
-| Path parameters | None. |
-| Query parameters | None. |
-| Request body | {email, password}. |
-| Validation | Required strings; same email normalization as registration; valid format/length; accepted password input bounds; do not silently alter password. |
-| Success / HTTP code | 200: safe user and authentication established. Exact body/cookie/access-token fields TBD pending transport; never return hash. |
-| Possible errors / HTTP codes | 400 malformed input; 401 invalid credentials for unknown email or wrong password; 500 safe unexpected failure. |
-| Route file → controller file | src/routes/auth.routes.js → src/controllers/auth.controller.js#login (planned handler/route in existing registration files). |
-| Database tables touched | users: internal lookup includes password_hash for compare only. |
-| Ownership rules | JWT identity derived from matched database account; no role from payload. |
+| Status | [IMPLEMENTED] |
+| Purpose | Verify credentials and issue JWT. |
+| Authentication / roles | Public; user role comes from the database. |
+| Path/query parameters | None used. |
+| Request body | {email, password}; other fields ignored. |
+| Validation | Nonblank string email and nonempty string password; email trim/lowercase. No registration-style format/length checks. Missing fields return 400 with Email is required or Password is required. |
+| Success / HTTP code | 200: {"message":"Login credentials valid","token":"...","user":{id,name,email,role}}; no password/hash or created_at. |
+| Possible errors / HTTP codes | 401: {"message":"Invalid email or password"} for unknown email/wrong password; 500: {"message":"Internal server error"} for other caught errors; global malformed-JSON 400 applies. |
+| Route file → controller file | src/routes/auth.routes.js → src/controllers/auth.controller.js#loginUser (existing). |
+| Database tables touched | users: parameterized lookup of id, name, email, password_hash, role; hash used internally by bcrypt.compare. |
+| Token | jwt.sign with {userID, role}, JWT_SECRET, and JWT_EXPIRES_IN or 1h. |
+| Ownership rules | Token identity/role derived from matched database row. |
 
-[PLANNED V1] **Flow:** Validate → lookup user → bcrypt.compare → generic rejection if invalid → sign expiring JWT if valid → selected transport plus safe user.
+[IMPLEMENTED] **Flow:** Required-field checks → normalize email → parameterized lookup → bcrypt.compare → generic 401 on credential failure → sign JWT → safe user/token 200. This public endpoint does not run authenticate or authorize.
 
 ### API-04 — GET /api/users/me
 
@@ -1369,7 +1367,7 @@ function authorize(...allowedRoles) {
 
 [PLANNED V1] / [TBD] proposed minimal dashboard read **Flow:** authenticate → validate mine scope → ownership-constrained review query → minimal dashboard collection.
 
-[PARTIALLY IMPLEMENTED] These contracts cover implemented registration and planned login, current user, advisors, appointments, community, and reviews. No logout, refresh, password reset, email verification, domain-administration, payment, video, or AI endpoint is implemented; those retain their explicit decisions/version boundaries.
+[PARTIALLY IMPLEMENTED] These contracts cover implemented registration/login and planned current user, advisors, appointments, community, and reviews. No logout, refresh, password reset, email verification, domain-administration, payment, video, or AI endpoint is implemented; those retain their explicit decisions/version boundaries.
 
 ## 15. Appointments and state transitions
 
@@ -1458,7 +1456,7 @@ stateDiagram-v2
 | Input family | Status | Required validation direction | Pending specifics |
 | --- | --- | --- | --- |
 | Registration | [IMPLEMENTED] | Typed required fields; trimmed name ≤100; trimmed/lowercase email ≤255 and valid pattern; password ≥12 characters and ≤72 UTF-8 bytes; USER-only insert | See API-02; general unknown-field policy and abuse controls remain TBD |
-| Login | [PLANNED V1] | Required types/fields and the accepted registration normalization/password policy | Day 4 implementation and verification |
+| Login | [IMPLEMENTED] | Nonblank string email, nonempty string password; trim/lowercase email; bcrypt.compare | No registration-style length/pattern checks; see API-03 |
 | UUID route/body IDs | [PLANNED V1] | Syntax, existence, and separate relationship authorization | Consistent 403 vs concealed 404 policy |
 | Advisor profile | [PLANNED V1] | Approved fields only, valid domain, bounded text, nonnegative experience/fee if included | Field requiredness, text lengths, currency |
 | Appointments | [PLANNED V1] | Eligible advisor, unambiguous future time, valid state transition, ownership | Duration, delivery, cutoff, scheduling conflicts |
@@ -1473,11 +1471,11 @@ stateDiagram-v2
 
 | Code | Meaning in intended project contract | Status |
 | --- | --- | --- |
-| 200 OK | Successful retrieval/update; current healthy diagnostic; proposed idempotent helpful mutation | [IMPLEMENTED] health / [PLANNED V1] business |
+| 200 OK | Health and successful login; future retrieval/update operations | [IMPLEMENTED] health/login; others [PLANNED V1] |
 | 201 Created | Successful user/profile/appointment/post/comment/review creation | [IMPLEMENTED] registration / [PLANNED V1] others |
 | 400 Bad Request | Invalid registration input and malformed JSON; future UUID/filter/body checks | [IMPLEMENTED] registration and malformed JSON / [PLANNED V1] broader validation |
-| 401 Unauthorized | Missing, invalid, expired authentication; invalid login credentials | [PLANNED V1] |
-| 403 Forbidden | Authenticated caller lacks role/ownership/policy permission | [PLANNED V1]; resource concealment alternative [TBD] |
+| 401 Unauthorized | Invalid login credentials; missing/invalid/expired token | [IMPLEMENTED] login and authenticate function; protected route integration [PLANNED V1] |
+| 403 Forbidden | Role not included in allowedRoles | [IMPLEMENTED] authorize function; role-protected routes and ownership policy [PLANNED V1] |
 | 404 Not Found | Valid request target does not exist/is unavailable under visibility policy | [PLANNED V1] safe JSON contract; current unmatched routes use framework default |
 | 409 Conflict | Duplicate email; future profile/review/state/scheduling conflicts | [IMPLEMENTED] registration SELECT and 23505 handling / [PLANNED V1] others |
 | 500 Internal Server Error | Unexpected failure; health disconnection or generic registration message | [IMPLEMENTED] health and registration catch / [PLANNED V1] global safe behavior |
@@ -1487,7 +1485,7 @@ stateDiagram-v2
 
 ### 17.3 Error architecture
 
-[IMPLEMENTED] Health and the registration catch have safe failure bodies. After routes, `src/app.js` checks `error instanceof SyntaxError`, `error.status === 400`, and `"body" in error`, returning HTTP 400 with `{"message":"Invalid JSON body"}`. Unrelated errors pass to `next(error)`. [PLANNED V1] General safe error/not-found handling remains pending; `src/middleware/error.middleware.js` does not exist.
+[IMPLEMENTED] Health and the registration catch have safe failure bodies. After routes, `src/app.js` checks `error instanceof SyntaxError`, `error.status === 400`, and `"body" in error`, returning HTTP 400 with `{"message":"Invalid JSON body"}`. Unrelated errors pass to `next(error)`. [PLANNED V1] General safe error/not-found handling remains pending; `src/middlewares/error.middleware.js` does not exist.
 
 [TBD] Standard error codes/envelope and validation detail shape must be approved. Recommended response example, not a current contract:
 
@@ -1504,7 +1502,7 @@ stateDiagram-v2
 
 ## 18. NON-NEGOTIABLE SECURITY INVARIANTS
 
-[PARTIALLY IMPLEMENTED] These accepted requirements apply across V1. Registration already enforces manual validation, bcrypt hashing at cost 12, the 12-character minimum/72-UTF-8-byte maximum, trimmed name/email limits, parameterized queries, safe user output, USER-only creation, and duplicate-email 409 handling. Malformed JSON receives a safe JSON 400. Login/JWT, authentication, RBAC, ownership, and other business protections remain planned.
+[PARTIALLY IMPLEMENTED] These accepted requirements apply across V1. Registration already enforces manual validation, bcrypt hashing at cost 12, the 12-character minimum/72-UTF-8-byte maximum, trimmed name/email limits, parameterized queries, safe user output, USER-only creation, and duplicate-email 409 handling. Malformed JSON receives a safe JSON 400. Login/JWT issuance and separate authentication/RBAC functions are implemented. Protected-route integration, ownership, and other business protections remain planned. authenticate must establish req.user before authorize reads its role; no such route chain exists yet.
 
 1. `.env` must never be committed; keep real secrets out of examples and documentation.
 2. `node_modules/` must never be committed; commit manifest and lockfile instead.
@@ -1623,7 +1621,7 @@ stateDiagram-v2
 
 ### 21.1 Current verification versus target suite
 
-[IMPLEMENTED] This maintenance task ran `node --check` successfully on `src/controllers/auth.controller.js` and `src/app.js`, checked Git diff/status and whitespace, and verified relevant dependency/ignore metadata. `docker compose config --no-interpolate --quiet` passes; C-12 is resolved. These are maintenance checks, not an automated application test suite. No server/database was started, no live data was modified, and no application integration, SQL execution, frontend, end-to-end, load, vulnerability, or deployment test was performed.
+[IMPLEMENTED] The prior Day 3 maintenance recorded successful syntax and Compose checks. This Day 5 documentation task inspected source and route wiring, reviewed the diff, ran `git diff --check`, and compared repository-file hashes to the starting snapshot. No source files, containers, or database data were changed; no runtime or automated login/authentication/authorization tests were run.
 
 [PLANNED V1] No `test` script or test dependencies currently exist; test framework and directory layout remain [TBD]. Do not claim coverage or passing application tests without executable evidence.
 
@@ -1666,7 +1664,7 @@ stateDiagram-v2
 
 ### 22.1 Logging and observability
 
-[IMPLEMENTED] `src/server.js` logs DB connection success, listening port, and startup database error message. Registration catch logs `Registration error:` plus error.message server-side while sending safe messages to the client. Health sends safe JSON without logging its failure. No structured logger, request IDs, request middleware, metrics, tracing, or production log configuration exists.
+[IMPLEMENTED] `src/server.js` logs DB connection success, listening port, and startup error message. Registration/login catches log their respective error prefixes plus error.message while returning safe client messages. Authentication verification failures return 401 without logging; health also returns safe JSON without logging. No structured logger or request logging middleware exists.
 
 [PLANNED V1] Provide enough safe operational diagnostics to distinguish startup failure, validation failure, authorization denial, unexpected exception, and database errors. [TBD] Structured logging, request IDs, health monitoring, metrics, retention, and package choices must be selected when operational needs require them. Redact tokens, passwords, hashes, connection strings, and private consultation content. Avoid logging entire request bodies by default.
 
@@ -1775,7 +1773,7 @@ docker compose down
 docker compose down -v
 ```
 
-[TBD] The initial audit reported a Docker API socket permission failure. This maintenance task validates Compose configuration only and does not inspect live Docker or database state. No container/volume reset was attempted. A configuration file or `SELECT 1` alone does not prove applied schema.
+[TBD] The initial audit reported a Docker API socket permission failure; the later Day 3 maintenance validated Compose configuration. This Day 5 documentation task does not inspect live Docker/database state or run configuration/startup commands. No container/volume reset was attempted.
 
 [IMPLEMENTED] The previously reported Compose syntax failure is resolved and configuration validation passes without starting containers. Runtime state cannot be inferred from that configuration-only check.
 
@@ -1845,8 +1843,8 @@ git push
 | 1 | Backend foundation: Node setup, Express, app/server separation, routes/controllers, health, env, nodemon, Git | [PARTIALLY IMPLEMENTED] Core source/scripts/Git and environment placeholders exist; required-variable validation and maintained tests remain pending | Existing sources parse; reproducible startup and health demonstrated; document variables |
 | 2 | Database foundation: PostgreSQL, Docker/Compose, ports, persistent volume, DATABASE_URL, pg pool, raw SQL, migrations/users, parameters, DB health | [PARTIALLY IMPLEMENTED] Compose/pool/users SQL/probes exist; live database/apply state unverified; migration runner absent | Verify correct DB and applied schema; reproducible migration process; explain separate HTTP/DB communication |
 | 3 | Registration: endpoint/router/controller, backend validation, normalization, bcrypt package/hash, duplicate checks, tests | [PARTIALLY IMPLEMENTED] Registration code implemented, including field limits, bcrypt cost 12, password bounds, duplicate SELECT/23505 handling, safe USER-only output, and malformed-JSON 400; automated tests remain [PLANNED V1] | D-05–D-08 accepted; valid/invalid/duplicate/concurrent runtime verification remains pending; no automatic login |
-| 4 | Login + JWT: compare password, sign token, expiry, safe response, tests | [PLANNED V1] No implementation | Registration/users; token library/algorithm/storage/expiry decisions; valid/invalid credential tests |
-| 5 | Authentication + authorization: authenticate, req.user, current user, role middleware, 401/403, ownership | [PLANNED V1] No implementation | Trusted identity and role policy; cross-account tests; no public privilege escalation |
+| 4 | Login + JWT: compare password, sign token, expiry, safe response, tests | [PARTIALLY IMPLEMENTED] Login route/controller, bcrypt.compare, JWT signing with userID/role and configurable expiry are implemented; automated tests remain planned | Runtime credential/token verification and remaining token policies still require evidence |
+| 5 | Authentication + authorization: authenticate, req.user, current user, role middleware, 401/403, ownership | [PARTIALLY IMPLEMENTED] Day 5 authenticate and authorize functions are [IMPLEMENTED] in existing src/middlewares/auth.middleware.js; header/Bearer parsing, jwt.verify, req.user, 401/403 and multiple allowed roles exist | No route wires authenticate → authorize → controller; current-user endpoint, ownership checks, and runtime/automated tests remain [PLANNED V1]. Day 5 middleware code is complete, but the full roadmap row is not |
 | 6 | Advisor system: generic domain model, Finance data, profile schema and profile APIs | [PLANNED V1] No implementation | Profile cardinality/provisioning decisions; domains/users FKs; own-profile permissions |
 | 7 | Advisor discovery: list/detail, basic search/filters, review/refactoring | [PLANNED V1] No implementation | Advisor data; approved pagination/projections; Finance discovery tests |
 | 8 | Appointment database: relationships, owner, time fields, statuses and transition rules | [PLANNED V1] No implementation | Scheduling/duration/domain-reference decisions; versioned schema and constraints |
@@ -1857,7 +1855,7 @@ git push
 | 13 | React/Vite frontend integration: auth, advisors, appointments, community, reviews, minimal dashboards | [PLANNED V1] No implementation | Stable APIs, selected token/CORS topology; loading/empty/error states and full Finance journeys |
 | 14 | Finalization: tests, debugging, security audit, justified refactoring, README, deployment, GitHub cleanup, master-spec audit | [PLANNED V1] Master reference created only | Definition of done in section 35; deploy and verify; update actual evidence/status rather than marking routes alone complete |
 
-[PLANNED V1] If decisions or correctness work exceed a day, extend the schedule rather than remove security/ownership checks. No roadmap item expands this maintenance task beyond the explicitly authorized Day 3 fixes.
+[PLANNED V1] If decisions or correctness work exceed a day, extend the schedule rather than remove security/ownership checks. This task documents current Day 5 evidence only and does not implement missing roadmap work.
 
 ## 26. Implementation checklist
 
@@ -1909,12 +1907,19 @@ git push
 - [x] [IMPLEMENTED] bcrypt hash storage, early duplicate SELECT, database UNIQUE protection, and 23505 → 409.
 - [x] [IMPLEMENTED] Other caught registration failures log server-side and return generic 500 only.
 - [ ] [PLANNED V1] Automated registration validation/hash/concurrency tests.
-- [ ] [PLANNED V1] Login and password comparison.
-- [ ] [TBD] JWT library/algorithm/expiry/storage/key strategy.
-- [ ] [PLANNED V1] JWT signing/verification with no secret payload fields.
-- [ ] [PLANNED V1] `authenticate` and trusted `req.user`.
+- [x] [IMPLEMENTED] Public login route/controller and bcrypt.compare against stored password_hash.
+- [x] [IMPLEMENTED] jsonwebtoken signing with JWT_SECRET, userID/role, and JWT_EXPIRES_IN or 1h.
+- [ ] [TBD] Explicit algorithm/claim policy, browser storage, secret validation/rotation and revocation strategy.
+- [x] [IMPLEMENTED] JWT issuance contains userID/role and expiry metadata, with no password/hash.
+- [x] [IMPLEMENTED] authenticate reads Authorization, checks Bearer prefix, extracts JWT, and calls jwt.verify(token, process.env.JWT_SECRET).
+- [x] [IMPLEMENTED] Missing header/prefix failures and missing/invalid/tampered/expired JWT verification failures return 401.
+- [x] [IMPLEMENTED] Verified payload is assigned to req.user; next follows successful verification.
+- [x] [IMPLEMENTED] Separate authenticate and authorize(...allowedRoles) functions in src/middlewares/auth.middleware.js (existing file).
 - [ ] [PLANNED V1] Current-user safe endpoint.
-- [ ] [PLANNED V1] Role middleware and 401/403 consistency.
+- [x] [IMPLEMENTED] Reusable role middleware supports one/multiple roles and returns 403 for a disallowed req.user.role.
+- [x] [IMPLEMENTED] Schema roles remain USER, ADVISOR, ADMIN.
+- [ ] [PLANNED V1] Wire protected routes in authenticate → authorize → controller order.
+- [ ] [PLANNED V1] Runtime/automated authentication and role authorization tests.
 - [ ] [PLANNED V1] Ownership/assignment checks for every private resource operation.
 - [ ] [TBD] Advisor/admin provisioning, advisor-as-customer policy, role freshness.
 
@@ -1967,15 +1972,15 @@ git push
 
 ## 27. Feature dependency graph
 
-[PARTIALLY IMPLEMENTED] Foundation, the users migration, registration, and hashing exist. [PLANNED V1] Arrows describe prerequisites for the remaining modules. Accepted password decisions are recorded; JWT and future schema decisions remain pending.
+[PARTIALLY IMPLEMENTED] Foundation, users migration, registration/login, JWT issuance, and authentication/role middleware functions exist. Middleware route integration, current-user and ownership remain planned; the middleware file is now tracked.
 
 ```mermaid
 flowchart TD
     F[Existing backend and pg foundation] --> M[Existing users migration; application unverified]
     M --> R[Existing registration and hashing]
-    R --> L[Planned login and JWT]
-    L --> A[Planned authentication and current user]
-    A --> Z[Planned RBAC and ownership]
+    R --> L[Existing login and JWT issuance]
+    L --> A[Existing authenticate function; route integration and current user planned]
+    A --> Z[Existing authorize function; protected routes and ownership planned]
     M --> D[Planned generic domains and Finance data]
     D --> P[Planned advisor profile]
     Z --> P
@@ -2160,11 +2165,11 @@ flowchart TD
 
 ### C-05 — Finance/domain business architecture is entirely pending
 
-**CURRENT IMPLEMENTATION:** [IMPLEMENTED] Seven backend source files and one users migration; registration exists, but domains, advisors, bookings, community, reviews, frontend, login, and JWT do not.
+**CURRENT IMPLEMENTATION:** [IMPLEMENTED] Eight backend source files including the authentication/role middleware, plus one users migration; registration/login/JWT and auth/role functions exist. Domains, advisors, bookings, community, reviews, frontend, and protected route integration remain planned.
 
 **INTENDED IMPLEMENTATION:** [PLANNED V1] Complete Finance journey with generic entities, security, tests, and deployment.
 
-**CONFLICT:** [PARTIALLY IMPLEMENTED] Product vision and package version `1.0.0` can be mistaken for delivered functionality. Registration is the only implemented business API; complete Finance journeys remain planned.
+**CONFLICT:** [PARTIALLY IMPLEMENTED] Product vision and package version `1.0.0` can be mistaken for delivered functionality. Registration and login are implemented business APIs; complete Finance journeys remain planned.
 
 **RECOMMENDED RESOLUTION:** [PLANNED V1] Follow dependencies/roadmap, preserve labels, and change status only after code plus appropriate tests/integration evidence exist.
 
@@ -2200,7 +2205,7 @@ flowchart TD
 
 ### C-09 — Role schema exists, role provisioning and combined abilities do not
 
-**CURRENT IMPLEMENTATION:** [IMPLEMENTED] `users.role` stores one of USER/ADVISOR/ADMIN. Public registration creates USER using the database default and ignores supplied role fields. Role middleware, advisor/admin provisioning, and profile workflows remain absent.
+**CURRENT IMPLEMENTATION:** [IMPLEMENTED] `users.role` stores one of USER/ADVISOR/ADMIN. Public registration creates USER using the database default and ignores supplied role fields. Role middleware exists but is not applied to routes. Advisor/admin provisioning and profile workflows remain absent.
 
 **INTENDED IMPLEMENTATION:** [PLANNED V1] Advisors are users with ADVISOR role plus profiles; public registration must remain safe; V2 contains stronger verification/admin tools.
 
@@ -2251,26 +2256,26 @@ flowchart TD
 | --- | --- | --- | --- | --- | --- |
 | Foundation | [IMPLEMENTED] Express/app/server/router/controller, dotenv, health, start/dev | [PLANNED V1] Reliable, understandable modular backend | Required environment validation, metadata correction, selected operational error/shutdown handling | Configuration decisions | P0 |
 | Database | [PARTIALLY IMPLEMENTED] Pool/users SQL and validated Compose configuration; no verified live schema | [PLANNED V1] Reproducible generic relational schema and constraints | Apply/tracking process, live verification, future business migrations/indexes | Raw SQL decisions, per-entity schema approval | P0 |
-| Authentication | [PARTIALLY IMPLEMENTED] Registration, normalization, bcrypt cost 12, validation, safe response, duplicate handling | [PLANNED V1] Safe registration/login/JWT/current user | Day 4 login/bcrypt.compare/JWT; authentication middleware/current user; tests and runtime verification | Users schema, env/secrets, token decisions | P0 |
-| Authorization | [PLANNED V1] Role CHECK only; no request checks | [PLANNED V1] Auth middleware, RBAC, ownership/assignment | Middleware, role freshness/provisioning rules, scoped queries, negative tests | Authentication, relationship design | P0 |
+| Authentication | [PARTIALLY IMPLEMENTED] Registration/login, JWT issuance, and authenticate function with 401/req.user behavior | [PLANNED V1] Integrated authenticated routes and safe current user | Route integration, current-user endpoint, token-policy decisions and tests | JWT_SECRET, intended claims/policies | P0 |
+| Authorization | [PARTIALLY IMPLEMENTED] Separate authorize(...allowedRoles), one/multiple roles and 403 behavior; USER/ADVISOR/ADMIN schema | [PLANNED V1] Enforced RBAC plus ownership | authenticate → authorize → controller wiring, role freshness/provisioning, ownership queries, negative tests | Verified identity, relationship design | P0 |
 | Advisors | [PLANNED V1] Absent | [PLANNED V1] Finance profiles/discovery/detail/basic filters | Domain seed, profile schema/APIs, safe projections, query/paging tests | Users/domains/auth/provisioning | P1 |
 | Appointments | [PLANNED V1] Absent | [PLANNED V1] Booking/tracking/cancellation/assigned-advisor lifecycle | Schema/time rules, transition matrix, ownership, atomic changes, delivery/conflict decisions | Advisors/auth, scheduling decisions | P0 integrity / P1 feature |
 | Community | [PLANNED V1] Absent | [PLANNED V1] Finance posts/comments/helpfulness | Schemas/APIs/content validation, helpful persistence/uniqueness, paging | Users/domains/auth, helpful scope decision | P1 |
 | Reviews | [PLANNED V1] Absent | [PLANNED V1] Eligible completed-consultation reviews and ratings | Schema/uniqueness/range, ownership/eligibility, list/aggregate queries/tests | Completed appointment lifecycle | P0 integrity / P1 feature |
 | Frontend | [PLANNED V1] Absent | [PLANNED V1] React/Vite Finance journey and minimal dashboards | Frontend setup/pages/API client/auth UI/loading/error/time display | Stable APIs, auth transport/CORS | P1 |
 | Testing | [PLANNED V1] No suite; audit syntax checks only | [PLANNED V1] Critical automated and manual acceptance evidence | Select tools; unit/integration/DB/security/frontend/E2E tests and fixtures | Implement incrementally with each feature; isolated test DB | P0 |
-| Security | [PARTIALLY IMPLEMENTED] Ignore rules, validated DB loopback mapping, safe health/registration errors, registration validation/hash/parameters/USER-only output, malformed-JSON 400 | [PLANNED V1] Enforced invariants and safe public deployment | Auth/ownership, broader safe errors, secret review, selected abuse/CORS/TLS policies | Protected features and deployment topology | P0 |
+| Security | [PARTIALLY IMPLEMENTED] Ignore rules, validated DB loopback mapping, safe health/registration errors, registration validation/hash/parameters/USER-only output, malformed-JSON 400 | [PLANNED V1] Enforced invariants and safe public deployment | Protected-route integration/ownership, broader safe errors, secret review, selected abuse/CORS/TLS policies | Protected features and deployment topology | P0 |
 | Deployment | [PLANNED V1] Local DB config only | [PLANNED V1] Hosted frontend/backend/managed DB, verified setup | Provider/runtime/secrets decisions, migration apply, HTTPS, smoke tests/recovery | Integrated tested app | P1 release gate |
 | Documentation | [PARTIALLY IMPLEMENTED] This master spec; README absent | [PLANNED V1] Accurate spec, concise setup README, explainable architecture | README, decision closure, actual test/deployment evidence, re-audits | Every implementation milestone | P2 ongoing / release gate |
 
 ### 31.1 Completion estimate and reasoning
 
-[PARTIALLY IMPLEMENTED] **Estimated V1 progress: about 18%, with a reasonable planning range of 15–20%.** This is a subjective scope-weighted engineering estimate, not measured hours, test coverage, route-count completion, or a guarantee about work remaining. Product journeys implemented end-to-end: **zero confirmed**.
+[PARTIALLY IMPLEMENTED] **Estimated V1 progress: about 23% (22.5% before rounding), with a reasonable planning range of 20–25%.** This is a subjective scope-weighted engineering estimate, not measured hours, test coverage, route-count completion, or a guarantee about work remaining. Product journeys implemented end-to-end: **zero confirmed**.
 
 | V1 work group | Estimated share of full V1 | Approximate completion within group | Contribution |
 | --- | --- | --- | --- |
 | Backend/database foundation | 15% | 70%: code/users SQL/validated config and env placeholders; reproducibility/live verification/hardening incomplete | 10.5 percentage points |
-| Authentication/authorization | 15% | 40%: registration implemented; login/JWT/middleware/ownership and tests pending | 6 percentage points |
+| Authentication/authorization | 15% | 70%: registration/login/JWT and middleware functions exist; route integration/current user/ownership/tests pending | 10.5 percentage points |
 | Advisor system/discovery | 10% | 0% | 0 |
 | Appointments | 15% | 0% | 0 |
 | Community/comments/helpfulness | 10% | 0% | 0 |
@@ -2279,11 +2284,11 @@ flowchart TD
 | Maintained tests/security hardening | 10% | 0% beyond foundation practices counted above | 0 |
 | Deployment | 5% | 0% | 0 |
 | Documentation/explainability | 5% | 30%: master reference exists, README/final evidence/understanding checks pending | 1.5 percentage points |
-| Total | 100% | Approximate weighted estimate | **18%** |
+| Total | 100% | Approximate weighted estimate | **22.5% (about 23%)** |
 
-[PARTIALLY IMPLEMENTED] Days 1–3 have repository artifacts, but roadmap day counts are not an effort model. Most remaining risk lies in authentication, ownership, relational business workflows, integration, and deployment. New document length does not materially substitute for implemented product scope. Re-estimate after meaningful tested milestones, keeping the weighting rationale visible.
+[PARTIALLY IMPLEMENTED] Days 1–5 have repository artifacts, but roadmap day counts are not an effort model. Most remaining risk lies in authentication, ownership, relational business workflows, integration, and deployment. New document length does not materially substitute for implemented product scope. Re-estimate after meaningful tested milestones, keeping the weighting rationale visible.
 
-[PARTIALLY IMPLEMENTED] The estimate now includes implemented registration and accepted Day 3 policies. Resolved Compose syntax is recorded separately; no live or automated verification is implied by this subjective estimate.
+[PARTIALLY IMPLEMENTED] The estimate includes login/JWT issuance and the Day 5 middleware functions. It does not treat unwired middleware, current-user access, resource ownership, or unperformed runtime tests as completed integration.
 
 ## 32. ARCHITECTURE DECISION LOG
 
@@ -2298,7 +2303,7 @@ flowchart TD
 | ADR-003 — Raw SQL + pg instead of Drizzle | Use shared `pg` pool and parameterized PostgreSQL SQL; no ORM without explicit change | SQL familiarity, query visibility, direct DB control, no second abstraction, DBMS interview preparation | Drizzle was briefly tried/removed per owner; Prisma/Sequelize/TypeORM not chosen; ORM convenience/type/schema/migration support is a tradeoff | Accepted; [IMPLEMENTED] `pg`/pool/SQL and parameterized registration; other business queries [PLANNED V1] | `package.json`, lockfile, `src/config/db.js`, migrations; intermediate Drizzle history owner-provided |
 | ADR-004 — Finance-first generic architecture | Deliver Finance end-to-end in V1 with generic users/domains/profiles/appointments/community | Manage scope while retaining multi-domain extension without duplicate architectures | Separate per-domain apps/tables are explicitly rejected; launching every domain immediately expands correctness/security workload | Accepted; [PLANNED V1] business implementation | Owner product/version requirements |
 | ADR-005 — UUID identifiers | Prefer PostgreSQL-generated UUID primary keys | Consistent opaque identity across generic entities; controller avoids manual ID generation | Sequential integers are a conceptual alternative; UUID storage/index cost and random ordering are tradeoffs; UUID is not access control | Accepted; [IMPLEMENTED] users migration, future entities [PLANNED V1] | `001_create_users.sql` and owner identifier requirement |
-| ADR-006 — JWT authentication for V1 | Use custom backend login and JWT verification | Chosen API authentication direction with middleware-populated identity | Session-based alternatives not selected; transport/expiry/revocation still need design; Supabase Auth is not chosen | Accepted mechanism; [PLANNED V1], details [TBD] | Owner auth requirements; no current JWT implementation |
+| ADR-006 — JWT authentication for V1 | Custom login/JWT with separate verification and role functions | Backend identity and reusable access policy | Browser storage, explicit verification options, rotation/revocation remain TBD | Accepted; [PARTIALLY IMPLEMENTED] login and middleware functions; route integration planned | Auth controller and src/middlewares/auth.middleware.js (tracked) |
 | ADR-007 — Node/Express/CommonJS backend | Keep backend JavaScript with Express and CommonJS modules | Small explicit HTTP backend fitting current skills and repository | Other runtimes/frameworks/TypeScript/ESM conversion are not selected; async I/O does not remove CPU/memory limits | Accepted; [IMPLEMENTED] foundation | `package.json`, all existing `src/` files |
 | ADR-008 — SQL migrations as schema history | Store ordered structural changes under `database/migrations/` | Reproducibility, onboarding, debugging, deployment, auditability | Unrecorded manual SQL is rejected as long-term approach; runner/ledger design remains pending | Accepted direction; [PARTIALLY IMPLEMENTED] first migration | Existing migration and owner requirements |
 | ADR-009 — app/server and routes/controllers separation | Separate HTTP app composition from startup; route mapping from request/application logic | Clear responsibilities, easier explanation and future testing without automatic listener startup | One large entry file or unnecessary layers not preferred; services only when complexity warrants | Accepted; [IMPLEMENTED] foundation separation | `src/app.js`, `src/server.js`, routes/controller files |
@@ -2306,7 +2311,7 @@ flowchart TD
 | ADR-011 — React/Vite JavaScript frontend | Build a basic REST-consuming React frontend using Vite | Selected frontend direction for V1 integration | No styling/routing/state package selected; frontend never gets direct PostgreSQL access | Accepted stack direction; [PLANNED V1] | Owner brief; current frontend absent |
 | ADR-012 — Modular monolith and minimal abstraction | Grow one modular Express service; add layers/services only when real complexity requires | Correctness, learning, maintainability, and explainability over infrastructure/abstraction count | Premature microservices/Kubernetes/Redis/search clusters explicitly outside V1 | Accepted; [IMPLEMENTED] small foundation; growth [PLANNED V1] | Owner architecture principles, current tree |
 | ADR-013 — Separate local HTTP and DB communication | Backend defaults to 8000; host DB publication 127.0.0.1:5433 to container PostgreSQL 5432 | Explicit service boundaries and loopback-restricted local DB access | Native default host 5432 or containerized backend networking would be different configurations; no HTTP-to-DB redirect | Accepted current configuration; [IMPLEMENTED], actual runtime values [TBD] | `src/server.js:6`, `docker-compose.yml:6–7` |
-| ADR-014 — Backend and DB enforce security/integrity | Use backend validation/auth/roles/ownership plus DB constraints; frontend never trusted | APIs are directly callable; concurrent requests can bypass frontend/precheck assumptions | Client-only validation/permission checks are explicitly rejected | Accepted requirement; [PARTIALLY IMPLEMENTED] users constraints and registration validation/hash/parameters/safe output | Users migration, auth controller, app; protected middleware/business flows remain planned |
+| ADR-014 — Backend and DB enforce security/integrity | Use backend validation/auth/roles/ownership plus DB constraints; frontend never trusted | APIs are directly callable; concurrent requests can bypass frontend/precheck assumptions | Client-only validation/permission checks are explicitly rejected | Accepted requirement; [PARTIALLY IMPLEMENTED] users constraints and registration validation/hash/parameters/safe output | Users migration, auth controller, app, and auth middleware; protected-route integration/business flows remain planned |
 
 [IMPLEMENTED] Accepted Day 3 decisions, confirmed by the owner and current registration code:
 
@@ -2316,7 +2321,7 @@ flowchart TD
 | D-06 — Password limits | Minimum 12 characters; maximum 72 UTF-8 bytes; reject excess | password.length and Buffer.byteLength checks; no password normalization |
 | D-07 — Email normalization | Trim surrounding whitespace and lowercase | Preserve Gmail dots and +tags; no provider-specific rewriting; UNIQUE protects stored values |
 | D-08 — Validation style | Explicit manual backend validation for current V1; no library selected | Registration checks in controller; current errors use message only; broader error schema remains TBD |
-| Registration behavior | Create USER only; no JWT or automatic login | INSERT omits role; safe message/user response; login remains planned for Day 4 |
+| Registration behavior | Create USER only; no JWT or automatic login | INSERT omits role; safe registration message/user response; separate login now implemented |
 
 [PLANNED V1] To change an accepted decision: identify the problem and affected files/contracts, document current versus intended behavior, review alternatives/tradeoffs, record the intentional decision, then update implementation/migrations/tests/spec together in an authorized task. An AI suggestion is not an accepted ADR. Do not backdate or invent approvals/history.
 
@@ -2326,10 +2331,10 @@ flowchart TD
 
 | ID / decision | Why it matters | Recommended default for review, not accepted | When decision is needed |
 | --- | --- | --- | --- |
-| D-01 — JWT transport and client storage | XSS/CSRF exposure, persistence, browser/API integration | Evaluate secure HttpOnly cookie with explicit CSRF policy against an in-memory bearer-token design; avoid silently persisting tokens in localStorage | Before day 4 auth contract; final topology before frontend integration |
-| D-02 — JWT package, algorithm, claims, expiry | Verification correctness and compatibility | Select a maintained compatible package; restrict algorithms; minimal identity claims and finite expiry; validate issuer/audience as selected | Before login/JWT implementation |
+| D-01 — Client token storage / remaining transport policy | Browser security and persistence | [IMPLEMENTED] Middleware reads Authorization Bearer tokens; no route integration or browser storage exists. Select browser storage and any cookie/CSRF policy separately | Before frontend integration |
+| D-02 — Remaining JWT verification policy | Verification and claim correctness | [IMPLEMENTED] jsonwebtoken, userID/role payload, JWT_EXPIRES_IN or 1h. Explicit algorithms, issuer/audience and claim validation remain TBD | Before protected routes/public deployment |
 | D-03 — Refresh tokens, logout, revocation, role freshness | Stolen/copied JWTs and role/deletion changes outlive client UI state | Start with the smallest explicit lifetime/reauthentication model that meets V1; do not add refresh storage without a selected need; define role-change behavior | Before auth is declared complete/publicly deployed |
-| D-04 — JWT signing material and rotation | Token integrity depends on private key/secret handling | Secure backend environment secret/key, explicit rotation plan; exact variable/key management approach pending | Before JWT implementation/deployment |
+| D-04 — JWT secret validation and rotation | Token integrity and operations | [IMPLEMENTED] Sign/verify read JWT_SECRET. Required-secret validation and rotation remain TBD; private values uninspected | Before operational readiness/deployment |
 | D-09 — Migration apply/tracking process | Reproducibility, repeated deploys, failure recovery | Small ordered raw-SQL process with recorded applied versions and documented failure behavior; no ORM | Before applying additional shared migrations/deployment |
 | D-10 — Advisor profile cardinality | Determines uniqueness, self-profile APIs, future multi-domain participation | One profile per user for minimal V1; compare per-user/domain or join-table design before V2; keep one auth identity | Before advisor migration/API approval |
 | D-11 — Advisor/admin provisioning and customer abilities | Need Finance advisors without public role escalation; single role affects who can book | Controlled trusted provisioning; explicitly decide whether ADVISOR can also perform customer actions | Before day 6 profile system and day 9 booking |
@@ -2429,12 +2434,12 @@ flowchart TD
 | Hashing versus encryption? | Encryption is reversible with a key. Password hashing is used for one-way verification; login compares against the hash instead of decrypting stored passwords. | [PLANNED V1] security direction |
 | What is a salt? | Per-password randomness incorporated in hashing so identical passwords can yield different hashes and precomputed guesses are less reusable. | [IMPLEMENTED] bcrypt registration hashing |
 | Why deliberately expensive hashing? | It raises the computational cost of password guessing. Cost must also fit the application's legitimate login workload. | [IMPLEMENTED] cost 12 selected; deployment benchmarking [PLANNED V1] |
-| How can bcrypt.compare work without decrypting? | The stored representation includes parameters needed to hash the candidate and verify a match; it does not contain recoverable plaintext. | [PLANNED V1] login |
-| Authentication versus authorization? | Authentication establishes identity. Authorization checks whether that identity may perform the specific action on the specific resource. | [PLANNED V1] middleware absent |
-| What is JWT? | A token format for claims; the planned signed token carries identity with verifiable integrity and expiry. The payload is readable, so it must not contain passwords, hashes, or secrets. | [PLANNED V1] no implementation |
-| 401 versus 403? | 401 means valid authentication is missing. 403 means the authenticated caller is forbidden by role/relationship/policy. | [PLANNED V1] intended semantics |
-| What is RBAC? | Role-based access control restricts operations to allowed roles such as ADVISOR/ADMIN. It does not automatically restrict which user's record a caller may access. | [PLANNED V1] role middleware |
-| How does authorize('ADMIN') work conceptually? | It is a higher-order function returning middleware. A closure retains allowed roles for that returned function to check after authentication. | [PLANNED V1] conceptual pattern only |
+| How can bcrypt.compare work without decrypting? | The stored representation includes parameters needed to hash the candidate and verify a match; it does not contain recoverable plaintext. | [IMPLEMENTED] login |
+| Authentication versus authorization? | authenticate verifies the token and assigns req.user; authorize checks that verified role against allowedRoles. | [IMPLEMENTED] separate functions; route integration planned |
+| What is JWT? | Login issues a signed token with userID/role and expiry; middleware verifies it using JWT_SECRET. Payloads are readable and contain no password/hash. | [IMPLEMENTED] signing/verification functions; routes not protected |
+| 401 versus 403? | Login/verification failures return 401; authorize returns 403 for a disallowed verified role. | [IMPLEMENTED] functions; protected-route behavior not integrated/tested |
+| What is RBAC? | Role-based access control restricts operations to allowed roles such as ADVISOR/ADMIN. It does not automatically restrict which user's record a caller may access. | [IMPLEMENTED] role helper; route integration planned |
+| How does authorize('ADMIN') work conceptually? | It is a higher-order function returning middleware. A closure retains allowed roles for that returned function to check after authentication. | [IMPLEMENTED] authorize closure in src/middlewares/auth.middleware.js; not wired |
 | What is ownership authorization? | Checking the caller's relationship to a resource, such as appointment.user_id matching the verified user ID or the assigned advisor profile belonging to the caller. | [PLANNED V1] required on private operations |
 | Role versus domain? | USER/ADVISOR/ADMIN describes authorization identity. FINANCE/HEALTH/ASTROLOGY describes advisory category. They should not share a field or duplicate account architecture. | [IMPLEMENTED] role field; domain [PLANNED V1] |
 | Why backend validation? | Browser checks can be bypassed. The backend must validate all request data before it influences SQL, ownership, or business state. | [IMPLEMENTED] manual registration validation; other business validation [PLANNED V1] |
@@ -2445,7 +2450,7 @@ flowchart TD
 | Do passing syntax checks prove the app works? | No. They catch parsing errors but not database connectivity, schema, routing correctness, security, or complete user journeys. | [IMPLEMENTED] syntax checks only during audit |
 | Why integration/database tests? | They verify middleware-to-controller-to-SQL behavior and actual constraints. Mocked unit tests cannot establish PostgreSQL uniqueness or real concurrent-write behavior. | [PLANNED V1] suite absent |
 | What does V1 done mean? | The integrated Finance journeys, security/ownership, constraints, critical tests, frontend, deployment, and current documentation all work. Route existence alone is insufficient. | [PLANNED V1] section 35 |
-| What is implemented right now? | Backend/DB foundation, validated local Compose, users migration, registration with manual validation/bcrypt/parameterized SQL/safe USER-only response/duplicate handling, malformed-JSON 400, environment placeholders, ignore rules, and this reference. Complete Finance journeys remain planned. | [IMPLEMENTED] evidence in section 4; live operation unverified |
+| What is implemented right now? | Backend/DB foundation, registration/login, JWT issuance, and separate authenticate/authorize functions exist. Helpers are not attached to routes; current-user, ownership, complete Finance journeys, tests, frontend, and deployment remain planned. | [IMPLEMENTED] source evidence; middleware tracked; runtime unverified |
 
 ## 35. VERSION 1 DEFINITION OF DONE
 
@@ -2488,7 +2493,7 @@ flowchart TD
 
 ## 36. Documentation maintenance and README relationship
 
-[IMPLEMENTED] This file is the detailed internal engineering source of truth, updated for current Day 3 registration maintenance. [PLANNED V1] `README.md` should be the concise public repository introduction and onboarding entry point; it is currently absent. Do not replace the README with this entire document or claim an existing README was updated.
+[IMPLEMENTED] This file is the detailed internal engineering source of truth, updated for current Day 5 middleware implementation and integration gaps. [PLANNED V1] `README.md` should be the concise public repository introduction and onboarding entry point; it is currently absent. Do not replace the README with this entire document or claim an existing README was updated.
 
 | Document/artifact | Status | Responsibility |
 | --- | --- | --- |
@@ -2506,6 +2511,7 @@ flowchart TD
 | --- | --- | --- | --- |
 | Initial audit, 2026-09-13 | `main` at `59553f5fe6f73c5424d26be76f520aa451b72537`, plus final working-tree C-12 discrepancy | Added this reference; inspected all current first-party files; documented missing business systems, conflicts, decisions, roadmap, and ~12% estimate; preserved independently changed Compose file | [IMPLEMENTED] historical documentation-only audit; no application/configuration edits by that audit |
 | Day 3 maintenance, 2026-09-14 | `main` at `74aeec62c37863c8c72ded88c836121766113923` plus scoped working-tree changes | Added name/email bounds, PostgreSQL 23505 → 409, and malformed-JSON 400; synchronized registration contract, accepted D-05–D-08, progress, and resolved config/ignore findings | [IMPLEMENTED] two JS files and this spec; login and automated tests remain planned |
+| Day 5 documentation audit, 2026-09-14 | `4a9384cecc9a2a21994e1bd8a5b58b03405b1694` | Confirmed login/JWT issuance, authenticate/authorize functions and 401/403 behavior; documented absent protected-route wiring/current-user/ownership and preserved future features as planned | [IMPLEMENTED] documentation only; source files preserved; no runtime tests |
 | Next feature milestone | [TBD] actual future commit | Record only work actually implemented/verified and intentionally revised decisions | [PLANNED V1] |
 
 [PLANNED V1] Official references linked throughout this document explain PostgreSQL, pg, JWT, bcrypt, and Docker behavior. They are not substitutes for local implementation evidence. Re-check version-specific technical behavior when changing dependency/runtime versions; never infer that current upstream documentation means Consultify has adopted a new version.
