@@ -6,17 +6,17 @@
 
 | Audit metadata | Value |
 | --- | --- |
-| Last audited against repository | 2026-09-14, Asia/Kolkata |
+| Last audited against repository | 2026-09-19, Asia/Kolkata |
 | Repository | `CONSULTIFY`, local directory `consultify/` |
 | Git branch | `main` |
-| Audited commit | `4a9384cecc9a2a21994e1bd8a5b58b03405b1694` |
-| Commit subject | Add authentication and role authorization middleware |
-| Master document revision | Day 5 middleware implementation audit; documentation-only update |
+| Audited commit | `3a9b906e4c8e57072c5a857596c6570941fd62a7`, plus the current working-tree advisor-route edit |
+| Commit subject | feat: add appointment booking and management APIs |
+| Master document revision | Day 7 advisor/appointment implementation audit; documentation-only update |
 | Package version | `1.0.0` in `package.json`; this does **not** mean product V1 is complete |
-| Product readiness | [PARTIALLY IMPLEMENTED] Foundation, registration/login, JWT issuance, and authentication/role middleware functions; approximately **20–25% toward V1**, rounded estimate 23%; route protection is not integrated; see section 31 |
-| Audit scope | Authentication/authorization middleware, login/registration controller, all current route wiring, app, role schema, relevant dependency metadata, and Git state |
-| Source preservation | Only this master spec was modified by the Day 5 documentation task. The existing middleware file and all source/configuration files were preserved |
-| Verification limits | Source inspection, `git diff --check`, diff review, and before/after repository-file hashes. No runtime authentication tests or database operations were performed; middleware is not wired into any current route |
+| Product readiness | [PARTIALLY IMPLEMENTED] Days 1–5 complete in code; Day 6 advisor APIs implemented with testing pending; Day 7 appointment schema/controller/routes implemented with testing pending and a blocking route-import defect; see sections 4, 14, 15, 21, 25, and 31 |
+| Audit scope | App/startup/DB wiring, auth/advisor/appointment middleware/routes/controllers, migrations 001–003, dependency metadata, Git state, and the master specification |
+| Source preservation | Documentation-only task. No application, migration, package, environment, or Docker file was modified. The pre-existing working-tree edit in `src/routes/advisor.routes.js` was preserved |
+| Verification limits | Static source/migration inspection, JavaScript syntax checks, route-module loading check, `git diff --check`, and final scope review. Day 6 and Day 7 API testing remains intentionally postponed until the dedicated backend test pass before frontend work |
 | Compose configuration | [IMPLEMENTED] Previously reported C-12 ports syntax issue is resolved in the inspected repository; `docker compose config --no-interpolate --quiet` passes. This verifies configuration structure, not live infrastructure |
 | Live infrastructure | [TBD] Container state, server PostgreSQL version, applied migrations, and persisted data were not inspected during this maintenance task |
 | Secret handling | `.env` was not opened. Private credentials, tokens, and production connection strings are not included here |
@@ -47,7 +47,7 @@
 22. [Logging, performance, and scalability](#22-logging-performance-and-scalability)
 23. [Local development and debugging commands](#23-local-development-and-debugging-commands)
 24. [Deployment and Git workflow](#24-deployment-and-git-workflow)
-25. [14-day V1 implementation roadmap](#25-14-day-v1-implementation-roadmap)
+25. [10-day V1 implementation roadmap](#25-10-day-v1-implementation-roadmap)
 26. [Implementation checklist](#26-implementation-checklist)
 27. [Feature dependency graph](#27-feature-dependency-graph)
 28. [Bug audit checklist](#28-bug-audit-checklist)
@@ -88,7 +88,7 @@
 
 [PLANNED V1] Every future audit must re-check the repository. Do not update an implementation checkbox based only on a plan, generated code suggestion, installed package, empty folder, or route stub. Never assume authentication, tests, migrations, hosting, AI, or middleware exist because they are customary in other applications.
 
-[TBD] When evidence and intent disagree, record **CURRENT IMPLEMENTATION**, **INTENDED IMPLEMENTATION**, **CONFLICT**, and **RECOMMENDED RESOLUTION**. A recommendation in this document is not permission to change the architecture. This Day 5 task updates documentation only, based on inspected implementation.
+[TBD] When evidence and intent disagree, record **CURRENT IMPLEMENTATION**, **INTENDED IMPLEMENTATION**, **CONFLICT**, and **RECOMMENDED RESOLUTION**. A recommendation in this document is not permission to change the architecture. This Day 7 task updates documentation only, based on inspected implementation.
 
 ## 2. Product, domains, and version boundaries
 
@@ -98,17 +98,19 @@
 
 [PLANNED V1] The differentiator is **professional expertise plus community experience** in one product. Advisor discovery without a community, or a discussion board without a booking workflow, does not fulfill this product definition.
 
-[IMPLEMENTED] Registration, login/JWT issuance, and infrastructure diagnostics exist. Authentication and role middleware functions also exist, but no current route uses them. Advisor discovery, bookings, community, and the complete Finance journey remain unimplemented.
+[PARTIALLY IMPLEMENTED] Registration, login/JWT, advisor profiles/discovery, and appointment schema/controller/route source exist. Advisor and appointment route source uses authentication/RBAC, but Day 6/7 API testing is postponed and the appointment router currently fails to load. Community and the complete tested Finance journey remain unimplemented.
 
 ### 2.2 Versions
 
 | Version | Status | Scope | Boundary |
 | --- | --- | --- | --- |
-| V1 — Core product | [PARTIALLY IMPLEMENTED] | Finance end-to-end; clean backend, relational schema, registration/login, JWT, RBAC/ownership, advisors, bookings, community/comments/helpfulness, reviews, basic frontend, tests, deployment | Correctness and security over feature count; foundation, registration/login, and authentication/role middleware artifacts currently exist |
+| V1 — Core product | [PARTIALLY IMPLEMENTED] | Finance end-to-end; clean backend, relational schema, registration/login, JWT, RBAC/ownership, advisors, bookings, community/comments/helpfulness, reviews, basic frontend, tests, deployment | Foundation/auth and Day 6/7 source exist; community/reviews/frontend/testing/deployment remain and appointment integration is blocked |
 | V2 — Product expansion | [PLANNED V2] | Health, Astrology, advanced filters/search, availability, notifications, stronger admin tools, community reputation, advisor verification, improved dashboards, favorites, reporting | Reuse generic entities and custom backend; exact feature order and schemas pending |
 | V3 — Intelligent platform | [PLANNED V3] | Possible advisor recommendations, question categorization, duplicate detection, consultation summaries, smart FAQs, sentiment analysis, intelligent answer ranking, analytics, recommendation systems | Assistance rather than replacement for professional judgment; no AI package, provider, data pipeline, or model selected |
 | Later real-time capabilities | [DEFERRED] | Chat, voice/video calls, WebSockets, real-time notifications | Delivery mechanism, provider, security model, and version assignment are unresolved |
 | Additional advisory domains | [DEFERRED] | Legal, Career, Fitness, and other future categories | Examples of extensibility, not approved V1/V2 workflows |
+
+[PARTIALLY IMPLEMENTED] Current V1 remains Finance-first: authentication, USER/ADVISOR/ADMIN roles, advisor profiles/discovery, and appointment booking/management are represented in code. Community is the next unstarted module; reviews, basic dashboard/profile frontend, broader testing, and deployment follow later. The schema remains generic enough to contain HEALTH and ASTROLOGY domain values, but those product workflows are not implemented V1 features.
 
 [PLANNED V1] Generic design is mandatory even though Finance is the only launch domain. `USER`, `ADVISOR`, and `ADMIN` are authorization roles. `FINANCE`, `HEALTH`, and `ASTROLOGY` are advisory categories. Do not create `financeUsers`, `healthUsers`, `financeAppointments`, or separate authentication systems per domain.
 
@@ -156,7 +158,7 @@
 
 ### 4.1 Audited files and history
 
-[IMPLEMENTED] The repository has 15 tracked files, including `src/middlewares/auth.middleware.js`. The scoped inspection covered the artifacts needed to verify login, authentication, authorization, and route integration; source links are relative to this document.
+[IMPLEMENTED] The repository has 21 tracked files at commit `3a9b906`, plus a pre-existing working-tree change in `src/routes/advisor.routes.js`. The scoped inspection covered Day 6/7 routes, controllers, migrations, app wiring, authentication/authorization, and dependency metadata.
 
 | File | Evidence and responsibility |
 | --- | --- |
@@ -174,9 +176,13 @@
 | [src/controllers/auth.controller.js](../src/controllers/auth.controller.js) | Registration and login; bcrypt.hash/compare, parameterized SQL, safe user responses, and JWT issuance |
 | [src/middlewares/auth.middleware.js](../src/middlewares/auth.middleware.js) | Tracked file exporting authenticate and authorize(...allowedRoles); verification and role checks are separate functions |
 | [database/migrations/001_create_users.sql](../database/migrations/001_create_users.sql) | Users schema, email UNIQUE, and default USER role |
+| [src/routes/advisor.routes.js](../src/routes/advisor.routes.js), [src/controllers/advisor.controller.js](../src/controllers/advisor.controller.js) | Day 6 profile create/update and public discovery/detail; current route file has a pre-existing working-tree edit |
+| [database/migrations/002_create_advisor_profiles.sql](../database/migrations/002_create_advisor_profiles.sql) | Advisor-profile schema and users relationship |
+| [src/routes/appointment.routes.js](../src/routes/appointment.routes.js), [src/controllers/appointment.controller.js](../src/controllers/appointment.controller.js) | Day 7 route/controller source; route import/export defect blocks module loading |
+| [database/migrations/003_create_appointments.sql](../database/migrations/003_create_appointments.sql) | Appointment schema, relationships, status CHECK, notes, timestamps |
 | [CONSULTIFY_MASTER_SPEC.md](CONSULTIFY_MASTER_SPEC.md) | Current implementation evidence and planned V1 reference |
 
-[IMPLEMENTED] Local history contains seven commits:
+[IMPLEMENTED] Local history includes the following relevant milestones:
 
 | Commit | Local date | Subject |
 | --- | --- | --- |
@@ -187,8 +193,10 @@
 | `5fc1c0c738dab8fbc027e05163acef1b22435d2e` | 2026-09-14 | Complete secure user registration |
 | `43e886e7e20defeea16bccb8e1437b68484d4c76` | 2026-09-14 | Add JWT based user login |
 | `4a9384cecc9a2a21994e1bd8a5b58b03405b1694` | 2026-09-14 | Add authentication and role authorization middleware |
+| `9296473b44bf28f9d12b7641ff872cbbfc4210fa` | 2026-09-17 | Add advisor profiles and discovery APIs |
+| `3a9b906e4c8e57072c5a857596c6570941fd62a7` | 2026-09-18 | feat: add appointment booking and management APIs |
 
-[IMPLEMENTED] At task start, tracked files were clean and `src/middlewares/auth.middleware.js` existed as an untracked file. During this documentation review, an external commit (`4a9384c`) tracked that file without changing its contents. Final implementation evidence includes that commit. This task modified only the spec; before/after hashes confirm all source files were preserved. `.env` was not opened.
+[IMPLEMENTED] At this Day 7 documentation task's start, `src/routes/advisor.routes.js` already had a working-tree modification. It was inspected as current evidence and preserved. This task modifies only the master specification; `.env` was not opened.
 
 [IMPLEMENTED] The prior Compose ports discrepancy (C-12) is resolved: the inspected file contains a valid list item and `docker compose config --no-interpolate --quiet` succeeds. No Compose configuration or Docker runtime state was changed by this task.
 
@@ -215,25 +223,25 @@
 | Environment documentation | [IMPLEMENTED] example | `.env.example` | PORT, DATABASE_URL, and POSTGRES_PASSWORD placeholders exist; required-variable validation remains planned |
 | Registration and password hashing | [IMPLEMENTED] | Auth route/controller, `bcrypt` dependency | POST /api/auth/register; manual validation, bcrypt cost 12, safe USER-only creation; no automatic login |
 | Login and JWT | [IMPLEMENTED] | Auth route/controller; jsonwebtoken | POST /api/auth/login, bcrypt.compare, JWT_SECRET signing, JWT_EXPIRES_IN or 1h, safe user response |
-| JWT authentication middleware | [IMPLEMENTED] function; route integration [PLANNED V1] | `src/middlewares/auth.middleware.js` (tracked) | Authorization/Bearer parsing, jwt.verify with JWT_SECRET, 401 errors, decoded req.user, next after verification |
-| Role authorization middleware | [IMPLEMENTED] function; route integration [PLANNED V1] | Same middleware file | authorize(...allowedRoles), one/multiple roles, 403 for a disallowed req.user.role; expects authenticate first |
-| Protected routes and ownership | [PLANNED V1] | No middleware imports/use in current routes | No authenticate → authorize → controller route chain, current-user endpoint, or resource ownership checks |
+| JWT authentication middleware | [IMPLEMENTED] and used | `src/middlewares/auth.middleware.js`, advisor/appointment routes | Authorization/Bearer parsing, jwt.verify with JWT_SECRET, 401 errors, decoded req.user, then next |
+| Role authorization middleware | [IMPLEMENTED] and used | Same middleware plus advisor/appointment routes | authorize(USER/ADVISOR), 403 for disallowed role, ordered after authenticate |
+| Protected routes and ownership | [PARTIALLY IMPLEMENTED] | Advisor/appointment routes and controllers | Advisor self-profile and appointment ownership/assignment SQL exist; appointment router load defect blocks those HTTP paths; current-user endpoint absent |
 | Current-user endpoint | [PLANNED V1] | No user route/controller | Not mounted |
 | Domains and Finance seed data | [PLANNED V1] | No domains migration or seed file | Finance-first product requirement only |
-| Advisor profiles and discovery | [PLANNED V1] | No advisor files/schema | All API contracts below are proposed |
-| Appointments and lifecycle | [PLANNED V1] | No appointment files/schema | State and scheduling policies pending |
+| Advisor profiles and discovery | [IMPLEMENTED] / TESTING PENDING | Migration 002, advisor controller/routes, app mount | Protected create/update; public list/detail/search/filter. API testing postponed |
+| Appointments and lifecycle | [PARTIALLY IMPLEMENTED] / TESTING PENDING | Migration 003, appointment controller/routes, app mount | Booking/list/cancel/status code exists, but appointment router currently fails to load because three handlers are referenced without imports |
 | Community posts/comments/helpfulness | [PLANNED V1] | No community files/schema | Helpful interaction required; persistence choice pending |
 | Reviews/ratings | [PLANNED V1] | No review files/schema | Completed-appointment integrity not implemented |
 | Minimal dashboards | [PLANNED V1] | No frontend or dashboard APIs | Minimal composition of core resources proposed |
 | Advanced admin/verification | [PLANNED V2] | No admin code | V1 provisioning policy still needs decision |
-| Input validation and safe global errors | [PARTIALLY IMPLEMENTED] | Auth controller and `src/app.js` | Registration validation, 409/500 JSON, malformed-JSON 400 exist; unrelated errors pass to next(error); general error/not-found policy remains planned |
+| Input validation and safe global errors | [PARTIALLY IMPLEMENTED] | Auth/advisor/appointment controllers and `src/app.js` | Module-specific validation and safe errors exist; general error/not-found policy and full API testing remain planned |
 | Frontend React/Vite | [PLANNED V1] | No frontend directory/package/components | No UI, static app hosting, or frontend build script |
 | Automated tests and CI | [PLANNED V1] | No tests, test script, test dependencies, or workflow files | Syntax checks during audit are not a maintained test suite |
 | CORS/rate limits/JWT secret management | [PARTIALLY IMPLEMENTED] | Auth controller and middleware read JWT_SECRET | CORS/rate limiting, secret validation/rotation, and production configuration remain TBD |
 | Logging/monitoring | [PARTIALLY IMPLEMENTED] | Server and auth controller console messages | Registration/login catches log error.message server-side; no structured logging or monitoring |
 | Deployment | [PLANNED V1] | Local DB Compose only; no deployment config | No backend Dockerfile, hosting provider, live URL, or managed DB evidence |
 | README | [PLANNED V1] | Absent | Master spec does not replace a future concise README |
-| Master engineering reference | [IMPLEMENTED] | `docs/CONSULTIFY_MASTER_SPEC.md` | Updated for Day 5 middleware evidence and remaining integration gaps |
+| Master engineering reference | [IMPLEMENTED] | `docs/CONSULTIFY_MASTER_SPEC.md` | Updated through Day 7 with testing status and known integration defects |
 | Health/Astrology and V2 expansion | [PLANNED V2] | No implementation | Do not expose unfinished domains as supported |
 | AI/ML features | [PLANNED V3] | No implementation or selected AI technology | Possibilities only |
 
@@ -272,7 +280,7 @@ consultify/
 │       ├── auth.routes.js
 │       └── health.routes.js
 └── docs/
-    └── CONSULTIFY_MASTER_SPEC.md # updated for current Day 5 implementation
+    └── CONSULTIFY_MASTER_SPEC.md # updated for current Day 7 implementation
 ```
 
 ### 5.2 TARGET V1 FILE STRUCTURE
@@ -651,18 +659,37 @@ CREATE TABLE users(
 
 [IMPLEMENTED] Registration trims/lowercases email, validates password and field limits, hashes passwords, and inserts only name/email/password_hash, relying on the USER default. Normalization and password policy are backend rules, not additional schema constraints; email UNIQUE protects stored values without independently lowercasing direct SQL writes. [TBD] User deletion, future update timestamps, advisor provisioning, and any broader database canonicalization remain unresolved. Domains and seeded advisor/admin accounts remain planned. Login issues JWTs; no persisted session store exists.
 
+### 10.1 Current advisor profile schema — migration 002
+
+[IMPLEMENTED] `advisor_profiles.id` is a generated UUID primary key. `user_id` is UNIQUE, NOT NULL, references `users(id)`, and cascades on user deletion, so the current schema permits one advisor profile per account. `domain` is limited by a CHECK to FINANCE, HEALTH, or ASTROLOGY; the Day 6 create controller narrows V1 creation to FINANCE. `bio` is required text, `specialization` is required VARCHAR(150), `experience_years` is a nonnegative integer, and `consultation_fee` is a nonnegative NUMERIC(10,2). Both timestamps are required and default to CURRENT_TIMESTAMP; controller updates set `updated_at` explicitly.
+
+### 10.2 Current appointments schema — migration 003
+
+| Field / constraint | Current definition | Meaning |
+| --- | --- | --- |
+| `id` | UUID PRIMARY KEY DEFAULT gen_random_uuid() | Appointment identity |
+| `user_id` | UUID NOT NULL REFERENCES users(id) | Customer account identity |
+| `advisor_id` | UUID NOT NULL REFERENCES advisor_profiles(id) | Advisor profile identity, not advisor account ID |
+| `scheduled_at` | TIMESTAMPTZ NOT NULL | Scheduled consultation instant |
+| `status` | VARCHAR(20) NOT NULL DEFAULT PENDING | CHECK permits PENDING, CONFIRMED, COMPLETED, CANCELLED |
+| `notes` | TEXT nullable | Optional booking notes; no current length/audience policy |
+| `created_at` | TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP | Creation timestamp |
+| `updated_at` | TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP | Last controller-managed update timestamp |
+
+[IMPLEMENTED] The migration provides foreign keys and the status CHECK, but no explicit delete action, indexes beyond those implied by referenced/primary/unique keys, overlap constraint, or automatic `updated_at` trigger. Migration existence does not prove it has been applied to a live database; Day 6/7 database/API testing is postponed.
+
 ## 11. Target relational model and integrity rules
 
 ### 11.1 Entity inventory by version
 
-[PLANNED V1] The entity names below express the generic product model. Only the `users` migration exists. Candidate fields are design inputs, not a finalized schema. No SQL for planned entities is generated by this task.
+[PARTIALLY IMPLEMENTED] `users`, `advisor_profiles`, and `appointments` now have versioned migrations. Remaining entities are design targets, not current schema.
 
 | Entity | Status | Purpose and owner | Schema maturity |
 | --- | --- | --- | --- |
 | `users` | [IMPLEMENTED] migration | Shared authentication identity; user owns applicable profile data | Exact current SQL in section 10; live state unverified |
 | `domains` | [PLANNED V1] | Advisory categories; controlled system data | Finance only seeded for V1; Health/Astrology in V2 |
-| `advisor_profiles` | [PLANNED V1] | Professional profile attached to an ADVISOR user | Fields/cardinality/provisioning [TBD] |
-| `appointments` | [PLANNED V1] | Consultation record joining a customer to an advisor | Customer and assigned advisor have different permitted actions |
+| `advisor_profiles` | [IMPLEMENTED] migration; testing pending | Professional profile attached one-to-one to an account | Current fields/constraints in section 10.1; role provisioning still operationally TBD |
+| `appointments` | [IMPLEMENTED] migration; testing pending | Consultation joining a customer account to an advisor profile | Current fields/constraints in section 10.2; stricter transitions/scheduling remain hardening work |
 | `community_posts` | [PLANNED V1] | Public questions/experiences in a domain | Author owns content; moderation policy [TBD] |
 | `comments` | [PLANNED V1] | Contributions under a community post | Comment author is distinct from post author |
 | `reviews` | [PLANNED V1] | Feedback grounded in completed consultation | Only the consultation's customer may create its review |
@@ -738,10 +765,10 @@ erDiagram
 
 | Child reference | Status | Proposed referenced key | Ownership/access meaning | Deletion behavior |
 | --- | --- | --- | --- | --- |
-| `advisor_profiles.user_id` | [PLANNED V1] | `users.id` | Authenticated advisor manages own profile; role assignment is separate | [TBD] No cascade selected |
+| `advisor_profiles.user_id` | [IMPLEMENTED] | `users.id` | Authenticated advisor manages own profile; role assignment is separate | UNIQUE, NOT NULL, ON DELETE CASCADE |
 | `advisor_profiles.domain_id` | [PLANNED V1] | `domains.id` | Domain is classification, not owner | [TBD] Recommend restrict deletion of in-use domains |
-| `appointments.user_id` | [PLANNED V1] | `users.id` | Customer can view/cancel subject to policy | [TBD] Preserve history pending retention decision |
-| `appointments.advisor_id` | [PLANNED V1] | Recommended `advisor_profiles.id` | Assigned advisor can view/perform allowed transitions | [TBD] Do not cascade away consultation history by default |
+| `appointments.user_id` | [IMPLEMENTED] | `users.id` | Customer list/cancel SQL scopes by JWT userID | No explicit delete action; retention remains TBD |
+| `appointments.advisor_id` | [IMPLEMENTED] | `advisor_profiles.id` | Advisor list/status SQL resolves profile ownership through user_id | No explicit delete action; testing pending |
 | `community_posts.author_id`, `domain_id` | [PLANNED V1] | `users.id`, `domains.id` | Public read proposal; author-specific writes if scoped | [TBD] Account/content deletion and anonymization pending |
 | `comments.author_id`, `post_id` | [PLANNED V1] | `users.id`, `community_posts.id` | Parent author does not automatically own someone else's comment | [TBD] Cascade vs retained/tombstoned discussion pending |
 | `reviews.appointment_id` | [PLANNED V1] | `appointments.id` | Creation restricted to completed appointment's customer | [TBD] Preserve eligibility trace and review history |
@@ -867,16 +894,15 @@ erDiagram
 | API-02 | POST | `/api/auth/register` | No; public | Create USER account without automatic login | [IMPLEMENTED] |
 | API-03 | POST | `/api/auth/login` | No; public | Verify credentials and issue JWT | [IMPLEMENTED] |
 | API-04 | GET | `/api/users/me` | Yes; all three roles | Read safe current user | [PLANNED V1] / [TBD] path |
-| API-05 | GET | `/api/advisors` | Public proposed | Discover Finance advisors | [PLANNED V1] / [TBD] |
-| API-06 | GET | `/api/advisors/:id` | Public proposed | Advisor detail | [PLANNED V1] / [TBD] |
-| API-07 | GET | `/api/advisors/me` | Yes; ADVISOR | Read own advisor profile | [PLANNED V1] / [TBD] |
-| API-08 | POST | `/api/advisors/me` | Yes; ADVISOR | Create own profile after trusted role provisioning | [PLANNED V1] / [TBD] |
-| API-09 | PATCH | `/api/advisors/me` | Yes; ADVISOR | Update own allowed profile fields | [PLANNED V1] / [TBD] |
-| API-10 | POST | `/api/appointments` | Yes; USER proposed | Book advisor | [PLANNED V1] / [TBD] |
-| API-11 | GET | `/api/appointments` | Yes; USER or ADVISOR | List own or assigned appointments | [PLANNED V1] / [TBD] |
-| API-12 | GET | `/api/appointments/:id` | Yes; parties only | Private appointment detail | [PLANNED V1] / [TBD] |
-| API-13 | PATCH | `/api/appointments/:id/cancel` | Yes; owning USER proposed | Customer cancellation | [PLANNED V1] / [TBD] |
-| API-14 | PATCH | `/api/appointments/:id/status` | Yes; assigned ADVISOR | Advisor lifecycle update | [PLANNED V1] / [TBD] |
+| API-05 | GET | `/api/advisors` | Public | List advisors; optional `domain` and `search` | [IMPLEMENTED] / TESTING PENDING |
+| API-06 | GET | `/api/advisors/:id` | Public | Advisor profile detail by profile ID | [IMPLEMENTED] / TESTING PENDING |
+| API-07 | POST | `/api/advisors/profile` | Bearer JWT; ADVISOR | Create caller's advisor profile | [IMPLEMENTED] / TESTING PENDING |
+| API-08 | PATCH | `/api/advisors/profile` | Bearer JWT; ADVISOR | Update caller's advisor profile | [IMPLEMENTED] / TESTING PENDING |
+| API-09 | POST | `/api/appointments` | Bearer JWT; USER | Book an appointment | [PARTIALLY IMPLEMENTED] / TESTING PENDING; router load blocked |
+| API-10 | GET | `/api/appointments/user` | Bearer JWT; USER | List caller's appointments | [PARTIALLY IMPLEMENTED] / TESTING PENDING; router load blocked |
+| API-11 | GET | `/api/appointments/advisor` | Bearer JWT; ADVISOR | List appointments assigned through caller's advisor profile | [PARTIALLY IMPLEMENTED] / TESTING PENDING; missing route import |
+| API-12 | PATCH | `/api/appointments/:id/cancel` | Bearer JWT; USER | Cancel caller-owned PENDING/CONFIRMED appointment | [PARTIALLY IMPLEMENTED] / TESTING PENDING; missing route import/export |
+| API-13 | PATCH | `/api/appointments/:id/status` | Bearer JWT; ADVISOR | Set assigned non-cancelled appointment to CONFIRMED/COMPLETED | [PARTIALLY IMPLEMENTED] / TESTING PENDING; missing route import |
 | API-15 | POST | `/api/community/posts` | Yes; all roles proposed | Create Finance post | [PLANNED V1] / [TBD] |
 | API-16 | GET | `/api/community/posts` | Public proposed; `author=me` protected | List community posts | [PLANNED V1] / [TBD] |
 | API-17 | GET | `/api/community/posts/:id` | Public proposed | Post detail | [PLANNED V1] / [TBD] |
@@ -888,12 +914,12 @@ erDiagram
 | API-23 | GET | `/api/advisors/:id/reviews` | Public proposed | List advisor reviews | [PLANNED V1] / [TBD] |
 | API-24 | GET | `/api/reviews?scope=mine` | Yes; eligible customer role policy | Read own submitted reviews for minimal dashboard | [PLANNED V1] / [TBD] |
 
-[PLANNED V1] Register fixed `/api/advisors/me` routes before `/api/advisors/:id` to avoid treating `me` as an ID. Route mounting, middleware order, and exact response contracts must be verified when implementation is created. Health remains a separate diagnostic contract unless an intentional change is documented.
+[IMPLEMENTED] `app.js` composes final paths by mounting `advisorRouter` at `/api/advisors` and `appointmentRouter` at `/api/appointments`. Router-relative `/profile`, `/user`, and `/advisor` therefore become the final paths shown above. Protected routes place `authenticate`, then `authorize(role)`, then the controller. The current advisor route order places `/profile` before `/:id`. Appointment route loading is currently blocked by missing controller imports; see section 15.
 
 
 ## 14. Detailed API contracts and V1 request flows
 
-[IMPLEMENTED] API-01, API-02, and API-03 are the current public endpoint inventory. [PLANNED V1] All remaining contracts are proposed; current-user/protected business routes remain absent. Middleware functions alone do not implement these endpoints.
+[PARTIALLY IMPLEMENTED] API-01–API-08 are present in the current route/controller tree; Day 6 advisor API testing is postponed. API-09–API-13 have migration/controller/route code, but the appointment router currently throws during module loading, so these paths are documented as implemented code with blocked integration and testing pending. Community, reviews, current-user, frontend, and deployment contracts remain planned.
 
 ### API-01 — GET /api/health
 
@@ -987,7 +1013,33 @@ erDiagram
 
 [PLANNED V1] / [TBD] proposed path **Flow:** authenticate → trusted req.user.id → safe user lookup → 200; never query by a caller-supplied user_id.
 
-### API-05 — GET /api/advisors
+### Day 6–7 implemented API contracts
+
+[IMPLEMENTED] / TESTING PENDING. These contracts supersede the older API-05–API-14 proposals retained immediately afterward for design history.
+
+| Method and final path | Auth / role | Input | Implemented behavior and ownership | Current limitation |
+| --- | --- | --- | --- | --- |
+| `GET /api/advisors` | Public | Optional query `domain`, `search` | Parameterized JOIN of `advisor_profiles` to `users`; optional uppercase domain filter and `ILIKE` search across name, specialization, and bio; newest profiles first | Allows FINANCE, HEALTH, ASTROLOGY filters although V1 product scope is Finance; no pagination; API testing postponed |
+| `GET /api/advisors/:id` | Public | Advisor-profile `id` path value | Parameterized profile/user JOIN; 404 if no profile; returns public profile fields | No explicit UUID validation; API testing postponed |
+| `POST /api/advisors/profile` | Bearer JWT; `ADVISOR` | `domain`, `bio`, `specialization`, `experienceYears`, `consultationFee` | `user_id` comes from verified `req.user.userID`; V1 create accepts FINANCE only; unique profile violation maps to 409 | String type/length checks are incomplete; API testing postponed |
+| `PATCH /api/advisors/profile` | Bearer JWT; `ADVISOR` | Optional `bio`, `specialization`, `experienceYears`, `consultationFee` | UPDATE is constrained by authenticated `user_id`; 404 when the caller has no profile | Empty patch is accepted; supplied text is not trimmed; API testing postponed |
+| `POST /api/appointments` | Bearer JWT; `USER` | `advisorId`, `scheduledAt`, optional `notes` | Verifies advisor-profile existence, derives `user_id` from JWT, inserts with database-default PENDING, returns created row | No UUID/time/future/conflict/domain/self-booking validation; router currently cannot load |
+| `GET /api/appointments/user` | Bearer JWT; `USER` | None | Filters by JWT `userID`; joins advisor profile and advisor account for display fields | Router currently cannot load; API testing postponed |
+| `GET /api/appointments/advisor` | Bearer JWT; `ADVISOR` | None | Resolves JWT account identity through `advisor_profiles.user_id`, then filters `appointments.advisor_id`; joins customer account fields | Handler exists but is not imported by route file; API testing postponed |
+| `PATCH /api/appointments/:id/cancel` | Bearer JWT; `USER` | Appointment `id`; no body required | Conditional UPDATE requires matching `user_id` and status PENDING or CONFIRMED; returns 404 for absent, unowned, or ineligible appointment | Controller function is neither imported by route nor exported by controller; router currently cannot load |
+| `PATCH /api/appointments/:id/status` | Bearer JWT; `ADVISOR` | Appointment `id`; body `{status}` | Target allowlist is CONFIRMED/COMPLETED; UPDATE joins advisor profile and requires `ap.user_id = req.user.userID`; cancelled rows are excluded | Does not enforce PENDING→CONFIRMED→COMPLETED; handler is not imported by route file; API testing postponed |
+
+[IMPLEMENTED] Route composition is explicit: `app.use("/api/appointments", appointmentRouter)` plus `router.get("/user", ...)` produces `GET /api/appointments/user`. The intended protected request flow is:
+
+```text
+Client → server.js → app.js → appointment.routes.js
+→ authenticate → authorize → appointment.controller.js
+→ db.js / pg Pool → PostgreSQL → JSON response
+```
+
+[PARTIALLY IMPLEMENTED] The middleware/controller order is present in the route source, but `require("./src/routes/appointment.routes")` currently throws `ReferenceError: getAdvisorAppointments is not defined`. Because `app.js` imports that router, normal application loading is blocked until the route imports/exports are corrected. This documentation task does not modify source code.
+
+### Historical API-05 proposal — superseded by current contracts above
 
 | Contract field | Definition |
 | --- | --- |
@@ -1006,7 +1058,7 @@ erDiagram
 
 [PLANNED V1] / [TBD] proposed contract **Flow:** Validate filters → map FINANCE to domain relationship → parameterized joined query with paging → derive rating without N+1 lookups → public collection.
 
-### API-06 — GET /api/advisors/:id
+### Historical API-06 proposal — superseded by current contracts above
 
 | Contract field | Definition |
 | --- | --- |
@@ -1025,7 +1077,7 @@ erDiagram
 
 [PLANNED V1] / [TBD] proposed contract **Flow:** Validate id → fetch supported advisor and derived summary → 404 if absent → safe profile.
 
-### API-07 — GET /api/advisors/me
+### Historical API-07 proposal — superseded by current contracts above
 
 | Contract field | Definition |
 | --- | --- |
@@ -1044,7 +1096,7 @@ erDiagram
 
 [PLANNED V1] / [TBD] proposed contract **Flow:** authenticate → authorize ADVISOR → query own profile → safe response; absence drives profile onboarding UI.
 
-### API-08 — POST /api/advisors/me
+### Historical API-08 proposal — superseded by current contracts above
 
 | Contract field | Definition |
 | --- | --- |
@@ -1063,7 +1115,7 @@ erDiagram
 
 [PLANNED V1] / [TBD] proposed onboarding route **Flow:** authenticate/authorize → validate selected fields → resolve FINANCE → parameterized owned-profile insert → uniqueness handling → 201.
 
-### API-09 — PATCH /api/advisors/me
+### Historical API-09 proposal — superseded by current contracts above
 
 | Contract field | Definition |
 | --- | --- |
@@ -1082,7 +1134,7 @@ erDiagram
 
 [PLANNED V1] / [TBD] proposed update route **Flow:** authenticate/authorize → allowlisted field validation → owned update → safe result; updated_at behavior must be implemented deliberately.
 
-### API-10 — POST /api/appointments
+### Historical API-10 proposal — superseded by current contracts above
 
 | Contract field | Definition |
 | --- | --- |
@@ -1101,7 +1153,7 @@ erDiagram
 
 [PLANNED V1] / [TBD] proposed contract **Flow:** authenticate/authorize → validate → verify advisor/domain → enforce selected scheduling checks atomically → insert PENDING booking → safe private result.
 
-### API-11 — GET /api/appointments
+### Historical API-11 proposal — superseded by current contracts above
 
 | Contract field | Definition |
 | --- | --- |
@@ -1120,7 +1172,7 @@ erDiagram
 
 [PLANNED V1] / [TBD] proposed contract **Flow:** authenticate → choose authorized scope → build ownership-constrained parameterized query → apply time/status paging → private list.
 
-### API-12 — GET /api/appointments/:id
+### Historical API-12 proposal — superseded by current contracts above
 
 | Contract field | Definition |
 | --- | --- |
@@ -1139,7 +1191,7 @@ erDiagram
 
 [PLANNED V1] / [TBD] proposed contract **Flow:** authenticate → validate id → load/check authorized relationship → safe party-specific detail.
 
-### API-13 — PATCH /api/appointments/:id/cancel
+### Historical API-13 proposal — superseded by current contracts above
 
 | Contract field | Definition |
 | --- | --- |
@@ -1158,7 +1210,7 @@ erDiagram
 
 [PLANNED V1] / [TBD] cancellation policy pending **Flow:** authenticate/authorize → validate → check ownership/cutoff → conditional eligible-state update → CANCELLED or controlled conflict.
 
-### API-14 — PATCH /api/appointments/:id/status
+### Historical API-14 proposal — superseded by current contracts above
 
 | Contract field | Definition |
 | --- | --- |
@@ -1367,53 +1419,56 @@ erDiagram
 
 [PLANNED V1] / [TBD] proposed minimal dashboard read **Flow:** authenticate → validate mine scope → ownership-constrained review query → minimal dashboard collection.
 
-[PARTIALLY IMPLEMENTED] These contracts cover implemented registration/login and planned current user, advisors, appointments, community, and reviews. No logout, refresh, password reset, email verification, domain-administration, payment, video, or AI endpoint is implemented; those retain their explicit decisions/version boundaries.
+[PARTIALLY IMPLEMENTED] Current contracts cover registration/login and Day 6 advisor APIs; Day 7 appointment contracts exist in code but route loading is blocked and testing is postponed. Current-user, community, reviews, frontend, deployment, logout/refresh/recovery, payments, video, and AI remain planned/deferred according to their version boundaries.
 
 ## 15. Appointments and state transitions
 
-[PLANNED V1] Appointments connect a customer to a professional advisor and track the consultation lifecycle. No appointment table, scheduling API, transition guard, or booking UI currently exists. Appointment tracking does not imply that consultations happen through an in-app call system; the consultation delivery arrangement itself is [TBD], and voice/video/chat infrastructure is deferred.
+[PARTIALLY IMPLEMENTED] Migration 003, the appointment controller, app mount, and five intended protected routes exist. Day 7 API testing is deliberately postponed until the dedicated backend testing phase before frontend development. The route module currently fails to load because `getAdvisorAppointments`, `cancelAppointment`, and `updateAppointmentStatus` are referenced without being imported; `cancelAppointment` is also absent from the controller export. Therefore the appointment HTTP module is not currently operational even though its schema and controller logic exist.
 
-### 15.1 Proposed lifecycle
+### 15.1 Implemented identity relationships
 
-[PLANNED V1] / [TBD] **TBD — DECISION REQUIRED:** approve the status set, transition permissions, time rules, cancellation cutoff, and repeat-request behavior before implementing migrations/APIs. The following is a concrete recommended baseline, not current behavior:
+```text
+users.id = account identity
+advisor_profiles.id = advisor profile identity
+
+appointments.user_id    → users.id
+appointments.advisor_id → advisor_profiles.id
+
+Advisor-side authorization/query path:
+JWT userID → advisor_profiles.user_id → advisor_profiles.id → appointments.advisor_id
+```
+
+[IMPLEMENTED] Authentication verifies the Bearer JWT and populates `req.user`. RBAC checks the USER or ADVISOR role. Ownership is enforced in SQL: customer list/cancel queries use `appointments.user_id = req.user.userID`; advisor list/status queries join `advisor_profiles` and require `advisor_profiles.user_id = req.user.userID`. A USER can cancel only their own eligible appointment, and an ADVISOR can update only an appointment assigned to their advisor profile. These controller protections are implemented but have not been API-tested, and the current route-import defect prevents exercising them over HTTP.
+
+### 15.2 Implemented lifecycle and limits
+
+[IMPLEMENTED] Migration 003 permits exactly PENDING, CONFIRMED, COMPLETED, and CANCELLED, with PENDING as the insert default. The intended product flow is:
 
 ```mermaid
 stateDiagram-v2
     [*] --> PENDING: Customer creates valid booking
     PENDING --> CONFIRMED: Assigned advisor confirms
     CONFIRMED --> COMPLETED: Assigned advisor records completion
-    PENDING --> CANCELLED: Owning customer within policy
-    CONFIRMED --> CANCELLED: Owning customer within policy
+    PENDING --> CANCELLED: Owning user cancels
+    CONFIRMED --> CANCELLED: Owning user cancels
     COMPLETED --> [*]
     CANCELLED --> [*]
 ```
 
-| From | To | Proposed actor | Preconditions | Status |
-| --- | --- | --- | --- | --- |
-| No appointment | PENDING | Authenticated eligible customer | Valid Finance advisor, valid future time, selected scheduling rules | [PLANNED V1] / [TBD] |
-| PENDING | CONFIRMED | Assigned ADVISOR | Own assigned profile; current status still PENDING | [PLANNED V1] / [TBD] |
-| CONFIRMED | COMPLETED | Assigned ADVISOR | Consultation has actually occurred; exact time/completion evidence rule pending | [PLANNED V1] / [TBD] |
-| PENDING | CANCELLED | Owning customer | Cancellation time/policy satisfied | [PLANNED V1] / [TBD] |
-| CONFIRMED | CANCELLED | Owning customer | Cancellation time/policy satisfied; fee/refund policy not implied | [PLANNED V1] / [TBD] |
-| PENDING or CONFIRMED | CANCELLED | Assigned advisor | Advisor cancellation authority not selected | [TBD] Deny until explicitly defined |
-| PENDING | COMPLETED | Any actor | Skips confirmation under this proposal | [PLANNED V1] Recommended forbidden; 409 |
-| COMPLETED | Any different state | Any actor | Terminal state under this proposal | [PLANNED V1] Recommended forbidden; 409 |
-| CANCELLED | Any different state | Any actor | Terminal state under this proposal | [PLANNED V1] Recommended forbidden; new booking if needed |
-| Any state | Same state | Same authorized actor | Idempotent response vs conflict pending | [TBD] Document per mutation route |
-| Any | Any | Unrelated USER/ADVISOR | No ownership/assignment | [PLANNED V1] Forbidden regardless of valid status name |
-| Any | Any | ADMIN | No override selected | [TBD] No implicit bypass |
+| Transition | Actor | Current enforcement | Status |
+| --- | --- | --- | --- |
+| Create → PENDING | Authenticated USER | Advisor profile must exist; status omitted so DB default applies | [IMPLEMENTED] controller; testing pending |
+| PENDING/CONFIRMED → CANCELLED | Owning USER | Conditional UPDATE checks user ownership and source-status allowlist | [IMPLEMENTED] controller; route broken/testing pending |
+| Non-CANCELLED → CONFIRMED | Assigned ADVISOR | Target allowlist and advisor ownership are checked | [IMPLEMENTED] controller; route broken/testing pending |
+| Non-CANCELLED → COMPLETED | Assigned ADVISOR | Target allowlist and advisor ownership are checked | [IMPLEMENTED] controller; route broken/testing pending |
 
-[PLANNED V1] A status `CHECK` can restrict stored values but cannot alone enforce who changed them or whether a transition was legal. A conditional write should check authorized identity and expected current state, then inspect affected rows; do not read a state and later overwrite it without accounting for concurrent cancellation/completion.
+[PARTIALLY IMPLEMENTED] The advisor status controller validates only the requested target (`CONFIRMED` or `COMPLETED`) and excludes CANCELLED rows. It does **not** enforce strict PENDING → CONFIRMED → COMPLETED transitions: PENDING can be changed directly to COMPLETED, COMPLETED can be changed back to CONFIRMED, and same-status updates can succeed. Strict transition validation, suitable conflict status codes, and concurrency tests are V1 hardening work.
 
-[PLANNED V1] Create appointments with the authenticated customer ID and server-controlled initial status. Do not accept arbitrary `user_id`, `status`, `created_at`, or ownership information. Listing and detail must scope every query to the customer/assigned advisor, including count queries. Invalid UUID input is a 400 concern; an unknown valid UUID is 404; an unauthorized resource is 403 or a consistently chosen concealed 404; a stale/invalid transition is 409.
+### 15.3 Scheduling, notes, and future scope
 
-### 15.2 Scheduling and double booking
+[PARTIALLY IMPLEMENTED] `scheduled_at` is stored as TIMESTAMPTZ and `notes` is nullable text. Current booking validation checks presence only; it does not validate UUID syntax, timestamp syntax, future time, Finance domain, self-booking, note length, availability, or double booking. Duration, timezone presentation, cancellation cutoff, delivery method, and notes audience remain TBD.
 
-[TBD] Duration, end time, allowed scheduling window, timezone conversion, advisor confirmation meaning, consultation delivery, and cancellation rules must be decided. Without duration or explicit slots, “overlap” is not even a fully defined rule.
-
-[PLANNED V2] Availability management and advanced time-slot locking are expansion work. [TBD] A minimal V1 conflict policy must still be explicitly decided before real bookings; do not advertise guaranteed exclusive slots while no backend/database guarantee exists. Two simultaneous requests can bypass a frontend check and a simple read-then-insert check. Depending on the final model, future protection could use a unique active slot rule or transactionally enforced time ranges/exclusion constraints. These are alternatives, not selected SQL or permission to add a scheduling service.
-
-[PLANNED V1] Notes, if included, need an audience and length policy. Do not expose private consultation context through advisor public profiles, community posts, review responses, or logs. A separate `consultation_notes` entity is deferred, not automatically created from the optional `appointments.notes` idea.
+[PLANNED V2] Advanced availability scheduling remains future scope. Payments, notifications, video calling, real-time chat, AI recommendations, semantic search, consultation summaries, sentiment analysis, and advanced reputation systems are not implemented.
 
 ## 16. Community, reviews, dashboards, and administration
 
@@ -1502,7 +1557,9 @@ stateDiagram-v2
 
 ## 18. NON-NEGOTIABLE SECURITY INVARIANTS
 
-[PARTIALLY IMPLEMENTED] These accepted requirements apply across V1. Registration already enforces manual validation, bcrypt hashing at cost 12, the 12-character minimum/72-UTF-8-byte maximum, trimmed name/email limits, parameterized queries, safe user output, USER-only creation, and duplicate-email 409 handling. Malformed JSON receives a safe JSON 400. Login/JWT issuance and separate authentication/RBAC functions are implemented. Protected-route integration, ownership, and other business protections remain planned. authenticate must establish req.user before authorize reads its role; no such route chain exists yet.
+[PARTIALLY IMPLEMENTED] These accepted requirements apply across V1. Registration/login, JWT authentication, role authorization, advisor ownership, and appointment ownership/assignment logic exist. Advisor and appointment route source orders `authenticate` before `authorize` before the controller. Appointment HTTP integration is blocked by its route imports/export, and community/review protections remain planned.
+
+[PARTIALLY IMPLEMENTED] Day 6/7 route source now applies `authenticate → authorize → controller` to advisor profile writes and appointment operations. Authorization has three distinct layers: authentication verifies identity, RBAC restricts USER versus ADVISOR actions, and controller SQL constrains the specific owned/assigned row. Advisor ownership uses `advisor_profiles.user_id`; appointment customer ownership uses `appointments.user_id`; advisor assignment resolves the JWT account through `advisor_profiles.user_id` to `appointments.advisor_id`. The appointment route-load defect currently prevents these protections from executing for appointment HTTP requests, and API testing is pending.
 
 1. `.env` must never be committed; keep real secrets out of examples and documentation.
 2. `node_modules/` must never be committed; commit manifest and lockfile instead.
@@ -1585,8 +1642,8 @@ stateDiagram-v2
 | `users.email` unique index | [IMPLEMENTED] migration implication | Duplicate protection and exact stored-email lookup | Does not establish selected normalized/case-insensitive uniqueness |
 | Advisor profile `user_id` | [PLANNED V1] / [TBD] uniqueness choice | Own-profile lookup and chosen cardinality | Unique only if one-profile-per-user is approved |
 | Advisor profile `domain_id` | [PLANNED V1] | Finance domain filtering | May not help a tiny all-Finance table; measure |
-| `appointments.user_id` | [PLANNED V1] | Customer's appointments | A composite `(user_id, scheduled_at)` may fit actual list queries better |
-| `appointments.advisor_id` | [PLANNED V1] | Assigned advisor list | Evaluate composite time/status access patterns |
+| `appointments.user_id` | [IMPLEMENTED] FK; index hardening [PLANNED V1] | Customer appointment list/cancel | Consider `(user_id, scheduled_at)` for the implemented list query |
+| `appointments.advisor_id` | [IMPLEMENTED] FK; index hardening [PLANNED V1] | Assigned advisor list/status | Evaluate composite access paths with scheduled time/status |
 | `appointments.scheduled_at` | [PLANNED V1] | Time ranges/order | Separate index not automatically needed when composite indexes suffice |
 | `community_posts.domain_id` | [PLANNED V1] | Domain feed | Consider `(domain_id, created_at, id)` based on selected pagination/order |
 | `community_posts.author_id` | [PLANNED V1] | Own-post dashboard | Optional composite depends on query |
@@ -1621,7 +1678,13 @@ stateDiagram-v2
 
 ### 21.1 Current verification versus target suite
 
-[IMPLEMENTED] The prior Day 3 maintenance recorded successful syntax and Compose checks. This Day 5 documentation task inspected source and route wiring, reviewed the diff, ran `git diff --check`, and compared repository-file hashes to the starting snapshot. No source files, containers, or database data were changed; no runtime or automated login/authentication/authorization tests were run.
+[PARTIALLY IMPLEMENTED] Static inspection confirms the Day 6 advisor and Day 7 appointment migrations/controllers/routes. Day 6 advisor API testing and Day 7 appointment API testing were intentionally postponed until a dedicated backend testing pass before frontend integration. No API pass, live database verification, or automated suite is claimed here. A documentation-time route-module load check exposed the appointment import/export defect described in section 15.
+
+| Milestone | Implementation status | Testing status |
+| --- | --- | --- |
+| Day 6 advisor APIs | IMPLEMENTED | API testing postponed |
+| Day 7 appointment APIs | IMPLEMENTED IN SCHEMA/CONTROLLER/ROUTE SOURCE; integration blocked by route imports/export | API testing postponed |
+| Planned next verification phase | Dedicated backend pass covering auth, advisor, appointment, ownership, validation, database constraints, and negative cases | Must complete before frontend integration |
 
 [PLANNED V1] No `test` script or test dependencies currently exist; test framework and directory layout remain [TBD]. Do not claim coverage or passing application tests without executable evidence.
 
@@ -1645,10 +1708,10 @@ stateDiagram-v2
 | Login | [PLANNED V1] | Correct credentials; wrong password; unknown email; consistent public errors; malformed body; safe response; valid issued token with selected expiry; no secrets in claims |
 | JWT/current user | [PLANNED V1] | No token; malformed/tampered token; expired token; wrong selected algorithm/claims; valid identity; removed/role-changed account per policy; no user_id override |
 | RBAC/ownership | [PLANNED V1] | USER denied any explicitly scoped ADMIN/ADVISOR route; A cannot read/cancel B booking; unassigned advisor denied; lists/counts scoped correctly; guessed UUID never grants access; frontend-hidden action still denied server-side |
-| Advisor profiles | [PLANNED V1] | ADVISOR creates/updates only own profile; USER denied; duplicate profile race; invalid domain/experience/fee/text; cannot set verification/rating/role; static me route not captured as dynamic ID |
-| Advisor discovery | [PLANNED V1] | Finance-only output; list/detail; empty list; unknown/malformed ID; filter/paging limits; sort injection attempts rejected; no private email/hash; no-rating behavior; no N+1 pattern in representative query review |
-| Appointment creation | [PLANNED V1] | Valid owned PENDING booking; absent/ineligible advisor; malformed/past/ambiguous time; forged user/status rejected; selected self-booking/time-window constraints; duplicate-request behavior decided |
-| Appointment access/lifecycle | [PLANNED V1] | Own and assigned lists; cross-party rejection; each approved/forbidden transition; cancellation cutoff; completed/cancelled terminal behavior; simultaneous cancellation/completion cannot silently overwrite state |
+| Advisor profiles | [IMPLEMENTED] / TESTING PENDING | ADVISOR creates/updates only own profile; USER denied; duplicate profile; invalid domain/experience/fee/text; no role/owner override |
+| Advisor discovery | [IMPLEMENTED] / TESTING PENDING | List/detail, empty/unknown IDs, current domain/search behavior, safe fields, missing pagination and V1 Finance-only consistency |
+| Appointment creation | [IMPLEMENTED] / TESTING PENDING | Valid owned PENDING booking; absent advisor; malformed/past/ambiguous time; forged owner/status; self-booking/time conflicts; route-load prerequisite |
+| Appointment access/lifecycle | [IMPLEMENTED] / TESTING PENDING | Own/assigned lists; cross-party rejection; cancellation eligibility; target-status behavior; non-strict transitions; simultaneous updates; route-load prerequisite |
 | Scheduling overlap | [TBD] V1 minimal; [PLANNED V2] advanced | Test selected minimal V1 conflict policy before claiming it; future concurrent slot/overlap/availability tests when corresponding model is approved |
 | Posts | [PLANNED V1] | Create/list/detail; required/large content; wrong domain; author spoofing; escaped content; safe public identity; own filter requires auth; paging/sort bounds |
 | Comments | [PLANNED V1] | Valid parent; missing/invalid parent; blank/large body; author spoofing; public-safe listing; stable paging; any selected deletion visibility policy |
@@ -1773,7 +1836,7 @@ docker compose down
 docker compose down -v
 ```
 
-[TBD] The initial audit reported a Docker API socket permission failure; the later Day 3 maintenance validated Compose configuration. This Day 5 documentation task does not inspect live Docker/database state or run configuration/startup commands. No container/volume reset was attempted.
+[TBD] The initial audit reported a Docker API socket permission failure; the later Day 3 maintenance validated Compose configuration. This Day 7 documentation task does not inspect live Docker/database state or run startup commands. No container/volume reset was attempted.
 
 [IMPLEMENTED] The previously reported Compose syntax failure is resolved and configuration validation passes without starting containers. Runtime state cannot be inferred from that configuration-only check.
 
@@ -1834,28 +1897,24 @@ git push
 
 [TBD] Remote branch protections, push protection, secret scanning, Dependabot settings, and CI requirements are not discoverable from the inspected local files and have not been checked through GitHub. Do not mark them enabled. Preserve intentional history and coordinate any exceptional history rewrite.
 
-## 25. 14-day V1 implementation roadmap
+## 25. 10-day V1 implementation roadmap
 
-[PLANNED V1] This is the owner's proposed sequencing, not a promise that each row requires exactly one calendar day. Testing and security should accompany features from the start; day 14 is final verification, not the first opportunity to test. Resolve a row's required decisions before implementing dependent work.
+[PARTIALLY IMPLEMENTED] Current milestone view. “Complete” means the planned code artifact exists for Days 1–5; it does not retroactively claim comprehensive automated testing. Day 6 and Day 7 are explicitly implementation-complete milestones with API testing postponed until the dedicated backend test pass before frontend development.
 
 | Day | Focus and planned work | Current evidence/status | Exit evidence / dependencies |
 | --- | --- | --- | --- |
-| 1 | Backend foundation: Node setup, Express, app/server separation, routes/controllers, health, env, nodemon, Git | [PARTIALLY IMPLEMENTED] Core source/scripts/Git and environment placeholders exist; required-variable validation and maintained tests remain pending | Existing sources parse; reproducible startup and health demonstrated; document variables |
-| 2 | Database foundation: PostgreSQL, Docker/Compose, ports, persistent volume, DATABASE_URL, pg pool, raw SQL, migrations/users, parameters, DB health | [PARTIALLY IMPLEMENTED] Compose/pool/users SQL/probes exist; live database/apply state unverified; migration runner absent | Verify correct DB and applied schema; reproducible migration process; explain separate HTTP/DB communication |
-| 3 | Registration: endpoint/router/controller, backend validation, normalization, bcrypt package/hash, duplicate checks, tests | [PARTIALLY IMPLEMENTED] Registration code implemented, including field limits, bcrypt cost 12, password bounds, duplicate SELECT/23505 handling, safe USER-only output, and malformed-JSON 400; automated tests remain [PLANNED V1] | D-05–D-08 accepted; valid/invalid/duplicate/concurrent runtime verification remains pending; no automatic login |
-| 4 | Login + JWT: compare password, sign token, expiry, safe response, tests | [PARTIALLY IMPLEMENTED] Login route/controller, bcrypt.compare, JWT signing with userID/role and configurable expiry are implemented; automated tests remain planned | Runtime credential/token verification and remaining token policies still require evidence |
-| 5 | Authentication + authorization: authenticate, req.user, current user, role middleware, 401/403, ownership | [PARTIALLY IMPLEMENTED] Day 5 authenticate and authorize functions are [IMPLEMENTED] in existing src/middlewares/auth.middleware.js; header/Bearer parsing, jwt.verify, req.user, 401/403 and multiple allowed roles exist | No route wires authenticate → authorize → controller; current-user endpoint, ownership checks, and runtime/automated tests remain [PLANNED V1]. Day 5 middleware code is complete, but the full roadmap row is not |
-| 6 | Advisor system: generic domain model, Finance data, profile schema and profile APIs | [PLANNED V1] No implementation | Profile cardinality/provisioning decisions; domains/users FKs; own-profile permissions |
-| 7 | Advisor discovery: list/detail, basic search/filters, review/refactoring | [PLANNED V1] No implementation | Advisor data; approved pagination/projections; Finance discovery tests |
-| 8 | Appointment database: relationships, owner, time fields, statuses and transition rules | [PLANNED V1] No implementation | Scheduling/duration/domain-reference decisions; versioned schema and constraints |
-| 9 | Appointment APIs: booking, own/assigned lists, detail, cancellation, advisor status updates, ownership | [PLANNED V1] No implementation | Auth/advisor/schema; approved transitions; concurrent state/ownership tests |
-| 10 | Community posts: schema, create/list/detail, Finance domain relationship | [PLANNED V1] No implementation | Users/domains/auth; content limits/format; safe public projections |
-| 11 | Community interactions: comments, helpful/upvote behavior | [PLANNED V1] No implementation | Posts/auth; decide helpful target/table/reversibility and enforce duplicate prevention |
-| 12 | Reviews + search improvement: schema, completed consultation requirement, ratings, public advisor review list, derived average | [PLANNED V1] No implementation | Completed appointment lifecycle; uniqueness/rating decisions; concurrent duplicate and eligibility tests |
-| 13 | React/Vite frontend integration: auth, advisors, appointments, community, reviews, minimal dashboards | [PLANNED V1] No implementation | Stable APIs, selected token/CORS topology; loading/empty/error states and full Finance journeys |
-| 14 | Finalization: tests, debugging, security audit, justified refactoring, README, deployment, GitHub cleanup, master-spec audit | [PLANNED V1] Master reference created only | Definition of done in section 35; deploy and verify; update actual evidence/status rather than marking routes alone complete |
+| 1 | Backend foundation / Express / MVC | COMPLETE | App/server separation, routes/controllers, health, env loading, scripts |
+| 2 | PostgreSQL / Docker / DB foundation | COMPLETE | Compose, pool, users migration, startup/health probes; live migration state still operationally unverified |
+| 3 | Registration / bcrypt | COMPLETE | Manual validation, normalization, bcrypt cost 12, duplicate handling, safe response |
+| 4 | Login / JWT | COMPLETE | bcrypt.compare, JWT signing, expiry, safe response |
+| 5 | Authentication middleware / RBAC | COMPLETE | Bearer verification, req.user, reusable authorize; now used on advisor and appointment route source |
+| 6 | Advisor system + discovery | IMPLEMENTED, TESTING PENDING | Migration/controller/routes/app mount exist; API testing intentionally postponed |
+| 7 | Appointment system + management | IMPLEMENTED, TESTING PENDING | Migration/controller/route definitions exist; fix missing imports/export before API testing |
+| 8 | Community module | NOT STARTED | Posts/comments/helpful schema and APIs remain planned |
+| 9 | Reviews / search / frontend integration | NOT STARTED | Reviews, expanded search, dashboard/profile frontend remain planned |
+| 10 | Testing / refactor / deployment / README | NOT STARTED | Dedicated backend test pass comes before frontend; then justified fixes, deployment and onboarding docs |
 
-[PLANNED V1] If decisions or correctness work exceed a day, extend the schedule rather than remove security/ownership checks. This task documents current Day 5 evidence only and does not implement missing roadmap work.
+[PLANNED V1] Day labels describe sequence, not guaranteed duration. Day 6/7 “implemented” does not mean tested or production-ready. Resolve the appointment route wiring defect before the postponed backend API pass; do not begin frontend integration on an unloadable backend.
 
 ## 26. Implementation checklist
 
@@ -1884,14 +1943,16 @@ git push
 - [x] [IMPLEMENTED] Shared `pg.Pool` module.
 - [x] [IMPLEMENTED] Users migration with UUID/defaults/constraints.
 - [x] [IMPLEMENTED] Table-independent health/startup DB probes.
-- [ ] [TBD] Verify running DB server/version/identity and applied users schema.
+- [ ] [TBD] Verify running DB server/version/identity and applied migrations 001–003.
 - [ ] [PLANNED V1] Reproducible migration application/tracking workflow.
 - [ ] [PLANNED V1] Domains migration and controlled Finance seed data.
-- [ ] [PLANNED V1] Advisor/appointment/post/comment/review migrations.
+- [x] [IMPLEMENTED] Advisor profile migration 002 and appointment migration 003.
+- [ ] [PLANNED V1] Community/comment/review migrations.
 - [ ] [TBD] Helpful interaction persistence decision and selected migration.
 - [ ] [PLANNED V1] Foreign keys, critical uniqueness/CHECK constraints and query-driven indexes.
 - [x] [IMPLEMENTED] Parameterized registration SELECT/INSERT and email UNIQUE/23505 race handling.
-- [ ] [PLANNED V1] Parameterized queries and concurrent integrity handling for future business workflows.
+- [x] [IMPLEMENTED] Parameterized advisor and appointment queries, including ownership-constrained appointment mutations.
+- [ ] [PLANNED V1] Concurrent transition/conflict hardening for appointments and future workflows.
 - [ ] [TBD] Time/deletion/retention policies reflected consistently in schema.
 
 ### Authentication and authorization
@@ -1918,21 +1979,21 @@ git push
 - [ ] [PLANNED V1] Current-user safe endpoint.
 - [x] [IMPLEMENTED] Reusable role middleware supports one/multiple roles and returns 403 for a disallowed req.user.role.
 - [x] [IMPLEMENTED] Schema roles remain USER, ADVISOR, ADMIN.
-- [ ] [PLANNED V1] Wire protected routes in authenticate → authorize → controller order.
+- [x] [IMPLEMENTED] Advisor and appointment route source uses authenticate → authorize → controller order.
 - [ ] [PLANNED V1] Runtime/automated authentication and role authorization tests.
-- [ ] [PLANNED V1] Ownership/assignment checks for every private resource operation.
+- [PARTIALLY IMPLEMENTED] Advisor-profile self-management and appointment list/cancel/status SQL scope access by authenticated identity; route wiring defect and future private resources remain.
 - [ ] [TBD] Advisor/admin provisioning, advisor-as-customer policy, role freshness.
 
 ### Advisors and appointments
 
-- [ ] [PLANNED V1] Generic user/domain/profile relationships.
-- [ ] [PLANNED V1] Finance advisor profile create/read/update with ownership.
-- [ ] [PLANNED V1] Public-safe advisor list/detail and basic search/filtering.
-- [ ] [TBD] Fee/currency/profile-field/cardinality decisions.
-- [ ] [TBD] Appointment lifecycle, duration, cancellation, delivery/timezone rules.
-- [ ] [PLANNED V1] Booking creation, own/assigned listing and private detail.
-- [ ] [PLANNED V1] Customer cancellation and assigned-advisor transitions.
-- [ ] [PLANNED V1] Concurrent transition guards and invalid-state errors.
+- [x] [IMPLEMENTED] Users → advisor_profiles and users/advisor_profiles → appointments relationships in migrations 002–003.
+- [x] [IMPLEMENTED] Finance advisor profile create/update with authenticated ownership.
+- [x] [IMPLEMENTED] Public advisor list/detail with basic domain filter and text search; testing pending.
+- [PARTIALLY IMPLEMENTED] Fee/profile/cardinality are represented; currency remains unspecified and API testing pending.
+- [PARTIALLY IMPLEMENTED] Appointment statuses, cancellation, and advisor target updates exist; duration/delivery/timezone and strict transitions remain TBD.
+- [PARTIALLY IMPLEMENTED] Booking plus own/assigned listing exists in controller/route source; no single appointment-detail route; router load defect blocks HTTP use.
+- [PARTIALLY IMPLEMENTED] Customer cancellation and assigned-advisor status updates exist in controller; route imports/exports must be corrected and tested.
+- [ ] [PLANNED V1] Strict source→target transition guards, suitable conflict errors, and concurrent transition tests.
 - [ ] [TBD] Minimal V1 booking conflict policy, accurately advertised/tested.
 
 ### Community and reviews
@@ -2163,13 +2224,13 @@ flowchart TD
 
 **RECOMMENDED RESOLUTION:** [PLANNED V1] Keep health's purpose clear; verify schema/migration state separately and add only the operational handling selected for V1. Do not silently redefine the current health response.
 
-### C-05 — Finance/domain business architecture is entirely pending
+### C-05 — Finance business architecture is partially implemented
 
-**CURRENT IMPLEMENTATION:** [IMPLEMENTED] Eight backend source files including the authentication/role middleware, plus one users migration; registration/login/JWT and auth/role functions exist. Domains, advisors, bookings, community, reviews, frontend, and protected route integration remain planned.
+**CURRENT IMPLEMENTATION:** [PARTIALLY IMPLEMENTED] Registration/login/JWT/RBAC, advisor profiles/discovery, and appointment schema/controller/route source exist. Advisor creation is restricted to FINANCE, while discovery accepts FINANCE/HEALTH/ASTROLOGY values permitted by the schema. Community, reviews, frontend, and deployment remain planned. Appointment HTTP integration is blocked by missing route imports/export.
 
 **INTENDED IMPLEMENTATION:** [PLANNED V1] Complete Finance journey with generic entities, security, tests, and deployment.
 
-**CONFLICT:** [PARTIALLY IMPLEMENTED] Product vision and package version `1.0.0` can be mistaken for delivered functionality. Registration and login are implemented business APIs; complete Finance journeys remain planned.
+**CONFLICT:** [PARTIALLY IMPLEMENTED] The current database stays generic across three domains while V1 product behavior is Finance-first. Day 6 discovery can expose non-FINANCE profiles if such rows exist. Day 7 is coded but not loadable/tested, so a complete Finance journey is not yet confirmed.
 
 **RECOMMENDED RESOLUTION:** [PLANNED V1] Follow dependencies/roadmap, preserve labels, and change status only after code plus appropriate tests/integration evidence exist.
 
@@ -2205,11 +2266,11 @@ flowchart TD
 
 ### C-09 — Role schema exists, role provisioning and combined abilities do not
 
-**CURRENT IMPLEMENTATION:** [IMPLEMENTED] `users.role` stores one of USER/ADVISOR/ADMIN. Public registration creates USER using the database default and ignores supplied role fields. Role middleware exists but is not applied to routes. Advisor/admin provisioning and profile workflows remain absent.
+**CURRENT IMPLEMENTATION:** [PARTIALLY IMPLEMENTED] `users.role` stores USER/ADVISOR/ADMIN. Public registration creates USER. Role middleware protects advisor/appointment route source; advisor profile create/update is implemented for ADVISOR. A trusted advisor/admin provisioning mechanism remains absent.
 
 **INTENDED IMPLEMENTATION:** [PLANNED V1] Advisors are users with ADVISOR role plus profiles; public registration must remain safe; V2 contains stronger verification/admin tools.
 
-**CONFLICT:** [TBD] How V1 advisors become ADVISOR and whether an advisor can also book as a customer are unspecified; a single role label does not answer those workflow questions.
+**CONFLICT:** [TBD] How V1 accounts become ADVISOR and whether an advisor can also act as a customer remain unspecified; the single role label does not answer those workflow questions.
 
 **RECOMMENDED RESOLUTION:** [TBD] Choose minimal trusted provisioning and an explicit role-operation matrix before profile/booking APIs. Do not allow self-elevation or invent a multi-role identity system without a decision.
 
@@ -2255,40 +2316,40 @@ flowchart TD
 | System | Current state | V1 target state | Missing work | Dependencies | Priority |
 | --- | --- | --- | --- | --- | --- |
 | Foundation | [IMPLEMENTED] Express/app/server/router/controller, dotenv, health, start/dev | [PLANNED V1] Reliable, understandable modular backend | Required environment validation, metadata correction, selected operational error/shutdown handling | Configuration decisions | P0 |
-| Database | [PARTIALLY IMPLEMENTED] Pool/users SQL and validated Compose configuration; no verified live schema | [PLANNED V1] Reproducible generic relational schema and constraints | Apply/tracking process, live verification, future business migrations/indexes | Raw SQL decisions, per-entity schema approval | P0 |
-| Authentication | [PARTIALLY IMPLEMENTED] Registration/login, JWT issuance, and authenticate function with 401/req.user behavior | [PLANNED V1] Integrated authenticated routes and safe current user | Route integration, current-user endpoint, token-policy decisions and tests | JWT_SECRET, intended claims/policies | P0 |
-| Authorization | [PARTIALLY IMPLEMENTED] Separate authorize(...allowedRoles), one/multiple roles and 403 behavior; USER/ADVISOR/ADMIN schema | [PLANNED V1] Enforced RBAC plus ownership | authenticate → authorize → controller wiring, role freshness/provisioning, ownership queries, negative tests | Verified identity, relationship design | P0 |
-| Advisors | [PLANNED V1] Absent | [PLANNED V1] Finance profiles/discovery/detail/basic filters | Domain seed, profile schema/APIs, safe projections, query/paging tests | Users/domains/auth/provisioning | P1 |
-| Appointments | [PLANNED V1] Absent | [PLANNED V1] Booking/tracking/cancellation/assigned-advisor lifecycle | Schema/time rules, transition matrix, ownership, atomic changes, delivery/conflict decisions | Advisors/auth, scheduling decisions | P0 integrity / P1 feature |
+| Database | [PARTIALLY IMPLEMENTED] Pool, validated Compose, migrations 001 users/002 advisor profiles/003 appointments; live schema unverified | [PLANNED V1] Reproducible full relational schema and constraints | Apply/tracking process, live verification, community/review/helpful SQL, query-driven indexes | Raw SQL decisions, remaining entity schemas | P0 |
+| Authentication | [PARTIALLY IMPLEMENTED] Registration/login/JWT and authenticate used on advisor/appointment route source | [PLANNED V1] Fully tested authenticated APIs and safe current user | Current-user endpoint, token-policy decisions, route-defect fix and tests | JWT_SECRET, claims/policies | P0 |
+| Authorization | [PARTIALLY IMPLEMENTED] authorize(USER/ADVISOR) plus advisor/appointment ownership SQL | [PLANNED V1] Tested RBAC and ownership across all private resources | Fix appointment wiring; role provisioning/freshness; negative/concurrency tests | Verified identity, relationship design | P0 |
+| Advisors | [IMPLEMENTED] / TESTING PENDING | [PLANNED V1] Tested Finance profiles/discovery/detail/basic filters | Dedicated API/database pass, pagination/limits, V1 domain consistency, provisioning procedure | Users/auth | P1 |
+| Appointments | [PARTIALLY IMPLEMENTED] / TESTING PENDING; schema/controller/route source exists, router load blocked | [PLANNED V1] Working tested booking/list/cancel/assigned-advisor lifecycle | Import/export fix, strict transitions, time/conflict policies, validation and concurrent tests | Advisors/auth, scheduling decisions | P0 integrity / P1 feature |
 | Community | [PLANNED V1] Absent | [PLANNED V1] Finance posts/comments/helpfulness | Schemas/APIs/content validation, helpful persistence/uniqueness, paging | Users/domains/auth, helpful scope decision | P1 |
 | Reviews | [PLANNED V1] Absent | [PLANNED V1] Eligible completed-consultation reviews and ratings | Schema/uniqueness/range, ownership/eligibility, list/aggregate queries/tests | Completed appointment lifecycle | P0 integrity / P1 feature |
 | Frontend | [PLANNED V1] Absent | [PLANNED V1] React/Vite Finance journey and minimal dashboards | Frontend setup/pages/API client/auth UI/loading/error/time display | Stable APIs, auth transport/CORS | P1 |
-| Testing | [PLANNED V1] No suite; audit syntax checks only | [PLANNED V1] Critical automated and manual acceptance evidence | Select tools; unit/integration/DB/security/frontend/E2E tests and fixtures | Implement incrementally with each feature; isolated test DB | P0 |
+| Testing | [PLANNED V1] No suite; Day 6/7 API testing deliberately postponed | [PLANNED V1] Dedicated backend pass, then frontend/E2E evidence | Fix route load first; verify auth/advisor/appointment happy/negative/ownership/DB cases; select automated tools | Isolated test DB and applied migrations | P0 |
 | Security | [PARTIALLY IMPLEMENTED] Ignore rules, validated DB loopback mapping, safe health/registration errors, registration validation/hash/parameters/USER-only output, malformed-JSON 400 | [PLANNED V1] Enforced invariants and safe public deployment | Protected-route integration/ownership, broader safe errors, secret review, selected abuse/CORS/TLS policies | Protected features and deployment topology | P0 |
 | Deployment | [PLANNED V1] Local DB config only | [PLANNED V1] Hosted frontend/backend/managed DB, verified setup | Provider/runtime/secrets decisions, migration apply, HTTPS, smoke tests/recovery | Integrated tested app | P1 release gate |
 | Documentation | [PARTIALLY IMPLEMENTED] This master spec; README absent | [PLANNED V1] Accurate spec, concise setup README, explainable architecture | README, decision closure, actual test/deployment evidence, re-audits | Every implementation milestone | P2 ongoing / release gate |
 
 ### 31.1 Completion estimate and reasoning
 
-[PARTIALLY IMPLEMENTED] **Estimated V1 progress: about 23% (22.5% before rounding), with a reasonable planning range of 20–25%.** This is a subjective scope-weighted engineering estimate, not measured hours, test coverage, route-count completion, or a guarantee about work remaining. Product journeys implemented end-to-end: **zero confirmed**.
+[PARTIALLY IMPLEMENTED] **Estimated V1 progress: about 43%, with a reasonable planning range of 40–45%.** This is a subjective scope-weighted engineering estimate, not test coverage or a guarantee. Advisor and appointment code materially increase implementation progress, while postponed testing and the appointment route-load defect prevent claiming a confirmed end-to-end journey.
 
 | V1 work group | Estimated share of full V1 | Approximate completion within group | Contribution |
 | --- | --- | --- | --- |
 | Backend/database foundation | 15% | 70%: code/users SQL/validated config and env placeholders; reproducibility/live verification/hardening incomplete | 10.5 percentage points |
-| Authentication/authorization | 15% | 70%: registration/login/JWT and middleware functions exist; route integration/current user/ownership/tests pending | 10.5 percentage points |
-| Advisor system/discovery | 10% | 0% | 0 |
-| Appointments | 15% | 0% | 0 |
+| Authentication/authorization | 15% | 85%: registration/login/JWT/RBAC and protected advisor/appointment route source exist; current-user/testing/hardening pending | 12.75 percentage points |
+| Advisor system/discovery | 10% | 80%: migration/APIs/search/ownership implemented; testing, provisioning and pagination hardening pending | 8 percentage points |
+| Appointments | 15% | 65%: schema/controller/ownership/route definitions exist; wiring defect, testing and lifecycle/time hardening pending | 9.75 percentage points |
 | Community/comments/helpfulness | 10% | 0% | 0 |
 | Reviews | 5% | 0% | 0 |
 | Frontend integration | 10% | 0% | 0 |
 | Maintained tests/security hardening | 10% | 0% beyond foundation practices counted above | 0 |
 | Deployment | 5% | 0% | 0 |
-| Documentation/explainability | 5% | 30%: master reference exists, README/final evidence/understanding checks pending | 1.5 percentage points |
-| Total | 100% | Approximate weighted estimate | **22.5% (about 23%)** |
+| Documentation/explainability | 5% | 40%: master reference updated through Day 7; README/final evidence pending | 2 percentage points |
+| Total | 100% | Approximate weighted estimate | **43%** |
 
-[PARTIALLY IMPLEMENTED] Days 1–5 have repository artifacts, but roadmap day counts are not an effort model. Most remaining risk lies in authentication, ownership, relational business workflows, integration, and deployment. New document length does not materially substitute for implemented product scope. Re-estimate after meaningful tested milestones, keeping the weighting rationale visible.
+[PARTIALLY IMPLEMENTED] Days 1–5 are complete in code; Days 6–7 have implementation artifacts with testing pending. Roadmap day counts are not an effort model. Most remaining risk lies in correcting/validating integration, community/reviews, frontend, security hardening, and deployment.
 
-[PARTIALLY IMPLEMENTED] The estimate includes login/JWT issuance and the Day 5 middleware functions. It does not treat unwired middleware, current-user access, resource ownership, or unperformed runtime tests as completed integration.
+[PARTIALLY IMPLEMENTED] The estimate credits Day 6/7 source and schema work but discounts untested behavior, the appointment router defect, missing strict transition/time rules, and all later modules.
 
 ## 32. ARCHITECTURE DECISION LOG
 
@@ -2300,10 +2361,10 @@ flowchart TD
 | --- | --- | --- | --- | --- | --- |
 | ADR-001 — PostgreSQL selected | Use PostgreSQL as relational system of record | Users/advisors/bookings/posts/comments/reviews have strong relationships and integrity needs; SQL supports learning/interviews | MongoDB is a conceptual alternative, not selected; relational design requires deliberate schema/migrations | Accepted; [IMPLEMENTED] local configuration/users SQL, broader schema [PLANNED V1] | Owner brief; `docker-compose.yml`; users migration; `pg` dependency |
 | ADR-002 — Dockerized local PostgreSQL | Run local PostgreSQL through Docker Compose using configured image | Isolation, repeatability, controlled version, simpler setup/reset, professional workflow practice | Native macOS PostgreSQL would work; hosted DB initially would reduce local infrastructure learning; Docker daemon adds a local prerequisite | Accepted; [IMPLEMENTED] configuration, live runtime [TBD] | `docker-compose.yml`, owner rationale |
-| ADR-003 — Raw SQL + pg instead of Drizzle | Use shared `pg` pool and parameterized PostgreSQL SQL; no ORM without explicit change | SQL familiarity, query visibility, direct DB control, no second abstraction, DBMS interview preparation | Drizzle was briefly tried/removed per owner; Prisma/Sequelize/TypeORM not chosen; ORM convenience/type/schema/migration support is a tradeoff | Accepted; [IMPLEMENTED] `pg`/pool/SQL and parameterized registration; other business queries [PLANNED V1] | `package.json`, lockfile, `src/config/db.js`, migrations; intermediate Drizzle history owner-provided |
+| ADR-003 — Raw SQL + pg instead of Drizzle | Use shared `pg` pool and parameterized PostgreSQL SQL; no ORM without explicit change | SQL familiarity, query visibility, direct DB control, no second abstraction, DBMS interview preparation | Drizzle was briefly tried/removed per owner; Prisma/Sequelize/TypeORM not chosen | Accepted; [IMPLEMENTED] parameterized auth/advisor/appointment SQL; later modules planned | package metadata, db.js, controllers, migrations |
 | ADR-004 — Finance-first generic architecture | Deliver Finance end-to-end in V1 with generic users/domains/profiles/appointments/community | Manage scope while retaining multi-domain extension without duplicate architectures | Separate per-domain apps/tables are explicitly rejected; launching every domain immediately expands correctness/security workload | Accepted; [PLANNED V1] business implementation | Owner product/version requirements |
 | ADR-005 — UUID identifiers | Prefer PostgreSQL-generated UUID primary keys | Consistent opaque identity across generic entities; controller avoids manual ID generation | Sequential integers are a conceptual alternative; UUID storage/index cost and random ordering are tradeoffs; UUID is not access control | Accepted; [IMPLEMENTED] users migration, future entities [PLANNED V1] | `001_create_users.sql` and owner identifier requirement |
-| ADR-006 — JWT authentication for V1 | Custom login/JWT with separate verification and role functions | Backend identity and reusable access policy | Browser storage, explicit verification options, rotation/revocation remain TBD | Accepted; [PARTIALLY IMPLEMENTED] login and middleware functions; route integration planned | Auth controller and src/middlewares/auth.middleware.js (tracked) |
+| ADR-006 — JWT authentication for V1 | Custom login/JWT with separate verification and role functions | Backend identity and reusable access policy | Browser storage, explicit verification options, rotation/revocation remain TBD | Accepted; [PARTIALLY IMPLEMENTED] login/middleware and advisor/appointment route use; testing pending | Auth controller/middleware and routes |
 | ADR-007 — Node/Express/CommonJS backend | Keep backend JavaScript with Express and CommonJS modules | Small explicit HTTP backend fitting current skills and repository | Other runtimes/frameworks/TypeScript/ESM conversion are not selected; async I/O does not remove CPU/memory limits | Accepted; [IMPLEMENTED] foundation | `package.json`, all existing `src/` files |
 | ADR-008 — SQL migrations as schema history | Store ordered structural changes under `database/migrations/` | Reproducibility, onboarding, debugging, deployment, auditability | Unrecorded manual SQL is rejected as long-term approach; runner/ledger design remains pending | Accepted direction; [PARTIALLY IMPLEMENTED] first migration | Existing migration and owner requirements |
 | ADR-009 — app/server and routes/controllers separation | Separate HTTP app composition from startup; route mapping from request/application logic | Clear responsibilities, easier explanation and future testing without automatic listener startup | One large entry file or unnecessary layers not preferred; services only when complexity warrants | Accepted; [IMPLEMENTED] foundation separation | `src/app.js`, `src/server.js`, routes/controller files |
@@ -2423,7 +2484,7 @@ flowchart TD
 | Why check DB before HTTP startup? | The intended server depends on PostgreSQL, so startup fails explicitly if the initial query fails rather than logging successful HTTP startup first. | [IMPLEMENTED] `src/server.js` |
 | How should transactions use pg? | Use one acquired client for BEGIN, statements, COMMIT/ROLLBACK, and release. A transaction cannot be spread across unrelated pool.query calls that may select different clients. | [PLANNED V1] complex writes |
 | Why can a duplicate email check race? | Two requests may both read no user before either inserts. Keep the DB UNIQUE constraint and handle the resulting duplicate violation as a controlled conflict. | [IMPLEMENTED] UNIQUE schema plus registration 23505 → 409 |
-| Why use indexes? | Appropriate indexes reduce work for filtered/joined/ordered reads, at a storage/write cost. Users PK/email uniqueness imply indexes; other indexes must follow actual queries. | [PARTIALLY IMPLEMENTED] users migration only |
+| Why use indexes? | Appropriate indexes reduce filtered/joined/ordered work at a storage/write cost. Current PK/UNIQUE constraints imply indexes; appointment FK/list query indexes are not explicitly added. | [PARTIALLY IMPLEMENTED] migrations 001–003 |
 | Why TIMESTAMPTZ? | Appointments should represent unambiguous instants and display in local time. The database type does not preserve a named timezone; recurring schedules may need additional zone information later. | [IMPLEMENTED] users timestamp; appointment policy [TBD] |
 
 ### 34.3 Authentication, product integrity, testing, and delivery
@@ -2435,22 +2496,22 @@ flowchart TD
 | What is a salt? | Per-password randomness incorporated in hashing so identical passwords can yield different hashes and precomputed guesses are less reusable. | [IMPLEMENTED] bcrypt registration hashing |
 | Why deliberately expensive hashing? | It raises the computational cost of password guessing. Cost must also fit the application's legitimate login workload. | [IMPLEMENTED] cost 12 selected; deployment benchmarking [PLANNED V1] |
 | How can bcrypt.compare work without decrypting? | The stored representation includes parameters needed to hash the candidate and verify a match; it does not contain recoverable plaintext. | [IMPLEMENTED] login |
-| Authentication versus authorization? | authenticate verifies the token and assigns req.user; authorize checks that verified role against allowedRoles. | [IMPLEMENTED] separate functions; route integration planned |
-| What is JWT? | Login issues a signed token with userID/role and expiry; middleware verifies it using JWT_SECRET. Payloads are readable and contain no password/hash. | [IMPLEMENTED] signing/verification functions; routes not protected |
-| 401 versus 403? | Login/verification failures return 401; authorize returns 403 for a disallowed verified role. | [IMPLEMENTED] functions; protected-route behavior not integrated/tested |
-| What is RBAC? | Role-based access control restricts operations to allowed roles such as ADVISOR/ADMIN. It does not automatically restrict which user's record a caller may access. | [IMPLEMENTED] role helper; route integration planned |
-| How does authorize('ADMIN') work conceptually? | It is a higher-order function returning middleware. A closure retains allowed roles for that returned function to check after authentication. | [IMPLEMENTED] authorize closure in src/middlewares/auth.middleware.js; not wired |
-| What is ownership authorization? | Checking the caller's relationship to a resource, such as appointment.user_id matching the verified user ID or the assigned advisor profile belonging to the caller. | [PLANNED V1] required on private operations |
-| Role versus domain? | USER/ADVISOR/ADMIN describes authorization identity. FINANCE/HEALTH/ASTROLOGY describes advisory category. They should not share a field or duplicate account architecture. | [IMPLEMENTED] role field; domain [PLANNED V1] |
-| Why backend validation? | Browser checks can be bypassed. The backend must validate all request data before it influences SQL, ownership, or business state. | [IMPLEMENTED] manual registration validation; other business validation [PLANNED V1] |
+| Authentication versus authorization? | authenticate verifies the token and assigns req.user; authorize checks that verified role against allowedRoles. | [IMPLEMENTED] separate functions used by advisor/appointment route source |
+| What is JWT? | Login issues a signed token with userID/role and expiry; middleware verifies it using JWT_SECRET. Payloads are readable and contain no password/hash. | [IMPLEMENTED] signing/verification and protected advisor/appointment route source; Day 6/7 API testing pending |
+| 401 versus 403? | Login/verification failures return 401; authorize returns 403 for a disallowed verified role. | [IMPLEMENTED] middleware and route composition; protected-route runtime behavior not yet tested |
+| What is RBAC? | Role-based access control restricts operations to allowed roles; ownership SQL separately restricts the specific profile/appointment. | [IMPLEMENTED] advisor/appointment route/controller source; testing pending |
+| How does authorize('ADMIN') work conceptually? | It is a higher-order function returning middleware. A closure retains allowed roles for that returned function to check after authentication. | [IMPLEMENTED] reusable authorize closure; USER and ADVISOR uses are wired in current route source, while no ADMIN route exists yet |
+| What is ownership authorization? | The controller constrains the specific row after authentication/RBAC. Customer appointment SQL matches appointments.user_id to JWT userID; advisor SQL joins advisor_profiles and matches its user_id to JWT userID. | [IMPLEMENTED] Day 6/7 controller SQL; appointment route integration broken/testing pending |
+| Role versus domain? | USER/ADVISOR/ADMIN describes authorization identity. FINANCE/HEALTH/ASTROLOGY describes advisory category. They remain separate in the users and advisor_profiles schemas. | [IMPLEMENTED] schema; V1 product scope Finance only |
+| Why backend validation? | Browser checks can be bypassed. The backend must validate all request data before it influences SQL, ownership, or business state. | [PARTIALLY IMPLEMENTED] auth/advisor/appointment checks exist; appointment UUID/time/conflict and broader validation remain planned |
 | How do reviews avoid abuse? | Require the current customer to own a completed appointment, derive its advisor, validate rating, and prevent duplicate reviews with DB-backed integrity. None is implemented yet. | [PLANNED V1] |
-| How do appointment transitions stay correct? | Define allowed source/target states and actors, then make writes conditional/transactional so concurrent operations cannot blindly overwrite newer state. | [PLANNED V1] / [TBD] final policy |
+| How do appointment transitions stay correct? | The database restricts stored statuses; cancellation checks owner and PENDING/CONFIRMED, while advisor updates check assignment, non-CANCELLED state, and target CONFIRMED/COMPLETED. Strict source→target sequencing is not enforced yet. | [PARTIALLY IMPLEMENTED] controller; route fix/testing/hardening pending |
 | Why can't the frontend prevent double booking? | Another client or simultaneous request can bypass or race the UI. Any exclusive-slot guarantee needs a defined schedule model plus backend/database enforcement. | [TBD] minimal V1; availability [PLANNED V2] |
 | What persists when a Docker container is removed? | Declared named-volume data can survive ordinary Compose down/recreation. Removing volumes with down -v destroys that persistence and can delete local database data. | [IMPLEMENTED] volume declaration; live data unverified |
 | Do passing syntax checks prove the app works? | No. They catch parsing errors but not database connectivity, schema, routing correctness, security, or complete user journeys. | [IMPLEMENTED] syntax checks only during audit |
 | Why integration/database tests? | They verify middleware-to-controller-to-SQL behavior and actual constraints. Mocked unit tests cannot establish PostgreSQL uniqueness or real concurrent-write behavior. | [PLANNED V1] suite absent |
 | What does V1 done mean? | The integrated Finance journeys, security/ownership, constraints, critical tests, frontend, deployment, and current documentation all work. Route existence alone is insufficient. | [PLANNED V1] section 35 |
-| What is implemented right now? | Backend/DB foundation, registration/login, JWT issuance, and separate authenticate/authorize functions exist. Helpers are not attached to routes; current-user, ownership, complete Finance journeys, tests, frontend, and deployment remain planned. | [IMPLEMENTED] source evidence; middleware tracked; runtime unverified |
+| What is implemented right now? | Foundation, auth/JWT/RBAC, Finance advisor profile/discovery, and appointment schema/controller/route definitions. Advisor/appointment API testing is postponed; appointment routing currently fails to load. Community, reviews, frontend, deployment, and automated tests remain planned. | [PARTIALLY IMPLEMENTED] source evidence; live schema/runtime unverified |
 
 ## 35. VERSION 1 DEFINITION OF DONE
 
@@ -2493,13 +2554,13 @@ flowchart TD
 
 ## 36. Documentation maintenance and README relationship
 
-[IMPLEMENTED] This file is the detailed internal engineering source of truth, updated for current Day 5 middleware implementation and integration gaps. [PLANNED V1] `README.md` should be the concise public repository introduction and onboarding entry point; it is currently absent. Do not replace the README with this entire document or claim an existing README was updated.
+[IMPLEMENTED] This file is the detailed internal engineering source of truth, updated through the current Day 7 repository state. [PLANNED V1] `README.md` should be the concise public repository introduction and onboarding entry point; it is currently absent.
 
 | Document/artifact | Status | Responsibility |
 | --- | --- | --- |
 | `README.md` | [PLANNED V1] | Short product description, actual stack, safe setup/run commands, current scope/limitations, link to master reference |
 | `docs/CONSULTIFY_MASTER_SPEC.md` | [IMPLEMENTED] updated this task | Implementation evidence, target contracts, architecture/decision history, audit/debug/testing/deployment guidance, version boundaries |
-| SQL migrations | [PARTIALLY IMPLEMENTED] users file only | Executable schema history; master spec explains it but cannot substitute for actual migration files |
+| SQL migrations | [PARTIALLY IMPLEMENTED] users, advisor_profiles, appointments | Executable schema history through migration 003; community/reviews remain planned; applied live state unverified |
 | Tests | [PLANNED V1] | Executable evidence for behavior; prose acceptance cases do not count as passing tests |
 | Package metadata | [IMPLEMENTED] | Dependency/scripts/package version; `1.0.0` does not certify product V1 readiness |
 
@@ -2512,6 +2573,7 @@ flowchart TD
 | Initial audit, 2026-09-13 | `main` at `59553f5fe6f73c5424d26be76f520aa451b72537`, plus final working-tree C-12 discrepancy | Added this reference; inspected all current first-party files; documented missing business systems, conflicts, decisions, roadmap, and ~12% estimate; preserved independently changed Compose file | [IMPLEMENTED] historical documentation-only audit; no application/configuration edits by that audit |
 | Day 3 maintenance, 2026-09-14 | `main` at `74aeec62c37863c8c72ded88c836121766113923` plus scoped working-tree changes | Added name/email bounds, PostgreSQL 23505 → 409, and malformed-JSON 400; synchronized registration contract, accepted D-05–D-08, progress, and resolved config/ignore findings | [IMPLEMENTED] two JS files and this spec; login and automated tests remain planned |
 | Day 5 documentation audit, 2026-09-14 | `4a9384cecc9a2a21994e1bd8a5b58b03405b1694` | Confirmed login/JWT issuance, authenticate/authorize functions and 401/403 behavior; documented absent protected-route wiring/current-user/ownership and preserved future features as planned | [IMPLEMENTED] documentation only; source files preserved; no runtime tests |
+| Day 7 documentation audit, 2026-09-19 | `3a9b906e4c8e57072c5a857596c6570941fd62a7` plus pre-existing advisor-route edit | Documented Day 6 advisor and Day 7 appointment schema/controllers/routes, exact APIs, ownership/ID relationships, lifecycle limits, postponed testing, and appointment route-load defect | [IMPLEMENTED] documentation only; no application code changed |
 | Next feature milestone | [TBD] actual future commit | Record only work actually implemented/verified and intentionally revised decisions | [PLANNED V1] |
 
 [PLANNED V1] Official references linked throughout this document explain PostgreSQL, pg, JWT, bcrypt, and Docker behavior. They are not substitutes for local implementation evidence. Re-check version-specific technical behavior when changing dependency/runtime versions; never infer that current upstream documentation means Consultify has adopted a new version.
