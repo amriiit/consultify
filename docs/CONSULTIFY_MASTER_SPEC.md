@@ -9,14 +9,14 @@
 | Last audited against repository | 2026-09-19, Asia/Kolkata |
 | Repository | `CONSULTIFY`, local directory `consultify/` |
 | Git branch | `main` |
-| Audited commit | `3a9b906e4c8e57072c5a857596c6570941fd62a7`, plus the current working-tree advisor-route edit |
-| Commit subject | feat: add appointment booking and management APIs |
-| Master document revision | Day 7 advisor/appointment implementation audit; documentation-only update |
+| Audited commit | `c8fc216d5ab41a3907b5d944f25264c0816d1671`, plus preserved working-tree changes in `src/app.js`, `src/routes/advisor.routes.js`, and `database/migrations/004_create_community.sql` |
+| Commit subject | feat: add community helpful and ownership actions |
+| Master document revision | Day 8 Community Module implementation audit; documentation-only update |
 | Package version | `1.0.0` in `package.json`; this does **not** mean product V1 is complete |
-| Product readiness | [PARTIALLY IMPLEMENTED] Days 1–5 complete in code; Day 6 advisor APIs implemented with testing pending; Day 7 appointment schema/controller/routes implemented with testing pending and a blocking route-import defect; see sections 4, 14, 15, 21, 25, and 31 |
-| Audit scope | App/startup/DB wiring, auth/advisor/appointment middleware/routes/controllers, migrations 001–003, dependency metadata, Git state, and the master specification |
-| Source preservation | Documentation-only task. No application, migration, package, environment, or Docker file was modified. The pre-existing working-tree edit in `src/routes/advisor.routes.js` was preserved |
-| Verification limits | Static source/migration inspection, JavaScript syntax checks, route-module loading check, `git diff --check`, and final scope review. Day 6 and Day 7 API testing remains intentionally postponed until the dedicated backend test pass before frontend work |
+| Product readiness | [PARTIALLY IMPLEMENTED] Days 1–5 complete in code; Days 6–8 implemented with testing pending; the appointment router still has a blocking route-import defect; reviews, frontend, full testing, and deployment remain |
+| Audit scope | App/startup/DB wiring, auth/advisor/appointment/community middleware/routes/controllers, migrations 001–004, dependency metadata, Git state, and the master specification |
+| Source preservation | Documentation-only task. No application, migration, package, environment, or Docker file was modified. Pre-existing working-tree changes in `src/app.js`, `src/routes/advisor.routes.js`, and `database/migrations/004_create_community.sql` were inspected and preserved |
+| Verification limits | Static source/migration inspection and documentation consistency review. Day 6, Day 7, and Day 8 API testing remains intentionally postponed until the dedicated backend test pass before frontend work |
 | Compose configuration | [IMPLEMENTED] Previously reported C-12 ports syntax issue is resolved in the inspected repository; `docker compose config --no-interpolate --quiet` passes. This verifies configuration structure, not live infrastructure |
 | Live infrastructure | [TBD] Container state, server PostgreSQL version, applied migrations, and persisted data were not inspected during this maintenance task |
 | Secret handling | `.env` was not opened. Private credentials, tokens, and production connection strings are not included here |
@@ -88,7 +88,7 @@
 
 [PLANNED V1] Every future audit must re-check the repository. Do not update an implementation checkbox based only on a plan, generated code suggestion, installed package, empty folder, or route stub. Never assume authentication, tests, migrations, hosting, AI, or middleware exist because they are customary in other applications.
 
-[TBD] When evidence and intent disagree, record **CURRENT IMPLEMENTATION**, **INTENDED IMPLEMENTATION**, **CONFLICT**, and **RECOMMENDED RESOLUTION**. A recommendation in this document is not permission to change the architecture. This Day 7 task updates documentation only, based on inspected implementation.
+[TBD] When evidence and intent disagree, record **CURRENT IMPLEMENTATION**, **INTENDED IMPLEMENTATION**, **CONFLICT**, and **RECOMMENDED RESOLUTION**. A recommendation in this document is not permission to change the architecture. This Day 8 task updates documentation only, based on inspected implementation.
 
 ## 2. Product, domains, and version boundaries
 
@@ -98,19 +98,19 @@
 
 [PLANNED V1] The differentiator is **professional expertise plus community experience** in one product. Advisor discovery without a community, or a discussion board without a booking workflow, does not fulfill this product definition.
 
-[PARTIALLY IMPLEMENTED] Registration, login/JWT, advisor profiles/discovery, and appointment schema/controller/route source exist. Advisor and appointment route source uses authentication/RBAC, but Day 6/7 API testing is postponed and the appointment router currently fails to load. Community and the complete tested Finance journey remain unimplemented.
+[PARTIALLY IMPLEMENTED] Registration, login/JWT, advisor profiles/discovery, appointment source, and the Community Module exist. The two current platform pillars are **Professional Consultation → advisors + appointments** and **Community Advisory → posts + comments + helpful interactions**. Day 6–8 API testing is postponed, the appointment router currently fails to load, and the complete tested Finance journey remains unfinished.
 
 ### 2.2 Versions
 
 | Version | Status | Scope | Boundary |
 | --- | --- | --- | --- |
-| V1 — Core product | [PARTIALLY IMPLEMENTED] | Finance end-to-end; clean backend, relational schema, registration/login, JWT, RBAC/ownership, advisors, bookings, community/comments/helpfulness, reviews, basic frontend, tests, deployment | Foundation/auth and Day 6/7 source exist; community/reviews/frontend/testing/deployment remain and appointment integration is blocked |
+| V1 — Core product | [PARTIALLY IMPLEMENTED] | Finance end-to-end; clean backend, relational schema, registration/login, JWT, RBAC/ownership, advisors, bookings, community/comments/helpfulness, reviews, basic frontend, tests, deployment | Foundation/auth and Day 6–8 source exist; reviews/frontend/testing/deployment remain and appointment integration is blocked |
 | V2 — Product expansion | [PLANNED V2] | Health, Astrology, advanced filters/search, availability, notifications, stronger admin tools, community reputation, advisor verification, improved dashboards, favorites, reporting | Reuse generic entities and custom backend; exact feature order and schemas pending |
 | V3 — Intelligent platform | [PLANNED V3] | Possible advisor recommendations, question categorization, duplicate detection, consultation summaries, smart FAQs, sentiment analysis, intelligent answer ranking, analytics, recommendation systems | Assistance rather than replacement for professional judgment; no AI package, provider, data pipeline, or model selected |
 | Later real-time capabilities | [DEFERRED] | Chat, voice/video calls, WebSockets, real-time notifications | Delivery mechanism, provider, security model, and version assignment are unresolved |
 | Additional advisory domains | [DEFERRED] | Legal, Career, Fitness, and other future categories | Examples of extensibility, not approved V1/V2 workflows |
 
-[PARTIALLY IMPLEMENTED] Current V1 remains Finance-first: authentication, USER/ADVISOR/ADMIN roles, advisor profiles/discovery, and appointment booking/management are represented in code. Community is the next unstarted module; reviews, basic dashboard/profile frontend, broader testing, and deployment follow later. The schema remains generic enough to contain HEALTH and ASTROLOGY domain values, but those product workflows are not implemented V1 features.
+[PARTIALLY IMPLEMENTED] Current V1 remains Finance-first: authentication, USER/ADVISOR/ADMIN roles, advisor profiles/discovery, appointment booking/management, community posts/comments, helpful interactions, and content ownership protections are represented in code. Reviews, basic dashboard/profile frontend, broader testing, and deployment follow later. Advisor schema values remain generic enough to contain HEALTH and ASTROLOGY, but those product workflows are not implemented V1 features; community post creation currently accepts only FINANCE.
 
 [PLANNED V1] Generic design is mandatory even though Finance is the only launch domain. `USER`, `ADVISOR`, and `ADMIN` are authorization roles. `FINANCE`, `HEALTH`, and `ASTROLOGY` are advisory categories. Do not create `financeUsers`, `healthUsers`, `financeAppointments`, or separate authentication systems per domain.
 
@@ -158,7 +158,7 @@
 
 ### 4.1 Audited files and history
 
-[IMPLEMENTED] The repository has 21 tracked files at commit `3a9b906`, plus a pre-existing working-tree change in `src/routes/advisor.routes.js`. The scoped inspection covered Day 6/7 routes, controllers, migrations, app wiring, authentication/authorization, and dependency metadata.
+[IMPLEMENTED] The audit is anchored at commit `c8fc216`, with preserved working-tree changes in `src/app.js`, `src/routes/advisor.routes.js`, and `database/migrations/004_create_community.sql`. The scoped inspection covered Day 6–8 routes, controllers, migrations, app wiring, authentication/authorization, and dependency metadata.
 
 | File | Evidence and responsibility |
 | --- | --- |
@@ -167,7 +167,7 @@
 | [.gitignore](../.gitignore) | Ignores `node_modules/`, `.env`, and `.DS_Store` |
 | [.env.example](../.env.example) | Contains `PORT`, a placeholder `DATABASE_URL`, and placeholder `POSTGRES_PASSWORD` |
 | [docker-compose.yml](../docker-compose.yml) | PostgreSQL 17.4, valid loopback ports list, `${POSTGRES_PASSWORD}`, and named volume; configuration validation passes |
-| [src/app.js](../src/app.js) | JSON parser, health/auth mounts, malformed-JSON error handler after routes, app export |
+| [src/app.js](../src/app.js) | JSON parser; health/auth/advisor/appointment/community mounts; malformed-JSON error handler; app export. Community mount is currently a preserved working-tree change |
 | [src/server.js](../src/server.js) | dotenv first, startup DB check, HTTP listener, failure exit |
 | [src/config/db.js](../src/config/db.js) | Shared `pg.Pool` configured from `DATABASE_URL` |
 | [src/routes/health.routes.js](../src/routes/health.routes.js) | `GET /` mapped to `getHealth`; mounted as `/api/health` |
@@ -180,6 +180,8 @@
 | [database/migrations/002_create_advisor_profiles.sql](../database/migrations/002_create_advisor_profiles.sql) | Advisor-profile schema and users relationship |
 | [src/routes/appointment.routes.js](../src/routes/appointment.routes.js), [src/controllers/appointment.controller.js](../src/controllers/appointment.controller.js) | Day 7 route/controller source; route import/export defect blocks module loading |
 | [database/migrations/003_create_appointments.sql](../database/migrations/003_create_appointments.sql) | Appointment schema, relationships, status CHECK, notes, timestamps |
+| [src/routes/community.routes.js](../src/routes/community.routes.js), [src/controllers/community.controller.js](../src/controllers/community.controller.js) | Day 8 public reads plus authenticated post/comment/helpful/ownership mutations |
+| [database/migrations/004_create_community.sql](../database/migrations/004_create_community.sql) | Preserved working-tree migration defining `community_posts`, `comments`, and `post_helpful`; live application unverified |
 | [CONSULTIFY_MASTER_SPEC.md](CONSULTIFY_MASTER_SPEC.md) | Current implementation evidence and planned V1 reference |
 
 [IMPLEMENTED] Local history includes the following relevant milestones:
@@ -195,8 +197,9 @@
 | `4a9384cecc9a2a21994e1bd8a5b58b03405b1694` | 2026-09-14 | Add authentication and role authorization middleware |
 | `9296473b44bf28f9d12b7641ff872cbbfc4210fa` | 2026-09-17 | Add advisor profiles and discovery APIs |
 | `3a9b906e4c8e57072c5a857596c6570941fd62a7` | 2026-09-18 | feat: add appointment booking and management APIs |
+| `c8fc216d5ab41a3907b5d944f25264c0816d1671` | 2026-09-19 | feat: add community helpful and ownership actions |
 
-[IMPLEMENTED] At this Day 7 documentation task's start, `src/routes/advisor.routes.js` already had a working-tree modification. It was inspected as current evidence and preserved. This task modifies only the master specification; `.env` was not opened.
+[IMPLEMENTED] At this Day 8 documentation task's start, `src/app.js`, `src/routes/advisor.routes.js`, and `database/migrations/004_create_community.sql` already had working-tree changes. They were inspected as current evidence and preserved. This task modifies only the master specification; `.env` was not opened.
 
 [IMPLEMENTED] The prior Compose ports discrepancy (C-12) is resolved: the inspected file contains a valid list item and `docker compose config --no-interpolate --quiet` succeeds. No Compose configuration or Docker runtime state was changed by this task.
 
@@ -217,20 +220,20 @@
 | Running database / applied schema | [TBD] | Not inspected in this maintenance task | No live connectivity, catalog, or volume contents verified |
 | Users migration | [IMPLEMENTED] | `database/migrations/001_create_users.sql` | Matches requested schema semantically; no runner or applied-migration ledger |
 | UUID/default roles/timestamps | [IMPLEMENTED] | Users migration and registration controller | Registration omits these columns and uses database defaults, including USER |
-| Migration workflow | [PARTIALLY IMPLEMENTED] | One SQL migration; no migration npm script | Ordering convention begun; repeatable apply/deployment workflow pending |
+| Migration workflow | [PARTIALLY IMPLEMENTED] | Four ordered SQL migration files; no migration npm script | Repeatable apply/deployment workflow pending; migration 004 is currently uncommitted |
 | SQL injection defenses for business queries | [IMPLEMENTED] registration | `src/controllers/auth.controller.js` | Duplicate SELECT and INSERT use placeholders and separate value arrays |
 | Secret/dependency ignore rules | [IMPLEMENTED] | `.gitignore` | Working rules verified; remote secret scanning not verified |
 | Environment documentation | [IMPLEMENTED] example | `.env.example` | PORT, DATABASE_URL, and POSTGRES_PASSWORD placeholders exist; required-variable validation remains planned |
 | Registration and password hashing | [IMPLEMENTED] | Auth route/controller, `bcrypt` dependency | POST /api/auth/register; manual validation, bcrypt cost 12, safe USER-only creation; no automatic login |
 | Login and JWT | [IMPLEMENTED] | Auth route/controller; jsonwebtoken | POST /api/auth/login, bcrypt.compare, JWT_SECRET signing, JWT_EXPIRES_IN or 1h, safe user response |
-| JWT authentication middleware | [IMPLEMENTED] and used | `src/middlewares/auth.middleware.js`, advisor/appointment routes | Authorization/Bearer parsing, jwt.verify with JWT_SECRET, 401 errors, decoded req.user, then next |
+| JWT authentication middleware | [IMPLEMENTED] and used | `src/middlewares/auth.middleware.js`, advisor/appointment/community routes | Authorization/Bearer parsing, jwt.verify with JWT_SECRET, 401 errors, decoded req.user, then next |
 | Role authorization middleware | [IMPLEMENTED] and used | Same middleware plus advisor/appointment routes | authorize(USER/ADVISOR), 403 for disallowed role, ordered after authenticate |
-| Protected routes and ownership | [PARTIALLY IMPLEMENTED] | Advisor/appointment routes and controllers | Advisor self-profile and appointment ownership/assignment SQL exist; appointment router load defect blocks those HTTP paths; current-user endpoint absent |
+| Protected routes and ownership | [PARTIALLY IMPLEMENTED] | Advisor/appointment/community routes and controllers | Advisor, appointment, and community ownership SQL exist; appointment router load defect blocks full app startup; current-user endpoint absent |
 | Current-user endpoint | [PLANNED V1] | No user route/controller | Not mounted |
 | Domains and Finance seed data | [PLANNED V1] | No domains migration or seed file | Finance-first product requirement only |
 | Advisor profiles and discovery | [IMPLEMENTED] / TESTING PENDING | Migration 002, advisor controller/routes, app mount | Protected create/update; public list/detail/search/filter. API testing postponed |
 | Appointments and lifecycle | [PARTIALLY IMPLEMENTED] / TESTING PENDING | Migration 003, appointment controller/routes, app mount | Booking/list/cancel/status code exists, but appointment router currently fails to load because three handlers are referenced without imports |
-| Community posts/comments/helpfulness | [PLANNED V1] | No community files/schema | Helpful interaction required; persistence choice pending |
+| Community posts/comments/helpfulness | [IMPLEMENTED] / TESTING PENDING | Community controller/routes, app mount, migration 004 | Public reads; authenticated create/comment/helpful/delete; duplicate helpful protection and post cascades; migration application/API testing unverified |
 | Reviews/ratings | [PLANNED V1] | No review files/schema | Completed-appointment integrity not implemented |
 | Minimal dashboards | [PLANNED V1] | No frontend or dashboard APIs | Minimal composition of core resources proposed |
 | Advanced admin/verification | [PLANNED V2] | No admin code | V1 provisioning policy still needs decision |
@@ -241,7 +244,7 @@
 | Logging/monitoring | [PARTIALLY IMPLEMENTED] | Server and auth controller console messages | Registration/login catches log error.message server-side; no structured logging or monitoring |
 | Deployment | [PLANNED V1] | Local DB Compose only; no deployment config | No backend Dockerfile, hosting provider, live URL, or managed DB evidence |
 | README | [PLANNED V1] | Absent | Master spec does not replace a future concise README |
-| Master engineering reference | [IMPLEMENTED] | `docs/CONSULTIFY_MASTER_SPEC.md` | Updated through Day 7 with testing status and known integration defects |
+| Master engineering reference | [IMPLEMENTED] | `docs/CONSULTIFY_MASTER_SPEC.md` | Updated through Day 8 with testing status and known integration defects |
 | Health/Astrology and V2 expansion | [PLANNED V2] | No implementation | Do not expose unfinished domains as supported |
 | AI/ML features | [PLANNED V3] | No implementation or selected AI technology | Possibilities only |
 
@@ -249,7 +252,7 @@
 
 ### 5.1 CURRENT FILE STRUCTURE
 
-[IMPLEMENTED] Snapshot includes the existing master document and registration files. `.git/` internals and generated `node_modules/` contents are intentionally collapsed; these are not uninspected first-party application modules.
+[IMPLEMENTED] Snapshot includes the inspected Day 8 backend and master document. `.git/` internals and generated `node_modules/` contents are intentionally collapsed.
 
 ```text
 consultify/
@@ -265,22 +268,31 @@ consultify/
 ├── database/
 │   ├── .DS_Store                 # ignored local OS artifact; not tracked
 │   └── migrations/
-│       └── 001_create_users.sql
+│       ├── 001_create_users.sql
+│       ├── 002_create_advisor_profiles.sql
+│       ├── 003_create_appointments.sql
+│       └── 004_create_community.sql # working-tree file; application unverified
 ├── src/
 │   ├── app.js
 │   ├── server.js
 │   ├── config/
 │   │   └── db.js
 │   ├── controllers/
+│   │   ├── advisor.controller.js
+│   │   ├── appointment.controller.js
 │   │   ├── auth.controller.js
+│   │   ├── community.controller.js
 │   │   └── health.controller.js
 │   ├── middlewares/
 │   │   └── auth.middleware.js     # existing, tracked; authenticate and authorize
 │   └── routes/
+│       ├── advisor.routes.js
+│       ├── appointment.routes.js
 │       ├── auth.routes.js
+│       ├── community.routes.js
 │       └── health.routes.js
 └── docs/
-    └── CONSULTIFY_MASTER_SPEC.md # updated for current Day 7 implementation
+    └── CONSULTIFY_MASTER_SPEC.md # updated for current Day 8 implementation
 ```
 
 ### 5.2 TARGET V1 FILE STRUCTURE
@@ -298,17 +310,17 @@ consultify/
 │   │   ├── health.controller.js             [existing]
 │   │   ├── auth.controller.js               [existing; registration and login]
 │   │   ├── user.controller.js               [planned]
-│   │   ├── advisor.controller.js            [planned]
-│   │   ├── appointment.controller.js        [planned]
-│   │   ├── post.controller.js               [planned; comments/helpful initially here]
+│   │   ├── advisor.controller.js            [existing]
+│   │   ├── appointment.controller.js        [existing]
+│   │   ├── community.controller.js          [existing; posts/comments/helpful/delete]
 │   │   └── review.controller.js             [planned]
 │   ├── routes/
 │   │   ├── health.routes.js                 [existing]
 │   │   ├── auth.routes.js                   [existing; registration and login]
 │   │   ├── user.routes.js                   [planned]
-│   │   ├── advisor.routes.js                [planned]
-│   │   ├── appointment.routes.js            [planned]
-│   │   ├── post.routes.js                   [planned]
+│   │   ├── advisor.routes.js                [existing]
+│   │   ├── appointment.routes.js            [existing]
+│   │   ├── community.routes.js              [existing]
 │   │   └── review.routes.js                 [planned]
 │   └── middlewares/
 │       ├── auth.middleware.js               [existing, tracked; authenticate and authorize]
@@ -316,10 +328,10 @@ consultify/
 ├── database/
 │   └── migrations/
 │       ├── 001_create_users.sql             [existing]
-│       ├── 002_create_domains.sql           [planned naming example]
-│       ├── 003_create_advisor_profiles.sql  [planned naming example]
-│       ├── 004_create_appointments.sql      [planned naming example]
-│       └── ...                              [planned community/comment/review/helpful SQL]
+│       ├── 002_create_advisor_profiles.sql  [existing]
+│       ├── 003_create_appointments.sql      [existing]
+│       ├── 004_create_community.sql         [existing working-tree migration]
+│       └── ...                              [planned review and later SQL]
 ├── frontend/                                [planned; proposed location]
 │   ├── package.json                         [planned]
 │   └── src/
@@ -676,13 +688,25 @@ CREATE TABLE users(
 | `created_at` | TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP | Creation timestamp |
 | `updated_at` | TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP | Last controller-managed update timestamp |
 
-[IMPLEMENTED] The migration provides foreign keys and the status CHECK, but no explicit delete action, indexes beyond those implied by referenced/primary/unique keys, overlap constraint, or automatic `updated_at` trigger. Migration existence does not prove it has been applied to a live database; Day 6/7 database/API testing is postponed.
+[IMPLEMENTED] The migration provides foreign keys and the status CHECK, but no explicit delete action, indexes beyond those implied by referenced/primary/unique keys, overlap constraint, or automatic `updated_at` trigger. Migration existence does not prove it has been applied to a live database; Day 6–8 database/API testing is postponed.
+
+### 10.3 Current community schema — migration 004
+
+[IMPLEMENTED] The inspected `database/migrations/004_create_community.sql` defines three tables. The migration is currently a preserved working-tree file; this documents its exact schema intent, not proof that it has been applied.
+
+| Table | Fields and constraints | Relationship / behavior |
+| --- | --- | --- |
+| `community_posts` | `id UUID PRIMARY KEY DEFAULT gen_random_uuid()`; `user_id UUID NOT NULL`; `domain VARCHAR(50) NOT NULL`; `title VARCHAR(200) NOT NULL`; `content TEXT NOT NULL`; required `created_at`/`updated_at` TIMESTAMPTZ defaults | Each post belongs to one `users(id)` account; one user can author many posts |
+| `comments` | `id UUID PRIMARY KEY DEFAULT gen_random_uuid()`; required `post_id`, `user_id`, `content`; required timestamp defaults | Each comment belongs to one post and one user; `post_id` references `community_posts(id) ON DELETE CASCADE` |
+| `post_helpful` | required `post_id`, `user_id`, `created_at`; `PRIMARY KEY (post_id, user_id)` | Join table representing users marking posts helpful; the composite primary key prevents the same user/post pair from appearing twice; `post_id` cascades on post deletion |
+
+[IMPLEMENTED] Cardinalities are **User → Community Posts: one-to-many**, **Post → Comments: one-to-many**, and **Users ↔ Posts through `post_helpful`: many-to-many**. Deleting a community post automatically removes its dependent comments and helpful rows because both post foreign keys use `ON DELETE CASCADE`. User foreign keys do not declare cascade behavior.
 
 ## 11. Target relational model and integrity rules
 
 ### 11.1 Entity inventory by version
 
-[PARTIALLY IMPLEMENTED] `users`, `advisor_profiles`, and `appointments` now have versioned migrations. Remaining entities are design targets, not current schema.
+[PARTIALLY IMPLEMENTED] `users`, `advisor_profiles`, `appointments`, `community_posts`, `comments`, and `post_helpful` now have versioned migration definitions. Migration application remains unverified; remaining entities are design targets, not current schema.
 
 | Entity | Status | Purpose and owner | Schema maturity |
 | --- | --- | --- | --- |
@@ -690,10 +714,10 @@ CREATE TABLE users(
 | `domains` | [PLANNED V1] | Advisory categories; controlled system data | Finance only seeded for V1; Health/Astrology in V2 |
 | `advisor_profiles` | [IMPLEMENTED] migration; testing pending | Professional profile attached one-to-one to an account | Current fields/constraints in section 10.1; role provisioning still operationally TBD |
 | `appointments` | [IMPLEMENTED] migration; testing pending | Consultation joining a customer account to an advisor profile | Current fields/constraints in section 10.2; stricter transitions/scheduling remain hardening work |
-| `community_posts` | [PLANNED V1] | Public questions/experiences in a domain | Author owns content; moderation policy [TBD] |
-| `comments` | [PLANNED V1] | Contributions under a community post | Comment author is distinct from post author |
+| `community_posts` | [IMPLEMENTED] migration; testing pending | Public questions/experiences with user ownership and textual domain | Current fields/constraints in section 10.3; controller restricts creation/filtering to FINANCE |
+| `comments` | [IMPLEMENTED] migration; testing pending | User-authored contributions under a community post | Post deletion cascades; comment author owns the implemented delete action |
 | `reviews` | [PLANNED V1] | Feedback grounded in completed consultation | Only the consultation's customer may create its review |
-| `helpful_votes` | [PLANNED V1] candidate persistence / [TBD] | Store helpful interaction without unlimited duplicate voting | Brief lists table as future, but V1 behavior requires a persistence decision; see conflict C-08 |
+| `post_helpful` | [IMPLEMENTED] migration; testing pending | User-to-post helpful association | Composite primary key `(post_id, user_id)` prevents duplicate pairs; no unhelp/toggle endpoint exists |
 | `favorites` | [PLANNED V2] | Saved advisors/content; target kind [TBD] | No V1 table or API |
 | `advisor_availability` | [PLANNED V2] | Working times and bookable slots | Model and scheduling integration [TBD] |
 | `notifications` | [PLANNED V2] | Product notifications | Delivery channels and retention [TBD]; real-time transport deferred |
@@ -704,17 +728,17 @@ CREATE TABLE users(
 
 ### 11.2 Proposed field and constraint specifications
 
-[PLANNED V1] / [TBD] **TBD — DECISION REQUIRED:** approve the schema before writing each migration. Recommendations below are separate from current implementation. For new entities, UUID primary keys generated by PostgreSQL follow the accepted identifier direction. Field lengths, optionality, defaults, update behavior, and constraint names remain pending unless explicitly stated as product invariants.
+[PLANNED V1] / [TBD] The table below preserves unresolved target-model proposals. It does not override the exact implemented schemas in sections 10.1–10.3. For entities that remain new, approve schema details before writing migrations.
 
 | Proposed table | Candidate fields and recommended types | Required relationships / integrity direction | Pending decisions |
 | --- | --- | --- | --- |
 | `domains` | `id UUID`; `code` textual category; optional display name; timestamps if needed | Recommend unique, non-null stable `code`; V1 code `FINANCE` | Code storage length/case, display label, seed mechanism; do not freeze a CHECK to only FINANCE if it blocks future domain data |
 | `advisor_profiles` | `id UUID`, `user_id UUID`, `domain_id UUID`, `specialization` text, `bio` text, `years_experience` integer, `consultation_fee` exact numeric if included, `created_at`/`updated_at TIMESTAMPTZ` | User and domain FKs; associated user must have ADVISOR role; recommend experience/fee nonnegative if present | One profile per user vs per user/domain; required fields, lengths, currency/fee meaning; verification status reserved for V2 unless explicitly scoped |
 | `appointments` | `id UUID`, `user_id UUID`, `advisor_id UUID`, optional `domain_id UUID`, `scheduled_at TIMESTAMPTZ`, `status` text, optional `notes` text, timestamps | User FK and advisor-profile FK; valid lifecycle; requester identity derived from auth | Duration/end time, overlap rules, direct domain link vs derivation, notes audience, cancellation policy, update semantics |
-| `community_posts` | `id UUID`, `author_id UUID`, `domain_id UUID`, `title` text, `body` text, timestamps | Author/domain FKs; nonblank bounded title/body validated by backend | SQL lengths, content format, edit/delete scope and moderation |
-| `comments` | `id UUID`, `post_id UUID`, `author_id UUID`, `body` text, timestamps | Post/user FKs; nonblank bounded content | Body limit, read pagination; nested replies are not a V1 requirement |
+| `community_posts` | [IMPLEMENTED] Exact current fields are `id`, `user_id`, textual `domain`, `title`, `content`, and timestamps | User FK; controller validates nonblank values and FINANCE for creation | Stronger type/length validation, content format, moderation; own-post deletion is implemented |
+| `comments` | [IMPLEMENTED] Exact current fields are `id`, `post_id`, `user_id`, `content`, and timestamps | Post/user FKs; post FK cascades; controller validates nonblank content | Stronger length validation and pagination; own-comment deletion is implemented; nested replies are not V1 |
 | `reviews` | `id UUID`, `user_id UUID` and `advisor_id UUID` if retained, `appointment_id UUID`, `rating` integer, `review_text` text, `created_at TIMESTAMPTZ` | Only completed owned appointment; recommend `UNIQUE(appointment_id)`; recommend `CHECK(rating BETWEEN 1 AND 5)` | Rating scale finalization, text optionality/length, denormalization, editing/removal/retention |
-| `helpful_votes` candidate | User reference plus post reference if post-target proposal is approved; timestamp; surrogate UUID optional if composite key used | Recommend unique `(user_id, post_id)` and both FKs; derive counts rather than accept client counts | Post vs comment targets, self-votes, reversible vote behavior, table name/key; polymorphic targets weaken simple FK enforcement |
+| `post_helpful` | [IMPLEMENTED] `post_id`, `user_id`, `created_at`, composite primary key `(post_id, user_id)` | Post/user FKs; one row per user/post; post deletion cascades; counts are derived | Self-helpful policy remains permissive; no reversal/toggle endpoint is implemented |
 
 [PLANNED V1] Rating should be derived from reviews (`AVG` plus count as appropriate), not blindly stored as an unrelated profile number. Any future cached aggregate needs explicit invalidation/update rules. A no-review advisor should have a distinguishable “no rating yet” representation, recommended `null` average with count 0; exact API representation remains [TBD].
 
@@ -728,19 +752,19 @@ CREATE TABLE users(
 | What `appointments.advisor_id` references | Advisor user ID or advisor profile ID | Profile ID, consistently used by discovery/booking APIs | Resolve through profile to authenticated advisor's user ID when authorizing |
 | Appointment domain | Derive from advisor profile; store `domain_id` directly | Derive for V1 unless historical domain-at-booking requirements justify storing it | If stored redundantly, enforce consistency and define behavior when profile domain changes |
 | Review identity links | Store only appointment link and derive customer/advisor; store customer/advisor links too | Prefer derivation where practical; keep duplicated links only for a documented query need | Independent FKs cannot prove duplicated IDs match the linked appointment |
-| Helpful interaction target | Posts, comments, or both | Start with posts and one reversible vote per user/post | Exact candidate routes below assume posts; decide before implementing day 11 |
+| Helpful interaction target | [IMPLEMENTED] Posts only | One mark per authenticated user/post | Current API is add-only: duplicate marks return 409; no unhelp/toggle behavior |
 | Historical profile/domain changes | Mutable relationships; immutable historical snapshot | Preserve interpretable consultation history; decide before allowing changes | Do not silently rewrite the meaning of older appointments/reviews |
 
 ### 11.4 Textual ER model and cardinalities
 
-[PLANNED V1] / [TBD] The following **recommended model** assumes one advisor profile per user, appointment advisor links to profiles, appointment domain is derived, and helpful votes target posts. Those assumptions are not accepted schema decisions. `users` itself is the only entity with an existing migration.
+[PARTIALLY IMPLEMENTED] The following model combines implemented users/advisors/appointments/community relationships with planned domains and reviews. Community currently stores a textual domain rather than a `domains` foreign key.
 
 - A user has zero or one advisor profile under this recommendation; every advisor profile belongs to exactly one user and one domain.
 - A domain has zero or many advisor profiles and zero or many posts.
 - A customer user has zero or many appointments; each appointment has exactly one customer and one advisor profile.
 - An advisor profile has zero or many assigned appointments.
 - A user authors zero or many posts/comments; each belongs to exactly one author.
-- A post has zero or many comments and helpful votes; each comment/vote targets exactly one post in this proposed model.
+- A post has zero or many comments and `post_helpful` rows; each row targets exactly one post and one user.
 - An appointment has zero or one review; each review belongs to exactly one completed appointment. Its customer/advisor are derivable from that appointment.
 - One user can create many votes, but cannot create multiple votes on the same target under the recommended uniqueness rule.
 
@@ -755,8 +779,8 @@ erDiagram
     COMMUNITY_POSTS ||--o{ COMMENTS : contains
     USERS ||--o{ COMMENTS : authors
     APPOINTMENTS ||--o| REVIEWS : "eligible when completed"
-    USERS ||--o{ HELPFUL_VOTES : casts
-    COMMUNITY_POSTS ||--o{ HELPFUL_VOTES : receives
+    USERS ||--o{ POST_HELPFUL : marks
+    COMMUNITY_POSTS ||--o{ POST_HELPFUL : receives
 ```
 
 [TBD] This is a conceptual diagram, not a generated database ER export. It intentionally omits optional redundant review/domain links. Changing a pending cardinality requires updating both diagram and contract assumptions before implementation.
@@ -769,10 +793,10 @@ erDiagram
 | `advisor_profiles.domain_id` | [PLANNED V1] | `domains.id` | Domain is classification, not owner | [TBD] Recommend restrict deletion of in-use domains |
 | `appointments.user_id` | [IMPLEMENTED] | `users.id` | Customer list/cancel SQL scopes by JWT userID | No explicit delete action; retention remains TBD |
 | `appointments.advisor_id` | [IMPLEMENTED] | `advisor_profiles.id` | Advisor list/status SQL resolves profile ownership through user_id | No explicit delete action; testing pending |
-| `community_posts.author_id`, `domain_id` | [PLANNED V1] | `users.id`, `domains.id` | Public read proposal; author-specific writes if scoped | [TBD] Account/content deletion and anonymization pending |
-| `comments.author_id`, `post_id` | [PLANNED V1] | `users.id`, `community_posts.id` | Parent author does not automatically own someone else's comment | [TBD] Cascade vs retained/tombstoned discussion pending |
+| `community_posts.user_id` | [IMPLEMENTED] | `users.id` | Public reads; create/delete identity comes from verified `req.user.userID` | No explicit user-delete action; deleting the post cascades to its comments/helpful rows |
+| `comments.user_id`, `post_id` | [IMPLEMENTED] | `users.id`, `community_posts.id` | Comment delete requires its own author; post author does not own another user's standalone comment | `post_id ON DELETE CASCADE`; no explicit user-delete action |
 | `reviews.appointment_id` | [PLANNED V1] | `appointments.id` | Creation restricted to completed appointment's customer | [TBD] Preserve eligibility trace and review history |
-| Helpful vote user/target | [PLANNED V1] / [TBD] | `users.id`, selected target table key | A user can change only their own vote | [TBD] Often removable with target, but policy not selected |
+| `post_helpful.user_id`, `post_id` | [IMPLEMENTED] | `users.id`, `community_posts.id` | Authenticated user can create only their own association; duplicate pair blocked | `post_id ON DELETE CASCADE`; no unhelp endpoint or user-delete action |
 
 [PLANNED V1] Foreign keys protect references, not HTTP ownership. An advisor-profile FK does not prove the related user currently has ADVISOR role. A review FK does not prove the appointment is completed. These cross-record rules need appropriate backend/transactional enforcement, with database constraints where expressible. Do not place cross-table business rules in an ordinary row `CHECK` and assume they remain correct as other rows change.
 
@@ -903,23 +927,24 @@ erDiagram
 | API-11 | GET | `/api/appointments/advisor` | Bearer JWT; ADVISOR | List appointments assigned through caller's advisor profile | [PARTIALLY IMPLEMENTED] / TESTING PENDING; missing route import |
 | API-12 | PATCH | `/api/appointments/:id/cancel` | Bearer JWT; USER | Cancel caller-owned PENDING/CONFIRMED appointment | [PARTIALLY IMPLEMENTED] / TESTING PENDING; missing route import/export |
 | API-13 | PATCH | `/api/appointments/:id/status` | Bearer JWT; ADVISOR | Set assigned non-cancelled appointment to CONFIRMED/COMPLETED | [PARTIALLY IMPLEMENTED] / TESTING PENDING; missing route import |
-| API-15 | POST | `/api/community/posts` | Yes; all roles proposed | Create Finance post | [PLANNED V1] / [TBD] |
-| API-16 | GET | `/api/community/posts` | Public proposed; `author=me` protected | List community posts | [PLANNED V1] / [TBD] |
-| API-17 | GET | `/api/community/posts/:id` | Public proposed | Post detail | [PLANNED V1] / [TBD] |
-| API-18 | POST | `/api/community/posts/:id/comments` | Yes; all roles proposed | Comment on existing post | [PLANNED V1] / [TBD] |
-| API-19 | GET | `/api/community/posts/:id/comments` | Public proposed | Paginated comments | [PLANNED V1] / [TBD] |
-| API-20 | PUT | `/api/community/posts/:id/helpful` | Yes; all roles proposed | Ensure own helpful vote exists | [PLANNED V1] / [TBD] target/persistence |
-| API-21 | DELETE | `/api/community/posts/:id/helpful` | Yes; all roles proposed | Remove own helpful vote | [PLANNED V1] / [TBD] reversibility |
+| API-15 | POST | `/api/community/posts` | Bearer JWT; any authenticated role | Create a FINANCE community post | [IMPLEMENTED] / TESTING PENDING |
+| API-16 | GET | `/api/community/posts` | Public | List posts; optional `domain=FINANCE` | [IMPLEMENTED] / TESTING PENDING |
+| API-17 | GET | `/api/community/posts/:id` | Public | Read one post with author and aggregate counts | [IMPLEMENTED] / TESTING PENDING |
+| API-18 | POST | `/api/community/posts/:id/comments` | Bearer JWT; any authenticated role | Add a comment to an existing post | [IMPLEMENTED] / TESTING PENDING |
+| API-19 | GET | `/api/community/posts/:id/comments` | Public | List comments with author information | [IMPLEMENTED] / TESTING PENDING |
+| API-20 | POST | `/api/community/posts/:id/helpful` | Bearer JWT; any authenticated role | Mark a post helpful once per user | [IMPLEMENTED] / TESTING PENDING |
+| API-21 | DELETE | `/api/community/posts/:id` | Bearer JWT; any authenticated role | Delete caller-owned post | [IMPLEMENTED] / TESTING PENDING |
+| API-21A | DELETE | `/api/community/comments/:id` | Bearer JWT; any authenticated role | Delete caller-owned comment | [IMPLEMENTED] / TESTING PENDING |
 | API-22 | POST | `/api/reviews` | Yes; eligible customer | Review own completed consultation | [PLANNED V1] / [TBD] |
 | API-23 | GET | `/api/advisors/:id/reviews` | Public proposed | List advisor reviews | [PLANNED V1] / [TBD] |
 | API-24 | GET | `/api/reviews?scope=mine` | Yes; eligible customer role policy | Read own submitted reviews for minimal dashboard | [PLANNED V1] / [TBD] |
 
-[IMPLEMENTED] `app.js` composes final paths by mounting `advisorRouter` at `/api/advisors` and `appointmentRouter` at `/api/appointments`. Router-relative `/profile`, `/user`, and `/advisor` therefore become the final paths shown above. Protected routes place `authenticate`, then `authorize(role)`, then the controller. The current advisor route order places `/profile` before `/:id`. Appointment route loading is currently blocked by missing controller imports; see section 15.
+[IMPLEMENTED] `app.js` composes final paths by mounting routers at `/api/advisors`, `/api/appointments`, and `/api/community`. For example, the community base `/api/community` plus router-relative `/posts/:id/comments` produces `/api/community/posts/:id/comments`. Community write/delete routes use `authenticate` directly without an additional role restriction, so any account with a verified JWT can participate. Appointment route loading is currently blocked by missing controller imports; see section 15.
 
 
 ## 14. Detailed API contracts and V1 request flows
 
-[PARTIALLY IMPLEMENTED] API-01–API-08 are present in the current route/controller tree; Day 6 advisor API testing is postponed. API-09–API-13 have migration/controller/route code, but the appointment router currently throws during module loading, so these paths are documented as implemented code with blocked integration and testing pending. Community, reviews, current-user, frontend, and deployment contracts remain planned.
+[PARTIALLY IMPLEMENTED] API-01–API-08 and API-15–API-21A are present in the current route/controller tree; Day 6 and Day 8 API testing is postponed. API-09–API-13 have migration/controller/route code, but the appointment router currently throws during module loading, so these paths remain implemented code with blocked integration and testing pending. Reviews, current-user, frontend, and deployment contracts remain planned.
 
 ### API-01 — GET /api/health
 
@@ -1233,134 +1258,148 @@ Client → server.js → app.js → appointment.routes.js
 
 | Contract field | Definition |
 | --- | --- |
-| Status | [PLANNED V1] / [TBD] proposed contract |
+| Status | [IMPLEMENTED] / TESTING PENDING |
 | Purpose | Create a public Finance question/experience post. |
-| Authentication / roles | Required; USER, ADVISOR, ADMIN proposed for ordinary participation. |
+| Authentication / roles | `authenticate` required; no role middleware, so any verified account role may participate. |
 | Path parameters | None. |
 | Query parameters | None. |
-| Request body | Proposed {title, body, domain?}; omitted domain resolves to FINANCE. |
-| Validation | Required nonblank bounded title/body; content format/limits TBD; domain only FINANCE; reject author_id and client counts. |
-| Success / HTTP code | 201: {data: PostPublic}. |
-| Possible errors / HTTP codes | 400 invalid content/domain; 401 unauthenticated; 403 if selected role/content policy blocks creation; 500 safe failure. |
-| Route file → controller file | src/routes/post.routes.js → src/controllers/post.controller.js#createPost (both planned). |
-| Database tables touched | community_posts INSERT, domains; user identity already authenticated. |
-| Ownership rules | author_id comes from req.user.id. |
+| Request body | `{domain, title, content}`; all required. Domain is trimmed/uppercased and must equal `FINANCE`; title/content are trimmed and must remain nonempty. |
+| Success / HTTP code | 201 with `message` and the inserted `post`. |
+| Possible errors / HTTP codes | 400 missing/blank fields or unsupported domain; 401 authentication failure; 500 generic controller failure. |
+| Route file → controller function | `community.routes.js` → `community.controller.js#createPost`. |
+| Database tables touched | `community_posts` INSERT. |
+| Ownership rules | `user_id` comes from verified `req.user.userID`, never the request body. |
 
-[PLANNED V1] / [TBD] proposed contract **Flow:** authenticate → validate content/domain → resolve Finance → parameterized insert with author → public-safe post response.
+[IMPLEMENTED] **Flow:** authenticate → read `req.body` → normalize/validate FINANCE content → parameterized insert using `req.user.userID` → JSON response.
 
 ### API-16 — GET /api/community/posts
 
 | Contract field | Definition |
 | --- | --- |
-| Status | [PLANNED V1] / [TBD] proposed contract |
-| Purpose | List Finance community content, optionally own posts. |
-| Authentication / roles | Public by default; author=me requires authentication, all roles proposed. |
+| Status | [IMPLEMENTED] / TESTING PENDING |
+| Purpose | List community posts with public author information and aggregate counts. |
+| Authentication / roles | Public. |
 | Path parameters | None. |
-| Query parameters | Proposed domain=FINANCE, q, author=me, limit, offset, sort. |
+| Query parameters | Optional `domain`; when present it is trimmed/uppercased and must equal `FINANCE`. No search or pagination is implemented. |
 | Request body | None. |
-| Validation | Supported domain; bounded search; paging and sort allowlists; author selector limited to approved values; no private data expansion. |
-| Success / HTTP code | 200: paginated PostPublic collection. |
-| Possible errors / HTTP codes | 400 invalid filters; 401 for author=me without valid auth; 403 only if an explicit role policy applies to protected view; 500 safe failure. |
-| Route file → controller file | src/routes/post.routes.js → src/controllers/post.controller.js#listPosts (both planned). |
-| Database tables touched | community_posts, domains, users public identity; candidate helpful_votes for aggregate. |
-| Ownership rules | Public projection; author=me must resolve authenticated identity, not accept another id as 'me'. |
+| Success / HTTP code | 200 with `{posts}` ordered newest first. |
+| Possible errors / HTTP codes | 400 unsupported domain; 500 generic controller failure. |
+| Route file → controller function | `community.routes.js` → `community.controller.js#getPosts`. |
+| Database tables touched | `community_posts` joined to `users`; correlated counts from `comments` and `post_helpful`. |
+| Ownership rules | Read is public; no private email or password field is selected. |
 
-[PLANNED V1] / [TBD] proposed contract **Flow:** Validate public filters → authenticate if own filter → apply supported-domain/optional-author query → paginated posts.
+[IMPLEMENTED] **Flow:** read optional `req.query.domain` → validate FINANCE when present → query posts/author and derived counts → JSON collection.
 
 ### API-17 — GET /api/community/posts/:id
 
 | Contract field | Definition |
 | --- | --- |
-| Status | [PLANNED V1] / [TBD] proposed contract |
+| Status | [IMPLEMENTED] / TESTING PENDING |
 | Purpose | View one Finance community post. |
-| Authentication / roles | Public read recommended. |
+| Authentication / roles | Public. |
 | Path parameters | id: post UUID. |
 | Query parameters | None. |
 | Request body | None. |
-| Validation | UUID; existing post in supported domain; deleted/hidden handling TBD. |
-| Success / HTTP code | 200: {data: PostPublic}; comments separately paginated via API-19. |
-| Possible errors / HTTP codes | 400 malformed id; 404 absent/unavailable; 500 safe failure. |
-| Route file → controller file | src/routes/post.routes.js → src/controllers/post.controller.js#getPost (both planned). |
-| Database tables touched | community_posts, domains, users public identity; helpful aggregate if selected. |
+| Validation | Database lookup by parameterized `req.params.id`; absent post returns 404. Malformed UUID currently reaches the generic 500 catch in this read handler. |
+| Success / HTTP code | 200 with `{post}` containing author fields plus comment/helpful counts. |
+| Possible errors / HTTP codes | 404 absent post; 500 generic controller failure, including the current malformed-UUID limitation. |
+| Route file → controller function | `community.routes.js` → `community.controller.js#getPostById`. |
+| Database tables touched | `community_posts` joined to `users`; correlated counts from `comments` and `post_helpful`. |
 | Ownership rules | Only public fields; reading a post does not grant edit/delete rights. |
 
-[PLANNED V1] / [TBD] proposed contract **Flow:** Validate id → fetch supported public post → safe result; avoid unbounded embedding of comments.
+[IMPLEMENTED] **Flow:** read `req.params.id` → parameterized post/author/count query → 404 or JSON post response.
 
 ### API-18 — POST /api/community/posts/:id/comments
 
 | Contract field | Definition |
 | --- | --- |
-| Status | [PLANNED V1] / [TBD] proposed contract |
+| Status | [IMPLEMENTED] / TESTING PENDING |
 | Purpose | Add a comment to an existing Finance post. |
-| Authentication / roles | Required; all three roles proposed. |
+| Authentication / roles | `authenticate` required; no role middleware. |
 | Path parameters | id: parent post UUID. |
 | Query parameters | None. |
-| Request body | {body}. |
-| Validation | Parent UUID and existence; required nonblank bounded body; selected content format; no author_id/post_id override. |
-| Success / HTTP code | 201: {data: CommentPublic}. |
-| Possible errors / HTTP codes | 400 malformed/invalid content; 401 unauthenticated; 403 if selected permission policy blocks interaction; 404 absent/unavailable parent; 500 safe failure. |
-| Route file → controller file | src/routes/post.routes.js → src/controllers/post.controller.js#createComment (both planned). |
-| Database tables touched | community_posts/domain eligibility lookup; comments INSERT; users public identity as needed. |
-| Ownership rules | Comment author from req.user.id; parent from validated route. |
+| Request body | `{content}`. |
+| Validation | Content required and nonblank after trimming; parent post must exist. |
+| Success / HTTP code | 201 with `message` and inserted `comment`. |
+| Possible errors / HTTP codes | 400 missing/blank content; 401 authentication failure; 404 post absent; 500 generic controller failure. |
+| Route file → controller function | `community.routes.js` → `community.controller.js#addComment`. |
+| Database tables touched | `community_posts` existence lookup; `comments` INSERT. |
+| Ownership rules | `req.user.userID` identifies who comments, `req.params.id` identifies the post, and `req.body.content` supplies the text. Client-supplied user IDs are not used. |
 
-[PLANNED V1] / [TBD] proposed contract **Flow:** authenticate → validate parent/body → check post availability → insert with author/post FKs → safe comment.
+[IMPLEMENTED] **Flow:** authenticate → read path/body/user data → confirm post → parameterized insert → JSON response.
 
 ### API-19 — GET /api/community/posts/:id/comments
 
 | Contract field | Definition |
 | --- | --- |
-| Status | [PLANNED V1] / [TBD] proposed contract |
-| Purpose | Read a bounded page of comments. |
-| Authentication / roles | Public read recommended. |
+| Status | [IMPLEMENTED] / TESTING PENDING |
+| Purpose | Read all current comments for one existing post. |
+| Authentication / roles | Public. |
 | Path parameters | id: parent post UUID. |
-| Query parameters | Proposed limit, offset, sort; chronological stable order recommendation. |
+| Query parameters | None; pagination is not implemented. |
 | Request body | None. |
-| Validation | Parent UUID/existence/visibility; bounded integer paging; allowlisted ordering. |
-| Success / HTTP code | 200: paginated CommentPublic collection; existing post with no comments yields empty data. |
-| Possible errors / HTTP codes | 400 invalid id/query; 404 absent/unavailable parent; 500 safe failure. |
-| Route file → controller file | src/routes/post.routes.js → src/controllers/post.controller.js#listComments (both planned). |
-| Database tables touched | community_posts; comments; users public display fields. |
+| Validation | Parent post existence; malformed UUID currently reaches the generic 500 catch. |
+| Success / HTTP code | 200 with `{comments}` ordered by `created_at ASC`; an existing post may return an empty array. |
+| Possible errors / HTTP codes | 404 post absent; 500 generic controller failure. |
+| Route file → controller function | `community.routes.js` → `community.controller.js#getComments`. |
+| Database tables touched | `community_posts` existence lookup; `comments` joined to `users` for author ID/name. |
 | Ownership rules | Public projection only; no author emails or private data. |
 
-[PLANNED V1] / [TBD] proposed contract **Flow:** Validate parent/page → confirm public post → query comments with deterministic order → collection.
+[IMPLEMENTED] **Flow:** read post ID → confirm post → join comments to users → JSON collection with useful author information instead of only UUIDs.
 
-### API-20 — PUT /api/community/posts/:id/helpful
+### API-20 — POST /api/community/posts/:id/helpful
 
 | Contract field | Definition |
 | --- | --- |
-| Status | [PLANNED V1] / [TBD] candidate post-vote contract |
-| Purpose | Ensure current user's helpful mark exists. |
-| Authentication / roles | Required; all roles proposed; self-vote rule pending. |
-| Path parameters | id: target post UUID under recommended target choice. |
+| Status | [IMPLEMENTED] / TESTING PENDING |
+| Purpose | Add the authenticated user's helpful association for a post. |
+| Authentication / roles | `authenticate` required; no role middleware. |
+| Path parameters | `id`: target post UUID. |
 | Query parameters | None. |
 | Request body | None; user id and count never supplied by client. |
-| Validation | UUID; visible supported post; selected self-vote/eligibility policy; unique user/target rule. |
-| Success / HTTP code | 200 proposed: {data:{post_id, helpful:true, helpful_count}}; count/shape TBD. |
-| Possible errors / HTTP codes | 400 malformed request; 401 unauthenticated; 403 selected vote restriction; 404 target absent; 500 safe failure. Repeated identical PUT should not create duplicates or use 409 under idempotent proposal. |
-| Route file → controller file | src/routes/post.routes.js → src/controllers/post.controller.js#markHelpful (both planned). |
-| Database tables touched | community_posts; helpful_votes candidate table with unique user/target; aggregate count if selected. |
-| Ownership rules | Vote identity derived from req.user.id, only on validated target. |
+| Validation | Post existence; malformed UUID maps PostgreSQL `22P02` to 400; uniqueness is enforced by `(post_id, user_id)`. |
+| Success / HTTP code | 201 with `message` and the inserted `helpful` association. |
+| Possible errors / HTTP codes | 400 invalid post ID; 401 authentication failure; 404 post absent; 409 already marked helpful; 500 generic failure. |
+| Route file → controller function | `community.routes.js` → `community.controller.js#markPostHelpful`. |
+| Database tables touched | `community_posts` existence lookup; `post_helpful` INSERT. |
+| Ownership rules | Voter identity is always `req.user.userID`; no `user_id` is accepted from the body. |
 
-[PLANNED V1] / [TBD] candidate post-vote contract **Flow:** authenticate → check target/policy → atomically insert if absent using uniqueness → derive count → idempotent response.
+[IMPLEMENTED] **Flow:** authenticate → confirm post → `INSERT ... ON CONFLICT (post_id, user_id) DO NOTHING RETURNING ...` → 409 if nothing was inserted. Same user + same post cannot create duplicate helpful data. There is no downvote, unhelp, toggle, or reputation score.
 
-### API-21 — DELETE /api/community/posts/:id/helpful
+### API-21 — DELETE /api/community/posts/:id
 
 | Contract field | Definition |
 | --- | --- |
-| Status | [PLANNED V1] / [TBD] candidate reversible-vote contract |
-| Purpose | Remove only current user's helpful mark. |
-| Authentication / roles | Required; all roles proposed. |
-| Path parameters | id: target post UUID. |
+| Status | [IMPLEMENTED] / TESTING PENDING |
+| Purpose | Delete only the authenticated user's own post. |
+| Authentication / roles | `authenticate` required; no role middleware. |
+| Path parameters | `id`: requested post UUID. |
 | Query parameters | None. |
 | Request body | None. |
-| Validation | UUID; target policy; no ability to supply someone else's voter id. |
-| Success / HTTP code | 200 proposed: {data:{post_id, helpful:false, helpful_count}}; repeated removal succeeds if target still exists. |
-| Possible errors / HTTP codes | 400 malformed request; 401 unauthenticated; 403 if selected vote policy requires; 404 target absent; 500 safe failure. |
-| Route file → controller file | src/routes/post.routes.js → src/controllers/post.controller.js#unmarkHelpful (both planned). |
-| Database tables touched | community_posts; helpful_votes candidate DELETE filtered by current user and target. |
-| Ownership rules | DELETE must include authenticated user key; not all votes for target. |
+| Validation | Malformed UUID maps to 400. The delete query matches both requested ID and authenticated user ID. |
+| Success / HTTP code | 200 with `{message:"Post deleted successfully"}`. |
+| Possible errors / HTTP codes | 400 invalid post ID; 401 authentication failure; 404 missing or not caller-owned; 500 generic failure. |
+| Route file → controller function | `community.routes.js` → `community.controller.js#deletePost`. |
+| Database tables touched | `community_posts` DELETE; database cascades remove dependent `comments` and `post_helpful` rows. |
+| Ownership rules | `WHERE id = $1 AND user_id = $2`, with `$2` from `req.user.userID`; the same 404 response avoids distinguishing absent from not-owned. |
 
-[PLANNED V1] / [TBD] candidate reversible-vote contract **Flow:** authenticate → validate target → delete own association if present → derive count → idempotent result.
+[IMPLEMENTED] **Flow:** authenticate → parameterized ownership-constrained DELETE → 404 if no row → success response. Authentication answers “who are you?”; RBAC answers “which role is allowed?”; ownership answers “does this particular row belong to you?” Community deletes currently rely on authentication plus ownership, not a role restriction.
+
+### API-21A — DELETE /api/community/comments/:id
+
+| Contract field | Definition |
+| --- | --- |
+| Status | [IMPLEMENTED] / TESTING PENDING |
+| Purpose | Delete only the authenticated user's own comment. |
+| Authentication / roles | `authenticate` required; no role middleware. |
+| Path parameters | `id`: requested comment UUID. |
+| Query parameters / body | None. |
+| Validation | Malformed UUID maps to 400. The delete query matches both requested ID and authenticated user ID. |
+| Success / HTTP code | 200 with `{message:"Comment deleted successfully"}`. |
+| Possible errors / HTTP codes | 400 invalid comment ID; 401 authentication failure; 404 missing or not caller-owned; 500 generic failure. |
+| Route file → controller function | `community.routes.js` → `community.controller.js#deleteComment`. |
+| Database tables touched | `comments` DELETE. |
+| Ownership rules | `WHERE id = $1 AND user_id = $2`, with `$2` from `req.user.userID`; callers cannot delete another user's comment. |
 
 ### API-22 — POST /api/reviews
 
@@ -1419,7 +1458,7 @@ Client → server.js → app.js → appointment.routes.js
 
 [PLANNED V1] / [TBD] proposed minimal dashboard read **Flow:** authenticate → validate mine scope → ownership-constrained review query → minimal dashboard collection.
 
-[PARTIALLY IMPLEMENTED] Current contracts cover registration/login and Day 6 advisor APIs; Day 7 appointment contracts exist in code but route loading is blocked and testing is postponed. Current-user, community, reviews, frontend, deployment, logout/refresh/recovery, payments, video, and AI remain planned/deferred according to their version boundaries.
+[PARTIALLY IMPLEMENTED] Current contracts cover registration/login, Day 6 advisor APIs, and Day 8 community APIs; Day 7 appointment contracts exist in code but route loading is blocked. Day 6–8 testing is postponed. Current-user, reviews, frontend, deployment, logout/refresh/recovery, payments, video, and AI remain planned/deferred according to their version boundaries.
 
 ## 15. Appointments and state transitions
 
@@ -1474,11 +1513,33 @@ stateDiagram-v2
 
 ### 16.1 Community scope
 
-[PLANNED V1] A Finance post has an author, domain, title, and body. Users can create/list/view posts and create/read comments. Domain relationships let future Health/Astrology posts coexist without duplicated tables or applications. Public reading is a recommended policy awaiting approval; posting and helpful mutations require authentication.
+[IMPLEMENTED] The Community Module is Consultify's second major platform pillar:
 
-[TBD] Content format is undecided. Recommended V1 default is plain text rendered safely, with server-enforced limits, rather than accepting arbitrary HTML. If richer content is later selected, define sanitization/rendering policy. React's ordinary escaped text rendering is not a license to use unsafe HTML insertion. Exact post/comment edit/delete endpoints and moderator powers are not scoped by the current API proposal.
+- **Professional Consultation → advisors + appointments**
+- **Community Advisory → posts + comments + helpful interactions**
 
-[PLANNED V1] Helpful interaction is required. [TBD] Proposed implementation is an idempotent per-user post vote, persisted with a unique user/target association and derived count. It is not a mutable count trusted from the client. Targeting comments instead, supporting both, self-voting, and vote removal must be decided before day 11. If the proposal changes, update API-20/21, relationships, tests, and indexes together.
+[IMPLEMENTED] The current module provides public post/detail/comment reading; authenticated post creation, commenting, and helpful marking; and authenticated ownership-based post/comment deletion. `createPost` and the optional feed filter accept only `FINANCE` for V1. The schema stores domain as text rather than a separate domain foreign key. No edit, nested reply, comment-like, moderation, unhelp/toggle, ranking, reputation, or pagination feature is implemented.
+
+[IMPLEMENTED] Express request data is used as follows:
+
+| Request source | Community use |
+| --- | --- |
+| `req.user.userID` | Verified JWT identity for post/comment authorship, helpful marks, and ownership deletes |
+| `req.params.id` | Post or comment UUID selected by the route path |
+| `req.body` | Submitted `domain`, `title`, `content`, or comment `content` |
+| `req.query.domain` | Optional FINANCE feed filter |
+
+For `POST /api/community/posts/:id/comments`, `req.user.userID` answers who is commenting, `req.params.id` selects the post, and `req.body.content` is what they wrote. The client never supplies the trusted author ID.
+
+[IMPLEMENTED] Community request flow is: **client/future frontend → `app.js` → `community.routes.js` → `authenticate` when the route is protected → `community.controller.js` → shared `db.js`/`pg.Pool` → PostgreSQL → JSON response**. Route composition matters: the `/api/community` mount plus `/posts/:id/comments` produces `/api/community/posts/:id/comments`.
+
+[IMPLEMENTED] Post reads query `community_posts`, join `users` for author ID/name, and derive `comment_count` and `helpful_count` from `comments` and `post_helpful`. `GET /api/community/posts?domain=FINANCE` filters the feed; `GET /api/community/posts/:id` selects one post. Comment reads join `comments` to `users` so responses contain useful author information rather than only UUIDs.
+
+[IMPLEMENTED] Helpful marking is add-only. `markPostHelpful` verifies the post, inserts the authenticated user/post association with `ON CONFLICT ... DO NOTHING`, returns 409 for an existing pair, and relies on the composite primary key for integrity. The client cannot choose the voter ID. There is no unhelp, downvote, toggle, or reputation scoring.
+
+[IMPLEMENTED] Ownership deletes use both the route ID and authenticated ID in SQL. `deletePost` deletes only `community_posts.id = requested ID AND community_posts.user_id = req.user.userID`; `deleteComment` applies the same rule to `comments`. A post delete relies on migration 004 cascades to remove dependent comments and helpful rows.
+
+[TBD] Content is currently stored as text and controller validation does not comprehensively enforce schema-length/type limits before methods such as `.trim()` are called. Stronger validation, content rendering policy, pagination, centralized errors, and indexes based on observed usage remain follow-up work.
 
 [PLANNED V2] Reputation can build on interaction history later. No arbitrary score formula, ranking engine, badge system, or accepted-answer workflow is a V1 commitment.
 
@@ -1512,11 +1573,11 @@ stateDiagram-v2
 | --- | --- | --- | --- |
 | Registration | [IMPLEMENTED] | Typed required fields; trimmed name ≤100; trimmed/lowercase email ≤255 and valid pattern; password ≥12 characters and ≤72 UTF-8 bytes; USER-only insert | See API-02; general unknown-field policy and abuse controls remain TBD |
 | Login | [IMPLEMENTED] | Nonblank string email, nonempty string password; trim/lowercase email; bcrypt.compare | No registration-style length/pattern checks; see API-03 |
-| UUID route/body IDs | [PLANNED V1] | Syntax, existence, and separate relationship authorization | Consistent 403 vs concealed 404 policy |
+| UUID route/body IDs | [PARTIALLY IMPLEMENTED] | Community helpful/delete handlers map PostgreSQL `22P02` to 400; existence/ownership checks are parameterized | Community public read/comment handlers and other modules remain inconsistent |
 | Advisor profile | [PLANNED V1] | Approved fields only, valid domain, bounded text, nonnegative experience/fee if included | Field requiredness, text lengths, currency |
 | Appointments | [PLANNED V1] | Eligible advisor, unambiguous future time, valid state transition, ownership | Duration, delivery, cutoff, scheduling conflicts |
-| Community/comment | [PLANNED V1] | Nonblank bounded text, existing supported-domain parent, author from auth | Lengths, content format, moderation/edit scope |
-| Helpful | [PLANNED V1] | Existing target, own voter identity, selected eligibility, duplicate prevention | Target(s), self-vote, reversibility |
+| Community/comment | [PARTIALLY IMPLEMENTED] | Required/nonblank text, existing parent, FINANCE create/filter, author from auth | Type/length validation, content format, moderation/edit scope |
+| Helpful | [IMPLEMENTED] / TESTING PENDING | Existing post, voter from auth, duplicate prevention through composite key and conflict-safe insert | Self-helpful remains allowed; no reversibility/toggle |
 | Reviews | [PLANNED V1] | Own completed appointment, bounded integer rating, duplicate prevention, text policy | Exact rating range/text constraints |
 | List filters/paging | [PLANNED V1] | Supported enums, bounded numeric paging, fixed sort allowlist, bounded search | Default/max values, cursor vs offset |
 
@@ -1526,13 +1587,13 @@ stateDiagram-v2
 
 | Code | Meaning in intended project contract | Status |
 | --- | --- | --- |
-| 200 OK | Health and successful login; future retrieval/update operations | [IMPLEMENTED] health/login; others [PLANNED V1] |
-| 201 Created | Successful user/profile/appointment/post/comment/review creation | [IMPLEMENTED] registration / [PLANNED V1] others |
-| 400 Bad Request | Invalid registration input and malformed JSON; future UUID/filter/body checks | [IMPLEMENTED] registration and malformed JSON / [PLANNED V1] broader validation |
-| 401 Unauthorized | Invalid login credentials; missing/invalid/expired token | [IMPLEMENTED] login and authenticate function; protected route integration [PLANNED V1] |
-| 403 Forbidden | Role not included in allowedRoles | [IMPLEMENTED] authorize function; role-protected routes and ownership policy [PLANNED V1] |
-| 404 Not Found | Valid request target does not exist/is unavailable under visibility policy | [PLANNED V1] safe JSON contract; current unmatched routes use framework default |
-| 409 Conflict | Duplicate email; future profile/review/state/scheduling conflicts | [IMPLEMENTED] registration SELECT and 23505 handling / [PLANNED V1] others |
+| 200 OK | Health/login, successful reads/updates/deletes | [IMPLEMENTED] across current controllers, including community reads/deletes |
+| 201 Created | Successful user/profile/appointment/post/comment/helpful creation | [IMPLEMENTED] current create actions; reviews remain planned |
+| 400 Bad Request | Invalid input, malformed JSON, and selected malformed community UUIDs | [PARTIALLY IMPLEMENTED] validation is not yet uniform |
+| 401 Unauthorized | Invalid login credentials; missing/invalid/expired token | [IMPLEMENTED] login and authenticate function on protected routes |
+| 403 Forbidden | Role not included in allowedRoles | [IMPLEMENTED] advisor/appointment role routes; community uses ownership without role middleware |
+| 404 Not Found | Target missing or concealed by an ownership-constrained mutation | [IMPLEMENTED] current advisor/community/appointment controller paths; unmatched routes still use framework default |
+| 409 Conflict | Duplicate email/profile/helpful association | [IMPLEMENTED] selected controllers; review/state/scheduling conflicts remain planned |
 | 500 Internal Server Error | Unexpected failure; health disconnection or generic registration message | [IMPLEMENTED] health and registration catch / [PLANNED V1] global safe behavior |
 | 429 Too Many Requests | Would apply if rate limiting is selected | [TBD] No limiter or status policy implemented |
 
@@ -1557,9 +1618,9 @@ stateDiagram-v2
 
 ## 18. NON-NEGOTIABLE SECURITY INVARIANTS
 
-[PARTIALLY IMPLEMENTED] These accepted requirements apply across V1. Registration/login, JWT authentication, role authorization, advisor ownership, and appointment ownership/assignment logic exist. Advisor and appointment route source orders `authenticate` before `authorize` before the controller. Appointment HTTP integration is blocked by its route imports/export, and community/review protections remain planned.
+[PARTIALLY IMPLEMENTED] These accepted requirements apply across V1. Registration/login, JWT authentication, role authorization, advisor ownership, appointment ownership/assignment, and community authorship/helpful/delete protections exist. Advisor/appointment role-protected routes order `authenticate` before `authorize`; community mutations use `authenticate` followed by controller ownership/identity rules. Appointment HTTP integration remains blocked by route imports/export, and review protections remain planned.
 
-[PARTIALLY IMPLEMENTED] Day 6/7 route source now applies `authenticate → authorize → controller` to advisor profile writes and appointment operations. Authorization has three distinct layers: authentication verifies identity, RBAC restricts USER versus ADVISOR actions, and controller SQL constrains the specific owned/assigned row. Advisor ownership uses `advisor_profiles.user_id`; appointment customer ownership uses `appointments.user_id`; advisor assignment resolves the JWT account through `advisor_profiles.user_id` to `appointments.advisor_id`. The appointment route-load defect currently prevents these protections from executing for appointment HTTP requests, and API testing is pending.
+[PARTIALLY IMPLEMENTED] Day 6/7 route source applies `authenticate → authorize → controller` to advisor profile writes and appointment operations. Day 8 community mutations apply `authenticate → controller`; no USER-only restriction excludes advisors. Authorization has three distinct layers: authentication verifies identity, RBAC restricts roles where used, and ownership constrains a specific row. Community deletes match `user_id` to `req.user.userID`, while helpful creation derives its voter from the same verified claim. The appointment route-load defect prevents full app execution, and Day 6–8 API testing is pending.
 
 1. `.env` must never be committed; keep real secrets out of examples and documentation.
 2. `node_modules/` must never be committed; commit manifest and lockfile instead.
@@ -1606,19 +1667,19 @@ stateDiagram-v2
 
 ### 19.2 DATA DELETION POLICY
 
-[TBD] **TBD — DECISION REQUIRED** for all rows below. No delete APIs, soft-delete columns, retention jobs, or FK deletion rules are implemented.
+[PARTIALLY IMPLEMENTED] Community hard-delete behavior now exists; broader retention/account/appointment/review policy remains unresolved. No soft-delete columns or retention jobs are implemented.
 
 | Decision | Why it matters | Recommended default for review | When |
 | --- | --- | --- | --- |
 | Hard vs soft deletion | Affects visibility, uniqueness, recovery, and query predicates | Decide per entity; avoid blanket cascades | Before adding relevant schema/delete behavior |
 | User account deletion | User connects to bookings, posts, comments, reviews | Define retention/anonymization and access removal together | Before account deletion is promised |
-| Post/comment deletion | Discussion continuity and child records | Decide hard removal vs tombstone; author/moderator permissions separately | Before content deletion APIs |
+| Post/comment deletion | Discussion continuity and child records | [IMPLEMENTED] Authors may hard-delete their own rows; post deletion cascades comments/helpful rows. Moderation/recovery policy remains absent | Revisit before moderation/public launch |
 | Appointment history | Reviews depend on proof of completed consultation | Retain interpretable history; avoid automatic cascading loss | Before appointment FKs/deployment |
 | Advisor deletion/role change | Existing bookings/reviews still reference advisor identity | Preserve history and define future discovery/booking visibility | Before profile/role mutation beyond basic fields |
 | Review retention | Affects public rating and eligibility evidence | Explicit retain/anonymize/remove policy, consistent aggregates | Before account/review deletion |
 | Domain removal | Affects profiles and posts across versions | Restrict removal while referenced; future deactivation only if selected | Before domain management in V2 |
 
-[PLANNED V1] Restrictive deletion is a recommendation while policy is unresolved, not a final migration choice. Do not silently add `deleted_at`, `ON DELETE CASCADE`, retention durations, or legal claims. Relevant legal requirements, if later needed, require a separate review appropriate to launch jurisdiction and data.
+[PARTIALLY IMPLEMENTED] Do not generalize the implemented post cascade to other entities. Account, appointment, advisor, and review retention remains unresolved; do not silently add `deleted_at`, additional cascades, retention durations, or legal claims.
 
 ### 19.3 PAGINATION
 
@@ -1628,7 +1689,7 @@ stateDiagram-v2
 
 ### 19.4 SEARCH
 
-[PLANNED V1] Basic Finance advisor search/filtering and basic community filtering are intended. Validate all filter inputs, parameterize terms, and specify which fields are searched. Recommended starting point is simple PostgreSQL filtering and bounded textual matching where appropriate. Decide whether `%`/`_` in a LIKE-family search are wildcard syntax or literal characters; parameterization alone does not decide search semantics.
+[PARTIALLY IMPLEMENTED] Basic advisor search/filtering and community domain filtering exist. Community supports only the optional exact FINANCE domain filter; it does not implement text search. Future filters/search must validate inputs, parameterize values, and specify searched fields and wildcard semantics.
 
 [PLANNED V2] Advanced filters can include domain, specialization, derived rating, experience, fee, and availability after supporting fields/models exist. Richer PostgreSQL search can evaluate full-text search/GIN indexes or trigram-based matching if query evidence justifies them. These are alternatives, not selected extensions/migrations. Elasticsearch is deferred and unnecessary as an assumed V1 dependency.
 
@@ -1645,12 +1706,12 @@ stateDiagram-v2
 | `appointments.user_id` | [IMPLEMENTED] FK; index hardening [PLANNED V1] | Customer appointment list/cancel | Consider `(user_id, scheduled_at)` for the implemented list query |
 | `appointments.advisor_id` | [IMPLEMENTED] FK; index hardening [PLANNED V1] | Assigned advisor list/status | Evaluate composite access paths with scheduled time/status |
 | `appointments.scheduled_at` | [PLANNED V1] | Time ranges/order | Separate index not automatically needed when composite indexes suffice |
-| `community_posts.domain_id` | [PLANNED V1] | Domain feed | Consider `(domain_id, created_at, id)` based on selected pagination/order |
-| `community_posts.author_id` | [PLANNED V1] | Own-post dashboard | Optional composite depends on query |
-| `comments.post_id` | [PLANNED V1] | Comments for post | Consider ordering columns in composite index |
+| `community_posts.domain` | [IMPLEMENTED] field; index hardening [PLANNED V1] | Domain feed | Consider `(domain, created_at, id)` only after query/volume evidence |
+| `community_posts.user_id` | [IMPLEMENTED] FK; index hardening [PLANNED V1] | Ownership deletes/future own-post views | Optional composite depends on actual queries |
+| `comments.post_id` | [IMPLEMENTED] FK; index hardening [PLANNED V1] | Comments/count/cascade by post | Consider ordering columns in composite index |
 | Reviews advisor lookup | [PLANNED V1] / [TBD] schema | Advisor review listing/aggregation | `reviews.advisor_id` only if that column is selected; otherwise index the actual join path |
 | `reviews.appointment_id` uniqueness | [PLANNED V1] / [TBD] exact constraint | Prevent duplicate reviews for consultation | Uniqueness invariant required; this is recommended representation |
-| Helpful `(user_id, post_id)` uniqueness | [PLANNED V1] / [TBD] target | One association per user/target | Post-first index may separately help counts; don't assume one key order serves all queries |
+| `post_helpful(post_id, user_id)` primary key | [IMPLEMENTED] migration implication | One association per user/post and post-first counts | Live existence unverified; additional reverse lookup index only if needed |
 
 [PLANNED V1] Indexes speed matching/order operations at the cost of storage and write overhead. PostgreSQL does not automatically add an index on every referencing FK column; choose those that serve actual queries. Use query plans and representative data before creating redundant indexes. A status-value CHECK is not an index, and an index is not an authorization policy.
 
@@ -1678,13 +1739,14 @@ stateDiagram-v2
 
 ### 21.1 Current verification versus target suite
 
-[PARTIALLY IMPLEMENTED] Static inspection confirms the Day 6 advisor and Day 7 appointment migrations/controllers/routes. Day 6 advisor API testing and Day 7 appointment API testing were intentionally postponed until a dedicated backend testing pass before frontend integration. No API pass, live database verification, or automated suite is claimed here. A documentation-time route-module load check exposed the appointment import/export defect described in section 15.
+[PARTIALLY IMPLEMENTED] Static inspection confirms the Day 6 advisor, Day 7 appointment, and Day 8 community migrations/controllers/routes. Their API testing was intentionally postponed until a dedicated backend testing pass before frontend integration. No API pass, live database verification, or automated suite is claimed here. The known appointment import/export defect described in section 15 still blocks full app loading.
 
 | Milestone | Implementation status | Testing status |
 | --- | --- | --- |
-| Day 6 advisor APIs | IMPLEMENTED | API testing postponed |
-| Day 7 appointment APIs | IMPLEMENTED IN SCHEMA/CONTROLLER/ROUTE SOURCE; integration blocked by route imports/export | API testing postponed |
-| Planned next verification phase | Dedicated backend pass covering auth, advisor, appointment, ownership, validation, database constraints, and negative cases | Must complete before frontend integration |
+| Day 6 advisor APIs | IMPLEMENTED | TESTING PENDING |
+| Day 7 appointment APIs | IMPLEMENTED; integration blocked by route imports/export | TESTING PENDING |
+| Day 8 community APIs | IMPLEMENTED | TESTING PENDING |
+| Planned next verification phase | Dedicated backend pass covering auth, advisor, appointment, community, ownership, validation, database constraints, and negative cases | Must complete before frontend integration |
 
 [PLANNED V1] No `test` script or test dependencies currently exist; test framework and directory layout remain [TBD]. Do not claim coverage or passing application tests without executable evidence.
 
@@ -1713,9 +1775,9 @@ stateDiagram-v2
 | Appointment creation | [IMPLEMENTED] / TESTING PENDING | Valid owned PENDING booking; absent advisor; malformed/past/ambiguous time; forged owner/status; self-booking/time conflicts; route-load prerequisite |
 | Appointment access/lifecycle | [IMPLEMENTED] / TESTING PENDING | Own/assigned lists; cross-party rejection; cancellation eligibility; target-status behavior; non-strict transitions; simultaneous updates; route-load prerequisite |
 | Scheduling overlap | [TBD] V1 minimal; [PLANNED V2] advanced | Test selected minimal V1 conflict policy before claiming it; future concurrent slot/overlap/availability tests when corresponding model is approved |
-| Posts | [PLANNED V1] | Create/list/detail; required/large content; wrong domain; author spoofing; escaped content; safe public identity; own filter requires auth; paging/sort bounds |
-| Comments | [PLANNED V1] | Valid parent; missing/invalid parent; blank/large body; author spoofing; public-safe listing; stable paging; any selected deletion visibility policy |
-| Helpful | [PLANNED V1] / [TBD] target | Valid mark; unauthenticated denial; duplicate/concurrent mark counts once; own removal if selected; cannot delete another vote; self-vote policy; target missing; client count ignored/rejected |
+| Posts | [IMPLEMENTED] / TESTING PENDING | Create/list/detail; required/large/wrong-type content; wrong domain; author spoofing; public fields/counts; malformed IDs; own/cross-user delete; cascade behavior; no pagination currently |
+| Comments | [IMPLEMENTED] / TESTING PENDING | Valid/missing/malformed parent; blank/large/wrong-type content; author spoofing; public author listing; own/cross-user delete; cascade from post |
+| Helpful | [IMPLEMENTED] / TESTING PENDING | Valid mark; unauthenticated denial; duplicate and concurrent mark produce one row/409 behavior; target missing/malformed; voter spoofing rejected by design; self-helpful behavior; no unhelp endpoint |
 | Reviews | [PLANNED V1] | Own COMPLETED consultation accepted; pending/confirmed/cancelled rejected; another user's consultation rejected; unrelated advisor cannot be supplied; duplicate/concurrent review rejected; bounds and integer rating; safe listing/accurate derived average |
 | Dashboards/frontend | [PLANNED V1] | Correct user/advisor data scope; valid/invalid auth flows; loading/empty/error views; refresh behavior per storage policy; timezone display; no database secrets in bundles; full core journeys |
 | Error/security boundary | [PLANNED V1] | Malformed JSON produces selected safe response; database failure never exposes SQL/credentials; allowed CORS topology; chosen cookie/CSRF behavior; limiter behavior if selected; no secrets in staged artifacts |
@@ -1899,7 +1961,7 @@ git push
 
 ## 25. 10-day V1 implementation roadmap
 
-[PARTIALLY IMPLEMENTED] Current milestone view. “Complete” means the planned code artifact exists for Days 1–5; it does not retroactively claim comprehensive automated testing. Day 6 and Day 7 are explicitly implementation-complete milestones with API testing postponed until the dedicated backend test pass before frontend development.
+[PARTIALLY IMPLEMENTED] Current milestone view. “Complete” means the planned code artifact exists for Days 1–5; it does not retroactively claim comprehensive automated testing. Days 6, 7, and 8 are explicitly implementation-complete milestones with API testing postponed until the dedicated backend test pass before frontend development.
 
 | Day | Focus and planned work | Current evidence/status | Exit evidence / dependencies |
 | --- | --- | --- | --- |
@@ -1910,11 +1972,11 @@ git push
 | 5 | Authentication middleware / RBAC | COMPLETE | Bearer verification, req.user, reusable authorize; now used on advisor and appointment route source |
 | 6 | Advisor system + discovery | IMPLEMENTED, TESTING PENDING | Migration/controller/routes/app mount exist; API testing intentionally postponed |
 | 7 | Appointment system + management | IMPLEMENTED, TESTING PENDING | Migration/controller/route definitions exist; fix missing imports/export before API testing |
-| 8 | Community module | NOT STARTED | Posts/comments/helpful schema and APIs remain planned |
+| 8 | Community module | IMPLEMENTED, TESTING PENDING | Migration/controller/routes/app mount define posts, comments, helpful marks, and ownership deletes; dedicated API/database testing pending |
 | 9 | Reviews / search / frontend integration | NOT STARTED | Reviews, expanded search, dashboard/profile frontend remain planned |
-| 10 | Testing / refactor / deployment / README | NOT STARTED | Dedicated backend test pass comes before frontend; then justified fixes, deployment and onboarding docs |
+| 10 | Full backend testing / refactor / deployment / README | NOT STARTED | Dedicated backend test pass comes before frontend; then justified fixes, deployment and onboarding docs |
 
-[PLANNED V1] Day labels describe sequence, not guaranteed duration. Day 6/7 “implemented” does not mean tested or production-ready. Resolve the appointment route wiring defect before the postponed backend API pass; do not begin frontend integration on an unloadable backend.
+[PLANNED V1] Day labels describe sequence, not guaranteed duration. Day 6–8 “implemented” does not mean tested or production-ready. Resolve the appointment route wiring defect before the postponed backend API pass; do not begin frontend integration on an unloadable backend.
 
 ## 26. Implementation checklist
 
@@ -1943,12 +2005,12 @@ git push
 - [x] [IMPLEMENTED] Shared `pg.Pool` module.
 - [x] [IMPLEMENTED] Users migration with UUID/defaults/constraints.
 - [x] [IMPLEMENTED] Table-independent health/startup DB probes.
-- [ ] [TBD] Verify running DB server/version/identity and applied migrations 001–003.
+- [ ] [TBD] Verify running DB server/version/identity and applied migrations 001–004.
 - [ ] [PLANNED V1] Reproducible migration application/tracking workflow.
 - [ ] [PLANNED V1] Domains migration and controlled Finance seed data.
 - [x] [IMPLEMENTED] Advisor profile migration 002 and appointment migration 003.
-- [ ] [PLANNED V1] Community/comment/review migrations.
-- [ ] [TBD] Helpful interaction persistence decision and selected migration.
+- [x] [IMPLEMENTED] Community migration 004 defines posts, comments, helpful associations, cascade behavior, and composite helpful uniqueness; applied state unverified.
+- [ ] [PLANNED V1] Review migration.
 - [ ] [PLANNED V1] Foreign keys, critical uniqueness/CHECK constraints and query-driven indexes.
 - [x] [IMPLEMENTED] Parameterized registration SELECT/INSERT and email UNIQUE/23505 race handling.
 - [x] [IMPLEMENTED] Parameterized advisor and appointment queries, including ownership-constrained appointment mutations.
@@ -1998,10 +2060,11 @@ git push
 
 ### Community and reviews
 
-- [ ] [PLANNED V1] Finance posts create/list/detail with author/domain FKs.
-- [ ] [PLANNED V1] Comments create/list and safe public content.
-- [ ] [TBD] Helpful target, self-vote and reversibility rules.
-- [ ] [PLANNED V1] Selected helpful behavior with duplicate/concurrent protection.
+- [x] [IMPLEMENTED] FINANCE posts create/list/detail with authenticated author identity, textual domain, public author data, and comment/helpful counts; testing pending.
+- [x] [IMPLEMENTED] Authenticated comment creation and public comment listing with author information; testing pending.
+- [x] [IMPLEMENTED] Post-target helpful association with composite uniqueness, conflict-safe insert, and duplicate 409; testing pending.
+- [x] [IMPLEMENTED] Authenticated own-post and own-comment hard deletion; post children cascade according to migration 004; testing pending.
+- [ ] [PLANNED V1] Stronger community input validation, pagination/index review, and dedicated API/database/ownership/concurrency testing.
 - [ ] [PLANNED V1] Review creation restricted to own completed appointment.
 - [ ] [PLANNED V1] One-review-per-appointment integrity representation selected and enforced.
 - [ ] [TBD] Rating/text policy and aggregate no-review representation.
@@ -2033,28 +2096,27 @@ git push
 
 ## 27. Feature dependency graph
 
-[PARTIALLY IMPLEMENTED] Foundation, users migration, registration/login, JWT issuance, and authentication/role middleware functions exist. Middleware route integration, current-user and ownership remain planned; the middleware file is now tracked.
+[PARTIALLY IMPLEMENTED] Foundation, migrations 001–004, auth/JWT/RBAC, advisor, appointment, and community source exist. Current-user/reviews/frontend remain planned; appointment route wiring blocks the integrated backend.
 
 ```mermaid
 flowchart TD
     F[Existing backend and pg foundation] --> M[Existing users migration; application unverified]
     M --> R[Existing registration and hashing]
     R --> L[Existing login and JWT issuance]
-    L --> A[Existing authenticate function; route integration and current user planned]
-    A --> Z[Existing authorize function; protected routes and ownership planned]
-    M --> D[Planned generic domains and Finance data]
-    D --> P[Planned advisor profile]
+    L --> A[Existing authenticate function and protected routes]
+    A --> Z[Existing authorize function and ownership rules]
+    M --> D[Finance-first domain values]
+    D --> P[Existing advisor profile]
     Z --> P
-    P --> Q[Planned advisor discovery]
-    P --> B[Planned appointment schema and booking]
+    P --> Q[Existing advisor discovery]
+    P --> B[Existing appointment schema and booking source]
     Z --> B
-    B --> C[Planned authorized completion lifecycle]
+    B --> C[Existing authorized lifecycle source; wiring/testing pending]
     C --> V[Planned eligible review and rating]
-    D --> S[Planned community posts]
+    D --> S[Existing community posts]
     Z --> S
-    S --> T[Planned comments]
-    S --> H[Planned helpful persistence and interaction]
-    T -. Roadmap order; target choice pending .-> H
+    S --> T[Existing comments]
+    S --> H[Existing post_helpful association]
     Q --> UI[Planned React frontend integration]
     B --> UI
     V --> UI
@@ -2063,7 +2125,7 @@ flowchart TD
     UI --> DONE[Planned tested and deployed Finance V1]
 ```
 
-[PLANNED V1] User + advisor → appointment; COMPLETED appointment → eligible review. Domain + user → community post; post → comment. Helpful behavior depends on identity and its selected target/persistence. Comments precede helpful work in the proposed roadmap, but a post-only vote does not technically depend on comments. Avoid turning a sequencing suggestion into a false schema dependency.
+[PARTIALLY IMPLEMENTED] User + advisor → appointment; COMPLETED appointment → eligible review remains planned. User + textual FINANCE domain → community post; post → comments and `post_helpful` rows are implemented. Helpful target/persistence is selected as one add-only association per authenticated user/post.
 
 ## 28. BUG AUDIT CHECKLIST
 
@@ -2226,11 +2288,11 @@ flowchart TD
 
 ### C-05 — Finance business architecture is partially implemented
 
-**CURRENT IMPLEMENTATION:** [PARTIALLY IMPLEMENTED] Registration/login/JWT/RBAC, advisor profiles/discovery, and appointment schema/controller/route source exist. Advisor creation is restricted to FINANCE, while discovery accepts FINANCE/HEALTH/ASTROLOGY values permitted by the schema. Community, reviews, frontend, and deployment remain planned. Appointment HTTP integration is blocked by missing route imports/export.
+**CURRENT IMPLEMENTATION:** [PARTIALLY IMPLEMENTED] Registration/login/JWT/RBAC, advisor profiles/discovery, appointment source, and the Day 8 Community Module exist. Advisor and community creation are restricted to FINANCE, while advisor discovery accepts FINANCE/HEALTH/ASTROLOGY values permitted by the advisor schema. Reviews, frontend, testing, and deployment remain planned. Appointment HTTP integration is blocked by missing route imports/export.
 
 **INTENDED IMPLEMENTATION:** [PLANNED V1] Complete Finance journey with generic entities, security, tests, and deployment.
 
-**CONFLICT:** [PARTIALLY IMPLEMENTED] The current database stays generic across three domains while V1 product behavior is Finance-first. Day 6 discovery can expose non-FINANCE profiles if such rows exist. Day 7 is coded but not loadable/tested, so a complete Finance journey is not yet confirmed.
+**CONFLICT:** [PARTIALLY IMPLEMENTED] The advisor schema stays generic across three domains while V1 behavior is Finance-first; discovery can expose non-FINANCE profiles if such rows exist. Community uses a textual domain and explicitly accepts only FINANCE in create/filter controllers. Days 6–8 are coded but untested, and Day 7 remains unloadable, so a complete Finance journey is not confirmed.
 
 **RECOMMENDED RESOLUTION:** [PLANNED V1] Follow dependencies/roadmap, preserve labels, and change status only after code plus appropriate tests/integration evidence exist.
 
@@ -2254,15 +2316,15 @@ flowchart TD
 
 **RECOMMENDED RESOLUTION:** [PLANNED V1] Select production secret/TLS/role/connectivity settings before deployment; never repeat private values in this reference.
 
-### C-08 — Helpful interaction is V1 but table is described as future
+### C-08 — Helpful interaction persistence resolved; reversal policy remains absent
 
-**CURRENT IMPLEMENTATION:** [IMPLEMENTED] Neither interaction nor persistence exists.
+**CURRENT IMPLEMENTATION:** [IMPLEMENTED] `post_helpful` stores `(post_id, user_id, created_at)` with composite primary key uniqueness and a post cascade. `POST /api/community/posts/:id/helpful` uses authenticated identity, conflict-safe insertion, and 409 for duplicates.
 
-**INTENDED IMPLEMENTATION:** [PLANNED V1] Community helpful/upvote behavior appears in V1 and day 11; the brief also lists `helpful_votes` among potential future entities.
+**INTENDED IMPLEMENTATION:** [IMPLEMENTED] V1 needs one helpful association per authenticated user/post and derived counts on reads. Reputation/ranking remains later scope.
 
-**CONFLICT:** [TBD] V1 needs a persistence/integrity design, but the exact table/target/version wording is not settled.
+**CONFLICT:** [PARTIALLY IMPLEMENTED] Persistence, target, and duplicate integrity are resolved. Self-helpful is not prohibited, and no unhelp/toggle endpoint exists; documentation must not imply reversibility.
 
-**RECOMMENDED RESOLUTION:** [TBD] Keep the V1 behavior requirement and decide its schema explicitly. Proposed baseline: one reversible post vote per user with a unique association; reserve reputation scoring for V2. Do not silently defer helpfulness or mark the proposed table accepted.
+**RECOMMENDED RESOLUTION:** [PLANNED V1] Test the current add-only behavior and concurrency during the backend pass. Change self-helpful or reversal semantics only through a separately scoped API/schema decision; reserve reputation scoring for V2.
 
 ### C-09 — Role schema exists, role provisioning and combined abilities do not
 
@@ -2316,22 +2378,22 @@ flowchart TD
 | System | Current state | V1 target state | Missing work | Dependencies | Priority |
 | --- | --- | --- | --- | --- | --- |
 | Foundation | [IMPLEMENTED] Express/app/server/router/controller, dotenv, health, start/dev | [PLANNED V1] Reliable, understandable modular backend | Required environment validation, metadata correction, selected operational error/shutdown handling | Configuration decisions | P0 |
-| Database | [PARTIALLY IMPLEMENTED] Pool, validated Compose, migrations 001 users/002 advisor profiles/003 appointments; live schema unverified | [PLANNED V1] Reproducible full relational schema and constraints | Apply/tracking process, live verification, community/review/helpful SQL, query-driven indexes | Raw SQL decisions, remaining entity schemas | P0 |
+| Database | [PARTIALLY IMPLEMENTED] Pool, validated Compose, migrations 001–004 including community; live schema unverified | [PLANNED V1] Reproducible full relational schema and constraints | Apply/tracking process, live verification, review SQL, query-driven indexes | Raw SQL decisions, remaining entity schemas | P0 |
 | Authentication | [PARTIALLY IMPLEMENTED] Registration/login/JWT and authenticate used on advisor/appointment route source | [PLANNED V1] Fully tested authenticated APIs and safe current user | Current-user endpoint, token-policy decisions, route-defect fix and tests | JWT_SECRET, claims/policies | P0 |
 | Authorization | [PARTIALLY IMPLEMENTED] authorize(USER/ADVISOR) plus advisor/appointment ownership SQL | [PLANNED V1] Tested RBAC and ownership across all private resources | Fix appointment wiring; role provisioning/freshness; negative/concurrency tests | Verified identity, relationship design | P0 |
 | Advisors | [IMPLEMENTED] / TESTING PENDING | [PLANNED V1] Tested Finance profiles/discovery/detail/basic filters | Dedicated API/database pass, pagination/limits, V1 domain consistency, provisioning procedure | Users/auth | P1 |
 | Appointments | [PARTIALLY IMPLEMENTED] / TESTING PENDING; schema/controller/route source exists, router load blocked | [PLANNED V1] Working tested booking/list/cancel/assigned-advisor lifecycle | Import/export fix, strict transitions, time/conflict policies, validation and concurrent tests | Advisors/auth, scheduling decisions | P0 integrity / P1 feature |
-| Community | [PLANNED V1] Absent | [PLANNED V1] Finance posts/comments/helpfulness | Schemas/APIs/content validation, helpful persistence/uniqueness, paging | Users/domains/auth, helpful scope decision | P1 |
+| Community | [IMPLEMENTED] / TESTING PENDING; posts/comments/helpful/ownership deletes exist | [PLANNED V1] Tested and hardened Finance community | Dedicated API/database/ownership/concurrency pass, stronger validation, pagination/index review | Users/auth, migration application, full app route fix | P1 |
 | Reviews | [PLANNED V1] Absent | [PLANNED V1] Eligible completed-consultation reviews and ratings | Schema/uniqueness/range, ownership/eligibility, list/aggregate queries/tests | Completed appointment lifecycle | P0 integrity / P1 feature |
 | Frontend | [PLANNED V1] Absent | [PLANNED V1] React/Vite Finance journey and minimal dashboards | Frontend setup/pages/API client/auth UI/loading/error/time display | Stable APIs, auth transport/CORS | P1 |
-| Testing | [PLANNED V1] No suite; Day 6/7 API testing deliberately postponed | [PLANNED V1] Dedicated backend pass, then frontend/E2E evidence | Fix route load first; verify auth/advisor/appointment happy/negative/ownership/DB cases; select automated tools | Isolated test DB and applied migrations | P0 |
+| Testing | [PLANNED V1] No suite; Day 6–8 API testing deliberately postponed | [PLANNED V1] Dedicated backend pass, then frontend/E2E evidence | Fix route load first; verify auth/advisor/appointment/community happy/negative/ownership/DB cases; select automated tools | Isolated test DB and applied migrations | P0 |
 | Security | [PARTIALLY IMPLEMENTED] Ignore rules, validated DB loopback mapping, safe health/registration errors, registration validation/hash/parameters/USER-only output, malformed-JSON 400 | [PLANNED V1] Enforced invariants and safe public deployment | Protected-route integration/ownership, broader safe errors, secret review, selected abuse/CORS/TLS policies | Protected features and deployment topology | P0 |
 | Deployment | [PLANNED V1] Local DB config only | [PLANNED V1] Hosted frontend/backend/managed DB, verified setup | Provider/runtime/secrets decisions, migration apply, HTTPS, smoke tests/recovery | Integrated tested app | P1 release gate |
 | Documentation | [PARTIALLY IMPLEMENTED] This master spec; README absent | [PLANNED V1] Accurate spec, concise setup README, explainable architecture | README, decision closure, actual test/deployment evidence, re-audits | Every implementation milestone | P2 ongoing / release gate |
 
 ### 31.1 Completion estimate and reasoning
 
-[PARTIALLY IMPLEMENTED] **Estimated V1 progress: about 43%, with a reasonable planning range of 40–45%.** This is a subjective scope-weighted engineering estimate, not test coverage or a guarantee. Advisor and appointment code materially increase implementation progress, while postponed testing and the appointment route-load defect prevent claiming a confirmed end-to-end journey.
+[PARTIALLY IMPLEMENTED] **Estimated V1 progress: about 50%, with a reasonable planning range of 47–52%.** This is a subjective scope-weighted engineering estimate, not test coverage or a guarantee. Day 8 community code materially increases implementation progress, while postponed testing, the appointment route-load defect, and unverified migration application prevent claiming a confirmed end-to-end journey.
 
 | V1 work group | Estimated share of full V1 | Approximate completion within group | Contribution |
 | --- | --- | --- | --- |
@@ -2339,17 +2401,17 @@ flowchart TD
 | Authentication/authorization | 15% | 85%: registration/login/JWT/RBAC and protected advisor/appointment route source exist; current-user/testing/hardening pending | 12.75 percentage points |
 | Advisor system/discovery | 10% | 80%: migration/APIs/search/ownership implemented; testing, provisioning and pagination hardening pending | 8 percentage points |
 | Appointments | 15% | 65%: schema/controller/ownership/route definitions exist; wiring defect, testing and lifecycle/time hardening pending | 9.75 percentage points |
-| Community/comments/helpfulness | 10% | 0% | 0 |
+| Community/comments/helpfulness | 10% | 70%: migration/APIs/ownership/cascade/uniqueness exist; testing, stronger validation and paging/index hardening pending | 7 percentage points |
 | Reviews | 5% | 0% | 0 |
 | Frontend integration | 10% | 0% | 0 |
 | Maintained tests/security hardening | 10% | 0% beyond foundation practices counted above | 0 |
 | Deployment | 5% | 0% | 0 |
-| Documentation/explainability | 5% | 40%: master reference updated through Day 7; README/final evidence pending | 2 percentage points |
-| Total | 100% | Approximate weighted estimate | **43%** |
+| Documentation/explainability | 5% | 50%: master reference updated through Day 8; README/final evidence pending | 2.5 percentage points |
+| Total | 100% | Approximate weighted estimate | **50%** |
 
-[PARTIALLY IMPLEMENTED] Days 1–5 are complete in code; Days 6–7 have implementation artifacts with testing pending. Roadmap day counts are not an effort model. Most remaining risk lies in correcting/validating integration, community/reviews, frontend, security hardening, and deployment.
+[PARTIALLY IMPLEMENTED] Days 1–5 are complete in code; Days 6–8 have implementation artifacts with testing pending. Roadmap day counts are not an effort model. Most remaining risk lies in correcting/validating integration, reviews, frontend, security hardening, and deployment.
 
-[PARTIALLY IMPLEMENTED] The estimate credits Day 6/7 source and schema work but discounts untested behavior, the appointment router defect, missing strict transition/time rules, and all later modules.
+[PARTIALLY IMPLEMENTED] The estimate credits Day 6–8 source and schema work but discounts untested behavior, the appointment router defect, unverified migration application, missing strict transition/time rules, and all later modules.
 
 ## 32. ARCHITECTURE DECISION LOG
 
@@ -2362,7 +2424,7 @@ flowchart TD
 | ADR-001 — PostgreSQL selected | Use PostgreSQL as relational system of record | Users/advisors/bookings/posts/comments/reviews have strong relationships and integrity needs; SQL supports learning/interviews | MongoDB is a conceptual alternative, not selected; relational design requires deliberate schema/migrations | Accepted; [IMPLEMENTED] local configuration/users SQL, broader schema [PLANNED V1] | Owner brief; `docker-compose.yml`; users migration; `pg` dependency |
 | ADR-002 — Dockerized local PostgreSQL | Run local PostgreSQL through Docker Compose using configured image | Isolation, repeatability, controlled version, simpler setup/reset, professional workflow practice | Native macOS PostgreSQL would work; hosted DB initially would reduce local infrastructure learning; Docker daemon adds a local prerequisite | Accepted; [IMPLEMENTED] configuration, live runtime [TBD] | `docker-compose.yml`, owner rationale |
 | ADR-003 — Raw SQL + pg instead of Drizzle | Use shared `pg` pool and parameterized PostgreSQL SQL; no ORM without explicit change | SQL familiarity, query visibility, direct DB control, no second abstraction, DBMS interview preparation | Drizzle was briefly tried/removed per owner; Prisma/Sequelize/TypeORM not chosen | Accepted; [IMPLEMENTED] parameterized auth/advisor/appointment SQL; later modules planned | package metadata, db.js, controllers, migrations |
-| ADR-004 — Finance-first generic architecture | Deliver Finance end-to-end in V1 with generic users/domains/profiles/appointments/community | Manage scope while retaining multi-domain extension without duplicate architectures | Separate per-domain apps/tables are explicitly rejected; launching every domain immediately expands correctness/security workload | Accepted; [PLANNED V1] business implementation | Owner product/version requirements |
+| ADR-004 — Finance-first generic architecture | Deliver Finance end-to-end in V1 with generic users/domains/profiles/appointments/community | Manage scope while retaining multi-domain extension without duplicate architectures | Separate per-domain apps/tables are explicitly rejected; launching every domain immediately expands correctness/security workload | Accepted; [PARTIALLY IMPLEMENTED] advisors/appointments/community exist, complete tested journey does not | Owner product/version requirements and current source |
 | ADR-005 — UUID identifiers | Prefer PostgreSQL-generated UUID primary keys | Consistent opaque identity across generic entities; controller avoids manual ID generation | Sequential integers are a conceptual alternative; UUID storage/index cost and random ordering are tradeoffs; UUID is not access control | Accepted; [IMPLEMENTED] users migration, future entities [PLANNED V1] | `001_create_users.sql` and owner identifier requirement |
 | ADR-006 — JWT authentication for V1 | Custom login/JWT with separate verification and role functions | Backend identity and reusable access policy | Browser storage, explicit verification options, rotation/revocation remain TBD | Accepted; [PARTIALLY IMPLEMENTED] login/middleware and advisor/appointment route use; testing pending | Auth controller/middleware and routes |
 | ADR-007 — Node/Express/CommonJS backend | Keep backend JavaScript with Express and CommonJS modules | Small explicit HTTP backend fitting current skills and repository | Other runtimes/frameworks/TypeScript/ESM conversion are not selected; async I/O does not remove CPU/memory limits | Accepted; [IMPLEMENTED] foundation | `package.json`, all existing `src/` files |
@@ -2411,7 +2473,7 @@ flowchart TD
 | D-21 — Deletion/retention/anonymization | Users/advisors/posts/reviews/history are linked | Decide per entity; preserve consultation/review history pending explicit retention decision; no blanket cascades/soft-delete fields | Before deletion behavior or shared FK design/launch review |
 | D-22 — Pagination and sorting | API/UI stability, memory/DB load | Start with limit/offset, proposed default 20/max 100, stable sort plus ID tie-breaker; cursor only if justified | Before list API contracts |
 | D-23 — Search fields and index choices | Query behavior and performance depend on real scope | Bounded basic SQL filters in V1; advanced PostgreSQL search/index alternatives only after measurement | Before discovery/community list implementation; deeper search V2 |
-| D-24 — Helpful target, persistence, self-votes, reversibility | V1 needs integrity and a clear interaction contract | One reversible post vote per authenticated user/post with uniqueness and derived counts; self-vote default proposed deny | Before day 11 migration/API/UI |
+| D-24 — Helpful target, persistence, self-votes, reversibility | [PARTIALLY RESOLVED] Integrity and interaction contract | [IMPLEMENTED] Post target, `post_helpful`, authenticated identity, composite uniqueness, derived counts, add-only POST/duplicate 409. Self-helpful is currently allowed; no reversal/toggle exists | Revisit only if product requirements change before frontend/public launch |
 | D-25 — Community content and mutation scope | Input safety, discussion integrity, moderation workload | Plain text with explicit lengths; create/read/comments/helpful first; edit/delete/moderation only when scoped | Before community schema/API contracts |
 | D-26 — Review schema, rating, text, aggregate shape | Completed-consultation integrity, no duplicate reviews, predictable ratings | One review per appointment; integer 1–5 proposal; derive advisor/customer where practical; null average/count 0 with no reviews | Before day 12 reviews |
 | D-27 — Public reads, role matrix, 403 versus concealed 404 | Consistent privacy/access behavior | Public-safe advisor/community/review reads; private appointment access; explicit role scopes; select one concealment approach | Before authorization/API contract approval |
@@ -2443,11 +2505,11 @@ flowchart TD
 
 | Question | Concise answer | Status / project anchor |
 | --- | --- | --- |
-| What is Consultify? | A planned hybrid platform combining professional consultation, community advice, and consultation tracking. V1 delivers Finance through generic entities, with Health/Astrology expansion later. | [PLANNED V1] Business journeys; current code includes foundation and registration |
+| What is Consultify? | A hybrid platform combining professional consultation (advisors/appointments) with community advisory (posts/comments/helpful interactions). V1 is Finance-first; Health/Astrology remain later expansion. | [PARTIALLY IMPLEMENTED] Backend source exists through Day 8; complete tested journey/frontend not finished |
 | Why Node.js? | It provides the JavaScript server runtime and asynchronous I/O model suitable for an HTTP backend waiting on database/network requests. CPU-heavy work still requires attention. | [IMPLEMENTED] `package.json`/server |
-| Why Express? | It provides a small HTTP routing/middleware layer, letting the project keep request flow explicit without a large application framework. | [IMPLEMENTED] `src/app.js`, health router |
-| Why PostgreSQL? | The product has related identities, advisors, consultations, content, and reviews. SQL joins, transactions, and integrity constraints fit those relationships. | [IMPLEMENTED] configured DB/users SQL; business schema [PLANNED V1] |
-| Why a relational database? | Relationships such as review→appointment→customer/advisor need consistent references and constraints. The model should prevent invalid data, not only store isolated documents. | [PLANNED V1] relational business design |
+| Why Express? | It provides a small HTTP routing/middleware layer, letting the project keep request flow explicit without a large application framework. | [IMPLEMENTED] `src/app.js` and current routers |
+| Why PostgreSQL? | The product has related identities, advisors, consultations, community content, and reviews. SQL joins and integrity constraints fit those relationships. | [PARTIALLY IMPLEMENTED] configured DB and migrations 001–004; live application unverified |
+| Why a relational database? | Relationships such as post→comments/helpful users and appointment→customer/advisor need consistent references and constraints. | [IMPLEMENTED] current migrations; reviews remain planned |
 | Why Docker? | It isolates local PostgreSQL and makes version/setup/persistence explicit and reproducible across development machines. | [IMPLEMENTED] Compose configuration; runtime unverified |
 | Why Docker Compose? | It records service image, ports, environment, and volume in YAML so developers can manage the declared local setup consistently. | [IMPLEMENTED] `docker-compose.yml` |
 | Dockerfile versus Compose? | A Dockerfile builds an image; Compose declares how services run. This project references the prebuilt PostgreSQL image and has no backend Dockerfile. | [IMPLEMENTED] configuration evidence |
@@ -2456,7 +2518,7 @@ flowchart TD
 | Is port 8000 redirected to port 5433? | No. Client→Express is HTTP. The controller asks pg to perform a separate PostgreSQL request through host 5433 to container 5432, then sends an HTTP response. | [IMPLEMENTED] source/configuration flow |
 | What does 127.0.0.1:5433:5432 mean? | Bind the database publication to IPv4 loopback on the host at 5433 and forward that database traffic to PostgreSQL's container port 5432. Docker itself is not the database listener. | [IMPLEMENTED] Compose ports |
 | Why app.js versus server.js? | app.js composes Express behavior and exports the app; server.js loads environment, checks DB, and listens. This keeps startup separate from request configuration and helps future testing. | [IMPLEMENTED] both files |
-| Why routes/controllers? | Routes map method/path to handler. Controllers coordinate request validation/application work/queries/responses. This keeps URL wiring distinct from implementation logic. | [IMPLEMENTED] health; business [PLANNED V1] |
+| Why routes/controllers? | Routes map method/path/middleware to handlers. Controllers coordinate request validation, SQL, and responses. | [IMPLEMENTED] health/auth/advisor/appointment/community modules |
 | Why no services layer yet? | Current code is tiny. Add a service only when real complexity or reuse warrants separating business operations; empty layers add indirection without solving a problem. | [IMPLEMENTED] current tree; [PLANNED V1] principle |
 | Why not microservices? | V1 needs correct integrated workflows and understandable code. A modular monolith avoids distributed operational complexity while the product is small. | [PLANNED V1] accepted direction |
 | Why generic domain architecture? | A user identity and booking workflow are reusable across Finance, Health, and Astrology. Domain relationships avoid duplicated security/business implementations. | [PLANNED V1] generic entities; Finance-only launch |
@@ -2466,25 +2528,25 @@ flowchart TD
 | Question | Concise answer | Status / project anchor |
 | --- | --- | --- |
 | Why pg? | It is the selected Node PostgreSQL driver. It sends explicit SQL and provides the Pool used by the backend without an ORM query abstraction. | [IMPLEMENTED] dependency and `src/config/db.js` |
-| Why raw SQL instead of ORM? | The owner is comfortable with SQL and prioritizes direct query control, first-principles learning, and DBMS interview understanding. ORM convenience is a known tradeoff, not a missing dependency. | [IMPLEMENTED] strategy and registration queries; other queries [PLANNED V1] |
+| Why raw SQL instead of ORM? | The owner prioritizes direct query control, first-principles learning, and DBMS interview understanding. ORM convenience is a known tradeoff, not a missing dependency. | [IMPLEMENTED] shared `pg` pool and parameterized current controllers |
 | What is connection pooling? | Reusing a bounded set of DB connections across queries instead of creating a fresh connection for each request. Each server process owns its configured pool. | [IMPLEMENTED] shared pool |
 | Why one shared pool? | It centralizes resource use and configuration. Many per-request/controller pools can create far more connections than intended. | [IMPLEMENTED] one exported module |
 | Why not pool.end() in a controller? | It closes the shared pool, preventing later request use. Close it during intentional process/script shutdown, not after a normal query. | [PLANNED V1] invariant; no controller does this today |
 | What does pool.query() return? | A promise resolving to a pg result with returned rows and command metadata. Current health ignores rows because success alone is enough for connectivity. | [IMPLEMENTED] current call sites |
 | What is result.rows[0].name? | `rows` is the result array, index zero is the first row, and `name` is a selected column. Check for an empty array before dereferencing. | [IMPLEMENTED] registration uses result.rows[0] |
-| What is a migration? | A versioned schema change saved as SQL so environments can reproduce structure and reviewers can understand its history. The first file exists; an apply/track system does not. | [PARTIALLY IMPLEMENTED] migrations directory |
+| What is a migration? | A versioned schema change saved as SQL so environments can reproduce structure and reviewers can understand its history. Four files exist; an apply/track system does not. | [PARTIALLY IMPLEMENTED] migrations 001–004 |
 | Does starting Compose apply users SQL? | No. Current Compose does not mount migration SQL or invoke a runner. A versioned file and an applied table are separate evidence. | [IMPLEMENTED] config; live schema [TBD] |
 | What is a UUID? | A 128-bit identifier. The users migration asks PostgreSQL for a random UUID by default. It is an identifier, not a password or authorization check. | [IMPLEMENTED] users migration |
-| PRIMARY KEY versus FOREIGN KEY? | A primary key identifies a row uniquely and non-null. A foreign key ties a reference to an existing row in another/its own table. Only the users primary key is defined currently. | [IMPLEMENTED] PK; FKs [PLANNED V1] |
+| PRIMARY KEY versus FOREIGN KEY? | A primary key uniquely identifies a row; a foreign key requires a referenced row. `post_helpful` demonstrates a composite primary key, while community post/comment/user links demonstrate foreign keys. | [IMPLEMENTED] migrations 001–004 |
 | What does DEFAULT gen_random_uuid() do? | PostgreSQL supplies an ID when INSERT omits the column or requests DEFAULT. It does not override an explicitly supplied null. | [IMPLEMENTED] users SQL |
 | What is SQL injection? | Untrusted input changes SQL syntax when code mixes data directly into a query string. It can change what the database executes. | [PLANNED V1] prevention invariant |
-| Why parameterized queries? | They pass values separately from the SQL structure. `$1` corresponds to the first supplied value; this avoids interpreting that value as query syntax. Identifier/sort fragments still need allowlists. | [IMPLEMENTED] registration; [PLANNED V1] all future user-value queries |
-| Why DB constraints if backend validates? | Clients can call APIs directly, code can contain mistakes, and concurrent requests can pass the same preliminary check. Constraints are the final data-integrity boundary. | [IMPLEMENTED] users constraints; broader [PLANNED V1] |
+| Why parameterized queries? | They pass values separately from SQL structure; `$1` is a value, not executable query syntax. | [IMPLEMENTED] current business controllers |
+| Why DB constraints if backend validates? | Clients can call APIs directly and concurrent requests can race. The `post_helpful` composite key is the final duplicate guard even though the controller also handles conflicts. | [IMPLEMENTED] current constraints; broader hardening continues |
 | Why SELECT 1? | It checks whether a database query can execute without depending on a business table. It cannot prove migrations or business permissions are correct. | [IMPLEMENTED] server/health |
 | Why check DB before HTTP startup? | The intended server depends on PostgreSQL, so startup fails explicitly if the initial query fails rather than logging successful HTTP startup first. | [IMPLEMENTED] `src/server.js` |
 | How should transactions use pg? | Use one acquired client for BEGIN, statements, COMMIT/ROLLBACK, and release. A transaction cannot be spread across unrelated pool.query calls that may select different clients. | [PLANNED V1] complex writes |
 | Why can a duplicate email check race? | Two requests may both read no user before either inserts. Keep the DB UNIQUE constraint and handle the resulting duplicate violation as a controlled conflict. | [IMPLEMENTED] UNIQUE schema plus registration 23505 → 409 |
-| Why use indexes? | Appropriate indexes reduce filtered/joined/ordered work at a storage/write cost. Current PK/UNIQUE constraints imply indexes; appointment FK/list query indexes are not explicitly added. | [PARTIALLY IMPLEMENTED] migrations 001–003 |
+| Why use indexes? | Appropriate indexes reduce filtered/joined/ordered work at a storage/write cost. Current PK/UNIQUE constraints imply indexes; additional FK/feed/list indexes are not explicitly added. | [PARTIALLY IMPLEMENTED] migrations 001–004 |
 | Why TIMESTAMPTZ? | Appointments should represent unambiguous instants and display in local time. The database type does not preserve a named timezone; recurring schedules may need additional zone information later. | [IMPLEMENTED] users timestamp; appointment policy [TBD] |
 
 ### 34.3 Authentication, product integrity, testing, and delivery
@@ -2496,14 +2558,14 @@ flowchart TD
 | What is a salt? | Per-password randomness incorporated in hashing so identical passwords can yield different hashes and precomputed guesses are less reusable. | [IMPLEMENTED] bcrypt registration hashing |
 | Why deliberately expensive hashing? | It raises the computational cost of password guessing. Cost must also fit the application's legitimate login workload. | [IMPLEMENTED] cost 12 selected; deployment benchmarking [PLANNED V1] |
 | How can bcrypt.compare work without decrypting? | The stored representation includes parameters needed to hash the candidate and verify a match; it does not contain recoverable plaintext. | [IMPLEMENTED] login |
-| Authentication versus authorization? | authenticate verifies the token and assigns req.user; authorize checks that verified role against allowedRoles. | [IMPLEMENTED] separate functions used by advisor/appointment route source |
-| What is JWT? | Login issues a signed token with userID/role and expiry; middleware verifies it using JWT_SECRET. Payloads are readable and contain no password/hash. | [IMPLEMENTED] signing/verification and protected advisor/appointment route source; Day 6/7 API testing pending |
+| Authentication versus authorization? | `authenticate` verifies the token and assigns `req.user`; `authorize` checks a role; ownership SQL checks whether a specific row belongs to that identity. | [IMPLEMENTED] current protected modules |
+| What is JWT? | Login issues a signed token with userID/role and expiry; middleware verifies it using JWT_SECRET. Payloads are readable and contain no password/hash. | [IMPLEMENTED] signing/verification and protected advisor/appointment/community route source; Day 6–8 testing pending |
 | 401 versus 403? | Login/verification failures return 401; authorize returns 403 for a disallowed verified role. | [IMPLEMENTED] middleware and route composition; protected-route runtime behavior not yet tested |
-| What is RBAC? | Role-based access control restricts operations to allowed roles; ownership SQL separately restricts the specific profile/appointment. | [IMPLEMENTED] advisor/appointment route/controller source; testing pending |
+| What is RBAC? | Role-based access control restricts operations to allowed roles; ownership SQL separately restricts a specific profile, appointment, post, or comment. Community actions intentionally authenticate without a USER-only role check. | [IMPLEMENTED] current route/controller source; testing pending |
 | How does authorize('ADMIN') work conceptually? | It is a higher-order function returning middleware. A closure retains allowed roles for that returned function to check after authentication. | [IMPLEMENTED] reusable authorize closure; USER and ADVISOR uses are wired in current route source, while no ADMIN route exists yet |
-| What is ownership authorization? | The controller constrains the specific row after authentication/RBAC. Customer appointment SQL matches appointments.user_id to JWT userID; advisor SQL joins advisor_profiles and matches its user_id to JWT userID. | [IMPLEMENTED] Day 6/7 controller SQL; appointment route integration broken/testing pending |
+| What is ownership authorization? | The controller constrains the specific row using verified identity. Appointment SQL scopes customers/advisors; community DELETE queries match both resource ID and `req.user.userID`. | [IMPLEMENTED] Day 6–8 controller SQL; testing pending |
 | Role versus domain? | USER/ADVISOR/ADMIN describes authorization identity. FINANCE/HEALTH/ASTROLOGY describes advisory category. They remain separate in the users and advisor_profiles schemas. | [IMPLEMENTED] schema; V1 product scope Finance only |
-| Why backend validation? | Browser checks can be bypassed. The backend must validate all request data before it influences SQL, ownership, or business state. | [PARTIALLY IMPLEMENTED] auth/advisor/appointment checks exist; appointment UUID/time/conflict and broader validation remain planned |
+| Why backend validation? | Browser checks can be bypassed. The backend validates selected auth/advisor/appointment/community inputs, while database constraints protect critical integrity. | [PARTIALLY IMPLEMENTED] stronger type/length/UUID/time consistency remains planned |
 | How do reviews avoid abuse? | Require the current customer to own a completed appointment, derive its advisor, validate rating, and prevent duplicate reviews with DB-backed integrity. None is implemented yet. | [PLANNED V1] |
 | How do appointment transitions stay correct? | The database restricts stored statuses; cancellation checks owner and PENDING/CONFIRMED, while advisor updates check assignment, non-CANCELLED state, and target CONFIRMED/COMPLETED. Strict source→target sequencing is not enforced yet. | [PARTIALLY IMPLEMENTED] controller; route fix/testing/hardening pending |
 | Why can't the frontend prevent double booking? | Another client or simultaneous request can bypass or race the UI. Any exclusive-slot guarantee needs a defined schedule model plus backend/database enforcement. | [TBD] minimal V1; availability [PLANNED V2] |
@@ -2511,7 +2573,7 @@ flowchart TD
 | Do passing syntax checks prove the app works? | No. They catch parsing errors but not database connectivity, schema, routing correctness, security, or complete user journeys. | [IMPLEMENTED] syntax checks only during audit |
 | Why integration/database tests? | They verify middleware-to-controller-to-SQL behavior and actual constraints. Mocked unit tests cannot establish PostgreSQL uniqueness or real concurrent-write behavior. | [PLANNED V1] suite absent |
 | What does V1 done mean? | The integrated Finance journeys, security/ownership, constraints, critical tests, frontend, deployment, and current documentation all work. Route existence alone is insufficient. | [PLANNED V1] section 35 |
-| What is implemented right now? | Foundation, auth/JWT/RBAC, Finance advisor profile/discovery, and appointment schema/controller/route definitions. Advisor/appointment API testing is postponed; appointment routing currently fails to load. Community, reviews, frontend, deployment, and automated tests remain planned. | [PARTIALLY IMPLEMENTED] source evidence; live schema/runtime unverified |
+| What is implemented right now? | Foundation, auth/JWT/RBAC, Finance advisor profile/discovery, appointment source, and the Day 8 community module: posts, comments, helpful marks, counts, and ownership deletes. Day 6–8 testing is postponed; appointment routing still blocks full app loading. Reviews, frontend, deployment, and automated tests remain planned. | [PARTIALLY IMPLEMENTED] source evidence; live schema/runtime unverified |
 
 ## 35. VERSION 1 DEFINITION OF DONE
 
@@ -2554,13 +2616,13 @@ flowchart TD
 
 ## 36. Documentation maintenance and README relationship
 
-[IMPLEMENTED] This file is the detailed internal engineering source of truth, updated through the current Day 7 repository state. [PLANNED V1] `README.md` should be the concise public repository introduction and onboarding entry point; it is currently absent.
+[IMPLEMENTED] This file is the detailed internal engineering source of truth, updated through the current Day 8 repository state. [PLANNED V1] `README.md` should be the concise public repository introduction and onboarding entry point; it is currently absent.
 
 | Document/artifact | Status | Responsibility |
 | --- | --- | --- |
 | `README.md` | [PLANNED V1] | Short product description, actual stack, safe setup/run commands, current scope/limitations, link to master reference |
 | `docs/CONSULTIFY_MASTER_SPEC.md` | [IMPLEMENTED] updated this task | Implementation evidence, target contracts, architecture/decision history, audit/debug/testing/deployment guidance, version boundaries |
-| SQL migrations | [PARTIALLY IMPLEMENTED] users, advisor_profiles, appointments | Executable schema history through migration 003; community/reviews remain planned; applied live state unverified |
+| SQL migrations | [PARTIALLY IMPLEMENTED] users, advisor_profiles, appointments, community | Executable schema definitions through migration 004; migration 004 is a preserved working-tree file, reviews remain planned, and applied live state is unverified |
 | Tests | [PLANNED V1] | Executable evidence for behavior; prose acceptance cases do not count as passing tests |
 | Package metadata | [IMPLEMENTED] | Dependency/scripts/package version; `1.0.0` does not certify product V1 readiness |
 
@@ -2574,6 +2636,7 @@ flowchart TD
 | Day 3 maintenance, 2026-09-14 | `main` at `74aeec62c37863c8c72ded88c836121766113923` plus scoped working-tree changes | Added name/email bounds, PostgreSQL 23505 → 409, and malformed-JSON 400; synchronized registration contract, accepted D-05–D-08, progress, and resolved config/ignore findings | [IMPLEMENTED] two JS files and this spec; login and automated tests remain planned |
 | Day 5 documentation audit, 2026-09-14 | `4a9384cecc9a2a21994e1bd8a5b58b03405b1694` | Confirmed login/JWT issuance, authenticate/authorize functions and 401/403 behavior; documented absent protected-route wiring/current-user/ownership and preserved future features as planned | [IMPLEMENTED] documentation only; source files preserved; no runtime tests |
 | Day 7 documentation audit, 2026-09-19 | `3a9b906e4c8e57072c5a857596c6570941fd62a7` plus pre-existing advisor-route edit | Documented Day 6 advisor and Day 7 appointment schema/controllers/routes, exact APIs, ownership/ID relationships, lifecycle limits, postponed testing, and appointment route-load defect | [IMPLEMENTED] documentation only; no application code changed |
+| Day 8 documentation audit, 2026-09-19 | `c8fc216d5ab41a3907b5d944f25264c0816d1671` plus preserved app/advisor-route/community-migration working-tree changes | Documented community schema, eight routes, request flow/data sources, public reads, helpful uniqueness/409 behavior, ownership deletes/cascades, roadmap/testing status, and follow-up debt | [IMPLEMENTED] documentation only; no application code changed; Day 6–8 testing pending |
 | Next feature milestone | [TBD] actual future commit | Record only work actually implemented/verified and intentionally revised decisions | [PLANNED V1] |
 
 [PLANNED V1] Official references linked throughout this document explain PostgreSQL, pg, JWT, bcrypt, and Docker behavior. They are not substitutes for local implementation evidence. Re-check version-specific technical behavior when changing dependency/runtime versions; never infer that current upstream documentation means Consultify has adopted a new version.
