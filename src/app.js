@@ -4,6 +4,8 @@ const healthRouter = require("./routes/health.routes");
 const authRouter = require("./routes/auth.routes");
 const advisorRouter=require("./routes/advisor.routes.js");
 const appointmentRouter = require("./routes/appointment.routes");
+const communityRouter = require("./routes/community.routes");
+const reviewRouter = require("./routes/review.routes");
 
 const app = express();
 
@@ -13,6 +15,8 @@ app.use("/api/health", healthRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/advisors", advisorRouter);
 app.use("/api/appointments", appointmentRouter);
+app.use("/api/community", communityRouter);
+app.use("/api/reviews", reviewRouter);
 
 app.use((error, req, res, next) => {
     if (

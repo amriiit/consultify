@@ -69,10 +69,11 @@ async function createPost(req, res) {
 }
 
 async function getPosts(req, res) {
-    let { domain } = req.query;
+    let { domain, search } = req.query;
 
     try {
         let normalizedDomain = null;
+        let normalizedSearch = null;
 
         if (domain) {
             normalizedDomain = domain.trim().toUpperCase();
@@ -81,6 +82,14 @@ async function getPosts(req, res) {
                 return res.status(400).json({
                     message: "Only FINANCE community is available in V1"
                 });
+            }
+        }
+
+        if (search) {
+            normalizedSearch = search.trim();
+
+            if (!normalizedSearch) {
+                normalizedSearch = null;
             }
         }
 
@@ -114,11 +123,23 @@ async function getPosts(req, res) {
             JOIN users u
                 ON cp.user_id = u.id
 
-            WHERE ($1::TEXT IS NULL OR cp.domain = $1)
+            WHERE
+                ($1::TEXT IS NULL OR cp.domain = $1)
+
+                AND
+
+                (
+                    $2::TEXT IS NULL
+                    OR cp.title ILIKE '%' || $2 || '%'
+                    OR cp.content ILIKE '%' || $2 || '%'
+                )
 
             ORDER BY cp.created_at DESC
             `,
-            [normalizedDomain]
+            [
+                normalizedDomain,
+                normalizedSearch
+            ]
         );
 
         return res.status(200).json({

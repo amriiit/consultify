@@ -184,54 +184,66 @@ async function updateAdvisorProfile(req, res) {
 
 
 async function getAllAdvisors(req, res) {
-    const domain = req.query.domain
-        ? req.query.domain.toUpperCase()
-        : null;
-
-    const search = req.query.search
-        ? req.query.search.trim()
-        : null;
-
-    const allowedDomains = ["FINANCE", "HEALTH", "ASTROLOGY"];
-
-    if (domain && !allowedDomains.includes(domain)) {
-        return res.status(400).json({
-            message: "Invalid advisor domain"
-        });
-    }
+    let { domain, search } = req.query;
 
     try {
-        const searchPattern = search
-            ? `%${search}%`
-            : null;
+        let normalizedDomain = null;
+        let normalizedSearch = null;
+
+        if (domain) {
+            normalizedDomain = domain.trim().toUpperCase();
+
+            if (normalizedDomain !== "FINANCE") {
+                return res.status(400).json({
+                    message: "Only FINANCE advisors are available in V1"
+                });
+            }
+        }
+
+        if (search) {
+            normalizedSearch = search.trim();
+
+            if (!normalizedSearch) {
+                normalizedSearch = null;
+            }
+        }
 
         const result = await pool.query(
             `
             SELECT
                 ap.id,
-                u.name,
                 ap.domain,
-                ap.bio,
                 ap.specialization,
+                ap.bio,
                 ap.experience_years,
                 ap.consultation_fee,
                 ap.created_at,
-                ap.updated_at
+
+                u.id AS user_id,
+                u.name AS advisor_name
+
             FROM advisor_profiles ap
+
             JOIN users u
                 ON ap.user_id = u.id
+
             WHERE
-                ($1::text IS NULL OR ap.domain = $1)
-            AND
+                ($1::TEXT IS NULL OR ap.domain = $1)
+
+                AND
+
                 (
-                    $2::text IS NULL
-                    OR u.name ILIKE $2
-                    OR ap.specialization ILIKE $2
-                    OR ap.bio ILIKE $2
+                    $2::TEXT IS NULL
+                    OR u.name ILIKE '%' || $2 || '%'
+                    OR ap.specialization ILIKE '%' || $2 || '%'
                 )
+
             ORDER BY ap.created_at DESC
             `,
-            [domain, searchPattern]
+            [
+                normalizedDomain,
+                normalizedSearch
+            ]
         );
 
         return res.status(200).json({

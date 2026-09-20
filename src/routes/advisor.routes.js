@@ -5,12 +5,17 @@ const {
 } = require("../controllers/advisor.controller");
 
 const {
+    getAdvisorReviews
+} = require("../controllers/review.controller");
+
+const {
     authenticate,
     authorize
 } = require("../middlewares/auth.middleware");
 
 const router = express.Router();
 
+// advisors making their own profile
 router.post(
     "/profile",
     authenticate,
@@ -35,5 +40,9 @@ router.get(
     getAdvisorById
 );
 
+router.get(
+    "/:id/reviews",
+    getAdvisorReviews
+);
 
 module.exports = router;

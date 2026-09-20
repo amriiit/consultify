@@ -164,7 +164,45 @@ async function loginUser(req, res) {
     }
 }
 
+async function getCurrentUser(req, res) {
+    const userID = req.user.userID;
+
+    try {
+        const result = await pool.query(
+            `
+            SELECT
+                id,
+                name,
+                email,
+                role,
+                created_at
+            FROM users
+            WHERE id = $1
+            `,
+            [userID]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        return res.status(200).json({
+            user: result.rows[0]
+        });
+
+    } catch (error) {
+        console.error("Get current user error:", error.message);
+
+        return res.status(500).json({
+            message: "Internal server error"
+        });
+    }
+}
+
 module.exports = {
     registerUser,
-    loginUser
+    loginUser,
+    getCurrentUser
 };
