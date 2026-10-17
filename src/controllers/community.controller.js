@@ -3,9 +3,9 @@ const pool = require("../config/db");
 async function createPost(req, res) {
     const userID = req.user.userID;
 
-    let { domain, title, content } = req.body;
+    let { domain, title, content } = req.body || {};
 
-    if (!domain || !title || !content) {
+    if (typeof domain !== "string" || typeof title !== "string" || typeof content !== "string" || !domain || !title || !content) {
         return res.status(400).json({
             message: "Domain, title and content are required"
         });
@@ -15,7 +15,7 @@ async function createPost(req, res) {
     title = title.trim();
     content = content.trim();
 
-    if (!title || !content) {
+    if (!title || !content || title.length > 200) {
         return res.status(400).json({
             message: "Title and content cannot be empty"
         });
@@ -70,6 +70,10 @@ async function createPost(req, res) {
 
 async function getPosts(req, res) {
     let { domain, search } = req.query;
+    if ((domain !== undefined && typeof domain !== "string") ||
+        (search !== undefined && typeof search !== "string")) {
+        return res.status(400).json({ message: "Domain and search must be strings" });
+    }
 
     try {
         let normalizedDomain = null;
@@ -205,6 +209,10 @@ async function getPostById(req, res) {
         });
 
     } catch (error) {
+        if (error.code === "22P02") {
+            return res.status(400).json({ message: "Invalid resource ID" });
+        }
+
         console.error("Get community post error:", error.message);
 
         return res.status(500).json({
@@ -216,9 +224,9 @@ async function getPostById(req, res) {
 async function addComment(req, res) {
     const userID = req.user.userID;
     const postID = req.params.id;
-    let { content } = req.body;
+    let { content } = req.body || {};
 
-    if (!content) {
+    if (typeof content !== "string" || !content) {
         return res.status(400).json({
             message: "Comment content is required"
         });
@@ -277,6 +285,10 @@ async function addComment(req, res) {
         });
 
     } catch (error) {
+        if (error.code === "22P02") {
+            return res.status(400).json({ message: "Invalid resource ID" });
+        }
+
         console.error("Add comment error:", error.message);
 
         return res.status(500).json({
@@ -328,6 +340,10 @@ async function getComments(req, res) {
         });
 
     } catch (error) {
+        if (error.code === "22P02") {
+            return res.status(400).json({ message: "Invalid resource ID" });
+        }
+
         console.error("Get comments error:", error.message);
 
         return res.status(500).json({

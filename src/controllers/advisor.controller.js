@@ -9,13 +9,14 @@ async function createAdvisorProfile(req, res) {
         specialization,
         experienceYears,
         consultationFee
-    } = req.body;
+    } = req.body || {};
 
     // Basic validation
     if (
         !domain ||
-        !bio ||
-        !specialization ||
+        typeof bio !== "string" || !bio.trim() ||
+        typeof specialization !== "string" || !specialization.trim() ||
+        specialization.trim().length > 150 ||
         experienceYears === undefined ||
         consultationFee === undefined
     ) {
@@ -33,7 +34,7 @@ async function createAdvisorProfile(req, res) {
 
     if (
         !Number.isInteger(experienceYears) ||
-        experienceYears < 0
+        experienceYears < 0 || experienceYears > 2147483647
     ) {
         return res.status(400).json({
             message: "Experience years must be a non-negative integer"
@@ -41,8 +42,8 @@ async function createAdvisorProfile(req, res) {
     }
 
     if (
-        typeof consultationFee !== "number" ||
-        consultationFee < 0
+        typeof consultationFee !== "number" || !Number.isFinite(consultationFee) ||
+        consultationFee < 0 || consultationFee > 99999999.99
     ) {
         return res.status(400).json({
             message: "Consultation fee must be a non-negative number"
@@ -111,11 +112,18 @@ async function updateAdvisorProfile(req, res) {
         specialization,
         experienceYears,
         consultationFee
-    } = req.body;
+    } = req.body || {};
+
+    if (
+        (bio !== undefined && (typeof bio !== "string" || !bio.trim())) ||
+        (specialization !== undefined && (typeof specialization !== "string" || !specialization.trim() || specialization.length > 150))
+    ) {
+        return res.status(400).json({ message: "Bio and specialization must be nonempty strings; specialization must not exceed 150 characters" });
+    }
 
     if (
         experienceYears !== undefined &&
-        (!Number.isInteger(experienceYears) || experienceYears < 0)
+        (!Number.isInteger(experienceYears) || experienceYears < 0 || experienceYears > 2147483647)
     ) {
         return res.status(400).json({
             message: "Experience years must be a non-negative integer"
@@ -124,7 +132,7 @@ async function updateAdvisorProfile(req, res) {
 
     if (
         consultationFee !== undefined &&
-        (typeof consultationFee !== "number" || consultationFee < 0)
+        (typeof consultationFee !== "number" || !Number.isFinite(consultationFee) || consultationFee < 0 || consultationFee > 99999999.99)
     ) {
         return res.status(400).json({
             message: "Consultation fee must be a non-negative number"
@@ -185,6 +193,10 @@ async function updateAdvisorProfile(req, res) {
 
 async function getAllAdvisors(req, res) {
     let { domain, search } = req.query;
+    if ((domain !== undefined && typeof domain !== "string") ||
+        (search !== undefined && typeof search !== "string")) {
+        return res.status(400).json({ message: "Domain and search must be strings" });
+    }
 
     try {
         let normalizedDomain = null;
@@ -296,6 +308,10 @@ async function getAdvisorById(req, res) {
         });
 
     } catch (error) {
+        if (error.code === "22P02") {
+            return res.status(400).json({ message: "Invalid resource ID" });
+        }
+
         console.error("Get advisor error:", error.message);
 
         return res.status(500).json({

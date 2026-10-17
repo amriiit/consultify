@@ -1,8 +1,8 @@
 const pool = require("../config/db");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-async function registerUser(req, res) {
-    const { name, email, password } = req.body;
+async function register(req, res, role) {
+    const { name, email, password } = req.body || {};
 
     if (typeof name !== "string" || !name.trim()) {
         return res.status(400).json({
@@ -68,10 +68,10 @@ async function registerUser(req, res) {
         }
         const passwordHash=await bcrypt.hash(password,12)
         const result=await pool.query(
-            `INSERT INTO users (name,email,password_hash)
-             VALUES ($1,$2,$3)
+            `INSERT INTO users (name,email,password_hash,role)
+             VALUES ($1,$2,$3,$4)
              RETURNING id,name,email,role,created_at`,
-             [cleanName,normalizedEmail,passwordHash]
+             [cleanName,normalizedEmail,passwordHash,role]
         )
         return res.status(201).json({
             message: "User registered successfully",
@@ -91,8 +91,16 @@ async function registerUser(req, res) {
     }
 }
 
+function registerUser(req, res) {
+    return register(req, res, "USER");
+}
+
+function registerAdvisor(req, res) {
+    return register(req, res, "ADVISOR");
+}
+
 async function loginUser(req, res) {
-    const { email, password } = req.body;
+    const { email, password } = req.body || {};
 
     if (typeof email !== "string" || !email.trim()) {
         return res.status(400).json({
@@ -203,6 +211,7 @@ async function getCurrentUser(req, res) {
 
 module.exports = {
     registerUser,
+    registerAdvisor,
     loginUser,
     getCurrentUser
 };

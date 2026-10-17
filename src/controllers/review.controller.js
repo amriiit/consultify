@@ -7,12 +7,17 @@ async function createReview(req, res) {
         appointmentId,
         rating,
         comment
-    } = req.body;
+    } = req.body || {};
 
     if (!appointmentId || rating === undefined) {
         return res.status(400).json({
             message: "Appointment ID and rating are required"
         });
+    }
+
+    if ((typeof rating !== "number" && typeof rating !== "string") ||
+        (comment !== undefined && comment !== null && typeof comment !== "string")) {
+        return res.status(400).json({ message: "Rating must be an integer and comment must be a string" });
     }
 
     rating = Number(rating);
@@ -111,6 +116,10 @@ async function createReview(req, res) {
         });
 
     } catch (error) {
+        if (error.code === "22P02") {
+            return res.status(400).json({ message: "Invalid resource ID" });
+        }
+
         if (error.code === "23505") {
             return res.status(409).json({
                 message: "This appointment has already been reviewed"
@@ -195,6 +204,10 @@ async function getAdvisorReviews(req, res) {
         });
 
     } catch (error) {
+        if (error.code === "22P02") {
+            return res.status(400).json({ message: "Invalid resource ID" });
+        }
+
         console.error("Get advisor reviews error:", error.message);
 
         return res.status(500).json({

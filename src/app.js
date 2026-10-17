@@ -29,7 +29,15 @@ app.use((error, req, res, next) => {
         });
     }
 
-    next(error);
+    if (error instanceof URIError) {
+        return res.status(400).json({ message: "Invalid request path" });
+    }
+
+    if (error.status === 413) {
+        return res.status(413).json({ message: "Request body too large" });
+    }
+
+    return res.status(500).json({ message: "Internal server error" });
 });
 
 module.exports = app;

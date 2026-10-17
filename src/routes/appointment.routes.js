@@ -2,7 +2,10 @@ const express = require("express");
 
 const {
     bookAppointment,
-    getUserAppointments
+    getUserAppointments,
+    getAdvisorAppointments,
+    cancelAppointment,
+    updateAppointmentStatus
 } = require("../controllers/appointment.controller");
 
 const {

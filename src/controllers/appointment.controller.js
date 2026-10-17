@@ -7,12 +7,18 @@ async function bookAppointment(req, res) {
         advisorId,
         scheduledAt,
         notes
-    } = req.body;
+    } = req.body || {};
 
     if (!advisorId || !scheduledAt) {
         return res.status(400).json({
             message: "Advisor and scheduled time are required"
         });
+    }
+
+    if (typeof advisorId !== "string" || typeof scheduledAt !== "string" ||
+        !Number.isFinite(Date.parse(scheduledAt)) ||
+        (notes !== undefined && notes !== null && typeof notes !== "string")) {
+        return res.status(400).json({ message: "Invalid advisor, scheduled time or notes" });
     }
 
     try {
@@ -65,6 +71,13 @@ async function bookAppointment(req, res) {
         });
 
     } catch (error) {
+        if (error.code === "22007" || error.code === "22008") {
+            return res.status(400).json({ message: "Invalid scheduled time" });
+        }
+        if (error.code === "22P02") {
+            return res.status(400).json({ message: "Invalid resource ID" });
+        }
+
         console.error("Book appointment error:", error.message);
 
         return res.status(500).json({
@@ -184,6 +197,10 @@ async function cancelAppointment(req, res) {
         });
 
     } catch (error) {
+        if (error.code === "22P02") {
+            return res.status(400).json({ message: "Invalid resource ID" });
+        }
+
         console.error("Cancel appointment error:", error.message);
 
         return res.status(500).json({
@@ -195,7 +212,7 @@ async function cancelAppointment(req, res) {
 async function updateAppointmentStatus(req, res) {
     const userID = req.user.userID;
     const appointmentID = req.params.id;
-    const { status } = req.body;
+    const { status } = req.body || {};
 
     const allowedStatuses = ["CONFIRMED", "COMPLETED"];
 
@@ -216,7 +233,10 @@ async function updateAppointmentStatus(req, res) {
             WHERE a.id = $2
               AND a.advisor_id = ap.id
               AND ap.user_id = $3
-              AND a.status != 'CANCELLED'
+              AND (
+                  (a.status = 'PENDING' AND $1 = 'CONFIRMED')
+                  OR (a.status = 'CONFIRMED' AND $1 = 'COMPLETED')
+              )
             RETURNING a.*
             `,
             [status, appointmentID, userID]
@@ -234,6 +254,10 @@ async function updateAppointmentStatus(req, res) {
         });
 
     } catch (error) {
+        if (error.code === "22P02") {
+            return res.status(400).json({ message: "Invalid resource ID" });
+        }
+
         console.error("Update appointment status error:", error.message);
 
         return res.status(500).json({
@@ -246,5 +270,6 @@ module.exports = {
     bookAppointment,
     getUserAppointments,
     getAdvisorAppointments,
-    updateAppointmentStatus
+    updateAppointmentStatus,
+    cancelAppointment
 };
