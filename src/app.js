@@ -18,6 +18,10 @@ app.use("/api/appointments", appointmentRouter);
 app.use("/api/community", communityRouter);
 app.use("/api/reviews", reviewRouter);
 
+app.use("/api", (req, res) => {
+    return res.status(404).json({ message: "API endpoint not found" });
+});
+
 app.use((error, req, res, next) => {
     if (
         error instanceof SyntaxError &&

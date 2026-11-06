@@ -13,3 +13,16 @@ frontend/dist/
 
 # Logs
 *.log
+
+# Private generated production-audit evidence (keep test scripts and fix report reviewable)
+/deployment-audit/artifacts/
+/deployment-audit/screenshots/
+/deployment-audit/traces/
+/deployment-audit/history/
+/deployment-audit/reports/FINAL_AUDIT_REPORT.md
+/deployment-audit/reports/FEATURE_COVERAGE.md
+/deployment-audit/reports/BUG_REPORT.md
+/deployment-audit/reports/TEST_RESULTS.md
+/deployment-audit/**/__pycache__/
+
+/deployment-audit/reports/PRODUCTION_DEPLOYMENT_REPORT.md

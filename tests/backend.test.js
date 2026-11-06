@@ -415,3 +415,72 @@ check('Appointments', 'invalid calendar date rejected safely', () => api('POST',
   advisorId: f.pa.id, scheduledAt: `${new Date().getUTCFullYear() + 1}-02-30T10:00:00Z`
 }, f.ua, 400));
 check('Security', 'malformed percent encoding returns safe 400', () => api('GET', '/api/advisors/%', undefined, null, 400));
+
+// API fallback regression: run only through the existing isolated database runner.
+for (const [method, path] of [
+  ['GET', '/api/this-route-does-not-exist'],
+  ['POST', '/api/this-route-does-not-exist'],
+  ['GET', '/api'],
+  ['GET', '/api/advisors/missing/nested-route'],
+  ['GET', '/api/auth/login']
+]) check('API fallback', `${method} ${path} returns JSON 404`, async () => {
+  assert.deepEqual(await api(method, path, undefined, null, 404), {
+    message: 'API endpoint not found'
+  });
+});
+check('API fallback', 'valid health remains database-backed', async () => {
+  assert.deepEqual(await api('GET', '/api/health'), { status: 'ok', database: 'connected' });
+});
+check('API fallback', 'authentication routes retain validation and identity', async () => {
+  await api('POST', '/api/auth/register', {}, null, 400);
+  await api('POST', '/api/auth/register/advisor', {}, null, 400);
+  await api('POST', '/api/auth/login', {}, null, 400);
+  assert.equal((await api('GET', '/api/auth/me', undefined, f.ua)).user.id, f.ua.id);
+});
+check('API fallback', 'advisor appointment community review routers remain reachable', async () => {
+  assert.ok(Array.isArray((await api('GET', '/api/advisors')).advisors));
+  assert.ok(Array.isArray((await api('GET', '/api/appointments/user', undefined, f.ua)).appointments));
+  assert.ok(Array.isArray((await api('GET', '/api/appointments/advisor', undefined, f.aa)).appointments));
+  assert.ok(Array.isArray((await api('GET', '/api/community/posts')).posts));
+  await api('POST', '/api/reviews', {}, f.ua, 400);
+});
+check('API fallback', 'authentication and authorization still take precedence', async () => {
+  await api('GET', '/api/appointments/user', undefined, null, 401);
+  await api('GET', '/api/appointments/user', undefined, f.aa, 403);
+});
+check('API fallback', 'malformed JSON error still takes precedence on unknown route', async () => {
+  assert.deepEqual(await api('POST', '/api/unknown', '{', null, 400, true), { message: 'Invalid JSON body' });
+});
+check('API fallback', 'malformed URI and oversized body keep existing safe JSON errors', async () => {
+  assert.deepEqual(await api('GET', '/api/advisors/%', undefined, null, 400), { message: 'Invalid request path' });
+  assert.deepEqual(await api('POST', '/api/unknown', { content: 'x'.repeat(110000) }, null, 413), { message: 'Request body too large' });
+});
+check('API fallback', 'unexpected parser error remains generic JSON 500', async () => {
+  // A rejected content encoding exercises the existing generic error branch without database writes.
+  const http = require('node:http');
+  const server = require('../src/app').listen(0, '127.0.0.1');
+  try {
+    await new Promise(resolve => server.once('listening', resolve));
+    const result = await new Promise((resolve, reject) => {
+      const req = http.request({ host: '127.0.0.1', port: server.address().port, path: '/api/unknown', method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Content-Encoding': 'unsupported-audit-test' } }, res => {
+        let body = ''; res.on('data', chunk => body += chunk); res.on('end', () => resolve({ status: res.statusCode, type: res.headers['content-type'], body }));
+      });
+      req.on('error', reject); req.end('{}');
+    });
+    assert.equal(result.status, 500);
+    assert.match(result.type, /application\/json/);
+    assert.deepEqual(JSON.parse(result.body), { message: 'Internal server error' });
+  } finally { await new Promise(resolve => server.close(resolve)); }
+});
+check('API fallback', 'non-API paths and similarly prefixed paths keep Express behavior', async () => {
+  const server = require('../src/app').listen(0, '127.0.0.1');
+  try {
+    await new Promise(resolve => server.once('listening', resolve));
+    for (const path of ['/frontend/nested-route', '/apiary']) {
+      const response = await fetch(`http://127.0.0.1:${server.address().port}${path}`);
+      assert.equal(response.status, 404);
+      assert.match(response.headers.get('content-type'), /text\/html/);
+    }
+  } finally { await new Promise(resolve => server.close(resolve)); }
+});
