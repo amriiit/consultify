@@ -31,7 +31,7 @@ Use Node 22.12+ (Node 24 was tested). Run commands from the repository root unle
    npm run dev
    ```
 
-4. Open `http://127.0.0.1:5173` in Chrome. `http://localhost:5173` also works, but use one hostname consistently: session storage belongs to an origin, so changing hostnames does not carry the login with you.
+4. Open `http://127.0.0.1:5174` in Chrome. `http://localhost:5174` also works, but use one hostname consistently: session storage belongs to an origin, so changing hostnames does not carry the login with you.
 
 Register a member at `/register` or a financial advisor at `/register/advisor`. Registration creates an account, then sends you to Login. Advisors create their professional profile from the dashboard. Member and advisor sessions can be tested in separate browser profiles. A normal pair of tabs shares session state only according to browser sessionStorage rules; logging into another role in the same tab replaces its session.
 
