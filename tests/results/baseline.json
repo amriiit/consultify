@@ -1,0 +1,4016 @@
+{
+  "database": "consultify_test_c92174d0a35350a7",
+  "postgres": "PostgreSQL 18.6 (Homebrew) on aarch64-apple-darwin25.6.0, compiled by Apple clang version 21.0.0 (clang-2100.1.1.101), 64-bit",
+  "node": "v24.18.1",
+  "temp": "/var/folders/l4/ww5_dwtn3d932jlxj7xxg4240000gn/T/consultify-test-PQ0qBi",
+  "date": "2026-10-17T14:12:50.834Z",
+  "durationMs": 8123,
+  "total": 278,
+  "passed": 233,
+  "failed": 45,
+  "skipped": 0,
+  "cases": [
+    {
+      "module": "Health",
+      "name": "real database connectivity",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER registration normalization role assignment bcrypt and safe me",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects missing name",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects blank name",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects object name",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects long name",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects bad email",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects missing email",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects long email",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects array email",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects short password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects multibyte password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects long password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects missing password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects object password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR registration normalization role assignment bcrypt and safe me",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects missing name",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects blank name",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects object name",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects long name",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects bad email",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects missing email",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects long email",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects array email",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects short password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects multibyte password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects long password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects missing password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects object password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "login wrong password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "login unknown email",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "login missing email",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "login missing password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "login SQL injection email",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "missing JWT denied",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "invalid JWT denied",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "expired JWT denied",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "tampered JWT denied",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "unsigned JWT denied",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "me ignores identity spoofing",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "duplicate profile conflicts",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "POST denies USER",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "POST requires authentication",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "PATCH denies USER",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "PATCH requires authentication",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "create rejects domain",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "create rejects experience",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "create rejects decimal",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "create rejects fee",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "create rejects missing",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "create rejects object bio",
+      "status": "FAIL",
+      "error": "POST /api/advisors/profile: expected 400, received 500"
+    },
+    {
+      "module": "Advisors",
+      "name": "create rejects blank bio",
+      "status": "FAIL",
+      "error": "POST /api/advisors/profile: expected 400, received 409"
+    },
+    {
+      "module": "Advisors",
+      "name": "create rejects long specialization",
+      "status": "FAIL",
+      "error": "POST /api/advisors/profile: expected 400, received 500"
+    },
+    {
+      "module": "Advisors",
+      "name": "create rejects huge experience",
+      "status": "FAIL",
+      "error": "POST /api/advisors/profile: expected 400, received 500"
+    },
+    {
+      "module": "Advisors",
+      "name": "create rejects huge fee",
+      "status": "FAIL",
+      "error": "POST /api/advisors/profile: expected 400, received 500"
+    },
+    {
+      "module": "Advisors",
+      "name": "partial update persists and cannot target another advisor",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "update rejects experienceYears {\"experienceYears\":-1}",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "update rejects consultationFee {\"consultationFee\":-2}",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "update rejects bio {\"bio\":{}}",
+      "status": "FAIL",
+      "error": "PATCH /api/advisors/profile: expected 400, received 200"
+    },
+    {
+      "module": "Advisors",
+      "name": "update rejects bio {\"bio\":\" \"}",
+      "status": "FAIL",
+      "error": "PATCH /api/advisors/profile: expected 400, received 200"
+    },
+    {
+      "module": "Advisors",
+      "name": "update rejects specialization {\"specialization\":\"xxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "status": "FAIL",
+      "error": "PATCH /api/advisors/profile: expected 400, received 500"
+    },
+    {
+      "module": "Advisors",
+      "name": "update rejects consultationFee {\"consultationFee\":10000000000}",
+      "status": "FAIL",
+      "error": "PATCH /api/advisors/profile: expected 400, received 500"
+    },
+    {
+      "module": "Advisors",
+      "name": "update rejects experienceYears {\"experienceYears\":2147483648}",
+      "status": "FAIL",
+      "error": "PATCH /api/advisors/profile: expected 400, received 500"
+    },
+    {
+      "module": "Advisors",
+      "name": "public list and detail use correct users JOIN",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "nonexistent advisor",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "booking persisted with JWT owner ignoring spoofed owner and status",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "rejects missing advisor",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "rejects missing time",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "rejects unknown advisor",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "rejects account UUID instead of profile",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "rejects malformed advisor",
+      "status": "FAIL",
+      "error": "POST /api/appointments: expected 400, received 500"
+    },
+    {
+      "module": "Appointments",
+      "name": "rejects invalid time",
+      "status": "FAIL",
+      "error": "POST /api/appointments: expected 400, received 500"
+    },
+    {
+      "module": "Appointments",
+      "name": "rejects object time",
+      "status": "FAIL",
+      "error": "POST /api/appointments: expected 400, received 500"
+    },
+    {
+      "module": "Appointments",
+      "name": "rejects object notes",
+      "status": "FAIL",
+      "error": "POST /api/appointments: expected 400, received 201"
+    },
+    {
+      "module": "Appointments",
+      "name": "booking requires USER",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "booking requires JWT",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "private lists isolate both users and advisors with real JOINs",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "user list denies wrong role",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "user list requires JWT",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "advisor list denies wrong role",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "advisor list requires JWT",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "PENDING to CONFIRMED",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "CONFIRMED to COMPLETED",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "PENDING to COMPLETED",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "COMPLETED to CONFIRMED",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "COMPLETED to COMPLETED",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "CANCELLED to CONFIRMED",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "CANCELLED to COMPLETED",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "PENDING to INVALID",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "PENDING to undefined",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "status denies other advisor",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "status denies USER",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "status denies missing JWT",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "status denies invalid JWT",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "cancel PENDING",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "cancel CONFIRMED",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "cancel COMPLETED",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "cancel CANCELLED",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "cancel denies other USER",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "cancel denies ADVISOR",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "cancel denies missing JWT",
+      "status": "PASS"
+    },
+    {
+      "module": "Community",
+      "name": "create rejects unsupported",
+      "status": "PASS"
+    },
+    {
+      "module": "Community",
+      "name": "create rejects title",
+      "status": "PASS"
+    },
+    {
+      "module": "Community",
+      "name": "create rejects content",
+      "status": "PASS"
+    },
+    {
+      "module": "Community",
+      "name": "create rejects missing",
+      "status": "PASS"
+    },
+    {
+      "module": "Community",
+      "name": "create rejects number domain",
+      "status": "FAIL",
+      "error": "POST /api/community/posts: expected 400, received 500"
+    },
+    {
+      "module": "Community",
+      "name": "create rejects object title",
+      "status": "FAIL",
+      "error": "POST /api/community/posts: expected 400, received 500"
+    },
+    {
+      "module": "Community",
+      "name": "create rejects array content",
+      "status": "FAIL",
+      "error": "POST /api/community/posts: expected 400, received 500"
+    },
+    {
+      "module": "Community",
+      "name": "create rejects long title",
+      "status": "FAIL",
+      "error": "POST /api/community/posts: expected 400, received 500"
+    },
+    {
+      "module": "Community",
+      "name": "create requires JWT",
+      "status": "PASS"
+    },
+    {
+      "module": "Community",
+      "name": "author spoofing and public joins/counts",
+      "status": "PASS"
+    },
+    {
+      "module": "Community",
+      "name": "unknown post 404",
+      "status": "PASS"
+    },
+    {
+      "module": "Comments",
+      "name": "rejects content \"\"",
+      "status": "PASS"
+    },
+    {
+      "module": "Comments",
+      "name": "rejects content \" \"",
+      "status": "PASS"
+    },
+    {
+      "module": "Comments",
+      "name": "rejects content {}",
+      "status": "FAIL",
+      "error": "POST /api/community/posts/:id/comments: expected 400, received 500"
+    },
+    {
+      "module": "Comments",
+      "name": "rejects content []",
+      "status": "FAIL",
+      "error": "POST /api/community/posts/:id/comments: expected 400, received 500"
+    },
+    {
+      "module": "Comments",
+      "name": "rejects content 42",
+      "status": "FAIL",
+      "error": "POST /api/community/posts/:id/comments: expected 400, received 500"
+    },
+    {
+      "module": "Comments",
+      "name": "unknown post comment rejected",
+      "status": "PASS"
+    },
+    {
+      "module": "Comments",
+      "name": "unknown post listing 404",
+      "status": "PASS"
+    },
+    {
+      "module": "Comments",
+      "name": "authors ownership order and deletion",
+      "status": "PASS"
+    },
+    {
+      "module": "Helpful",
+      "name": "duplicate votes counts ownership and cascade",
+      "status": "PASS"
+    },
+    {
+      "module": "Helpful",
+      "name": "unknown post 404",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "comments requires JWT",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "helpful requires JWT",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "invalid rating 0",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "invalid rating 6",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "invalid rating 1.5",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "invalid rating undefined",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "invalid rating true",
+      "status": "FAIL",
+      "error": "POST /api/reviews: expected 400, received 404"
+    },
+    {
+      "module": "Reviews",
+      "name": "invalid rating [5]",
+      "status": "FAIL",
+      "error": "POST /api/reviews: expected 400, received 404"
+    },
+    {
+      "module": "Reviews",
+      "name": "missing appointment",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "unknown appointment",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "invalid comment {}",
+      "status": "FAIL",
+      "error": "POST /api/reviews: expected 400, received 500"
+    },
+    {
+      "module": "Reviews",
+      "name": "invalid comment []",
+      "status": "FAIL",
+      "error": "POST /api/reviews: expected 400, received 500"
+    },
+    {
+      "module": "Reviews",
+      "name": "invalid comment 42",
+      "status": "FAIL",
+      "error": "POST /api/reviews: expected 400, received 500"
+    },
+    {
+      "module": "Reviews",
+      "name": "requires JWT",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "denies ADVISOR",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "rejects PENDING",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "rejects CONFIRMED",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "rejects CANCELLED",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "owner eligibility boundary ratings duplicate and DB association",
+      "status": "PASS"
+    },
+    {
+      "module": "Ratings",
+      "name": "fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments",
+      "status": "PASS"
+    },
+    {
+      "module": "Ratings",
+      "name": "unknown advisor 404",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "advisors returns matches",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "advisors?domain=FINANCE returns matches",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "advisors?search=investment returns matches",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "advisors?search=INVESTMENT returns matches",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "advisors?domain=finance&search=investment returns matches",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "advisors unsupported domain",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "advisors?search=f6d9ec70-9633-43f9-b3bd-b679fc654de0 empty safe result",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "advisors?search='%20OR%201%3D1%20-- empty safe result",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "advisors repeated query parameters safely rejected",
+      "status": "FAIL",
+      "error": "GET /api/advisors: expected 400, received 500"
+    },
+    {
+      "module": "Search",
+      "name": "community/posts returns matches",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "community/posts?domain=FINANCE returns matches",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "community/posts?search=investment returns matches",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "community/posts?search=INVESTMENT returns matches",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "community/posts?domain=finance&search=investment returns matches",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "community/posts unsupported domain",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "community/posts?search=47c84113-ce61-4cd2-8ed0-d6b795cf0748 empty safe result",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "community/posts?search='%20OR%201%3D1%20-- empty safe result",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "community/posts repeated query parameters safely rejected",
+      "status": "FAIL",
+      "error": "GET /api/community/posts: expected 400, received 500"
+    },
+    {
+      "module": "Search",
+      "name": "advisor name search",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "community title and content search",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID GET /api/advisors/bad",
+      "status": "FAIL",
+      "error": "GET /api/advisors/bad: expected 400, received 500"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID GET /api/advisors/bad/reviews",
+      "status": "FAIL",
+      "error": "GET /api/advisors/bad/reviews: expected 400, received 500"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID PATCH /api/appointments/bad/status",
+      "status": "FAIL",
+      "error": "PATCH /api/appointments/bad/status: expected 400, received 500"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID PATCH /api/appointments/bad/cancel",
+      "status": "FAIL",
+      "error": "PATCH /api/appointments/bad/cancel: expected 400, received 500"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID GET /api/community/posts/bad",
+      "status": "FAIL",
+      "error": "GET /api/community/posts/bad: expected 400, received 500"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID GET /api/community/posts/bad/comments",
+      "status": "FAIL",
+      "error": "GET /api/community/posts/bad/comments: expected 400, received 500"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID POST /api/community/posts/bad/comments",
+      "status": "FAIL",
+      "error": "POST /api/community/posts/bad/comments: expected 400, received 500"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID POST /api/community/posts/bad/helpful",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID DELETE /api/community/posts/bad",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID DELETE /api/community/comments/bad",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID POST /api/reviews",
+      "status": "FAIL",
+      "error": "POST /api/reviews: expected 400, received 500"
+    },
+    {
+      "module": "Security",
+      "name": "malformed JSON /api/auth/login",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "missing JSON body /api/auth/login",
+      "status": "FAIL",
+      "error": "POST /api/auth/login: expected 400, received 500"
+    },
+    {
+      "module": "Security",
+      "name": "malformed JSON /api/advisors/profile",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "missing JSON body /api/advisors/profile",
+      "status": "FAIL",
+      "error": "POST /api/advisors/profile: expected 400, received 500"
+    },
+    {
+      "module": "Security",
+      "name": "malformed JSON /api/appointments",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "missing JSON body /api/appointments",
+      "status": "FAIL",
+      "error": "POST /api/appointments: expected 400, received 500"
+    },
+    {
+      "module": "Security",
+      "name": "malformed JSON /api/community/posts",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "missing JSON body /api/community/posts",
+      "status": "FAIL",
+      "error": "POST /api/community/posts: expected 400, received 500"
+    },
+    {
+      "module": "Security",
+      "name": "malformed JSON /api/reviews",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "missing JSON body /api/reviews",
+      "status": "FAIL",
+      "error": "POST /api/reviews: expected 400, received 500"
+    },
+    {
+      "module": "Security",
+      "name": "SQL injection content round trip and legitimate request after rejection",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "catalog seven tables and constraint metadata plus fixtures",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "users primary key 23505",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "users.id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "users.name NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "users.email NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "users.password_hash NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "users.role NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "users.created_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles primary key 23505",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.user_id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.domain NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.bio NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.specialization NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.experience_years NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.consultation_fee NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.created_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.updated_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments primary key 23505",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments.id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments.user_id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments.advisor_id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments.scheduled_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments.status NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments.created_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments.updated_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "community_posts primary key 23505",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "community_posts.id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "community_posts.user_id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "community_posts.domain NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "community_posts.title NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "community_posts.content NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "community_posts.created_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "community_posts.updated_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "comments primary key 23505",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "comments.id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "comments.post_id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "comments.user_id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "comments.content NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "comments.created_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "comments.updated_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "post_helpful primary key 23505",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "post_helpful.post_id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "post_helpful.user_id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "post_helpful.created_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "reviews primary key 23505",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "reviews.id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "reviews.appointment_id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "reviews.rating NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "reviews.created_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "reviews.updated_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.user_id foreign key 23503",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments.user_id foreign key 23503",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments.advisor_id foreign key 23503",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "community_posts.user_id foreign key 23503",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "comments.post_id foreign key 23503",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "comments.user_id foreign key 23503",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "post_helpful.post_id foreign key 23503",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "post_helpful.user_id foreign key 23503",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "reviews.appointment_id foreign key 23503",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "users.email UNIQUE 23505",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.user_id UNIQUE 23505",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "reviews.appointment_id UNIQUE 23505",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "users.role CHECK OWNER 23514",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.domain CHECK OTHER 23514",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.experience_years CHECK -1 23514",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.consultation_fee CHECK -1 23514",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments.status CHECK OTHER 23514",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "reviews.rating CHECK 0 23514",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "reviews.rating CHECK 6 23514",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "catalog matches exercised constraints and allowed enums",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "registration iteration 1",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "helpful iteration 1",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "review iteration 1",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "competing confirms and cancel iteration 1",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "complete versus cancel iteration 1",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "registration iteration 2",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "helpful iteration 2",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "review iteration 2",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "competing confirms and cancel iteration 2",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "complete versus cancel iteration 2",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "registration iteration 3",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "helpful iteration 3",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "review iteration 3",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "competing confirms and cancel iteration 3",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "complete versus cancel iteration 3",
+      "status": "PASS"
+    },
+    {
+      "module": "E2E",
+      "name": "Professional consultation steps 1–23",
+      "status": "PASS"
+    },
+    {
+      "module": "E2E",
+      "name": "Community consultation steps 1–17",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "all nine foreign-key relationships have no orphans after negative/concurrent tests",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "oversized JSON returns safe 413",
+      "status": "FAIL",
+      "error": "POST /api/community/posts: expected safe JSON"
+    },
+    {
+      "module": "Security",
+      "name": "status missing body safely rejected",
+      "status": "FAIL",
+      "error": "PATCH /api/appointments/:id/status: expected 400, received 500"
+    },
+    {
+      "module": "Security",
+      "name": "comment missing body safely rejected",
+      "status": "FAIL",
+      "error": "POST /api/community/posts/:id/comments: expected 400, received 500"
+    },
+    {
+      "module": "Advisors",
+      "name": "blank profile on fresh advisor rejected without persistence",
+      "status": "FAIL",
+      "error": "POST /api/advisors/profile: expected 400, received 201"
+    }
+  ],
+  "calls": [
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "GET",
+      "route": "/api/health",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/auth/me",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 409,
+      "expected": 409
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/auth/me",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 409,
+      "expected": 409
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "GET",
+      "route": "/api/auth/me",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "GET",
+      "route": "/api/auth/me",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "GET",
+      "route": "/api/auth/me",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "GET",
+      "route": "/api/auth/me",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "GET",
+      "route": "/api/auth/me",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "GET",
+      "route": "/api/auth/me",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 409,
+      "expected": 409
+    },
+    {
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/advisors/profile",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/advisors/profile",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 409,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/advisors/profile",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/advisors/profile",
+      "status": 200,
+      "expected": 400
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/advisors/profile",
+      "status": 200,
+      "expected": 400
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/advisors/profile",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/advisors/profile",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/advisors/profile",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors/:id",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "GET",
+      "route": "/api/appointments/user",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/appointments/user",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/appointments/advisor",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/appointments/advisor",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/appointments/user",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "method": "GET",
+      "route": "/api/appointments/user",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "GET",
+      "route": "/api/appointments/advisor",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "method": "GET",
+      "route": "/api/appointments/advisor",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts/:id",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts/:id/comments",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts/:id/comments",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "DELETE",
+      "route": "/api/community/comments/:id",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "DELETE",
+      "route": "/api/community/comments/:id",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "DELETE",
+      "route": "/api/community/comments/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts/:id/comments",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 409,
+      "expected": 409
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "DELETE",
+      "route": "/api/community/posts/:id",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "DELETE",
+      "route": "/api/community/posts/:id",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "DELETE",
+      "route": "/api/community/posts/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts/:id",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 404,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 404,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 409,
+      "expected": 409
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 409,
+      "expected": 409
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors/:id/reviews",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors/:id/reviews",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors/:id/reviews",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors/:id/reviews",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors/bad",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors/bad/reviews",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/bad/status",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/bad/cancel",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts/bad",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts/bad/comments",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/bad/comments",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/bad/helpful",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "DELETE",
+      "route": "/api/community/posts/bad",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "DELETE",
+      "route": "/api/community/comments/bad",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/auth/me",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 201,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 409,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 201,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 409,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 201,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 409,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 200,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 404,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 201,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 409,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 201,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 409,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 201,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 409,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 200,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 404,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 201,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 409,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 201,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 409,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 201,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 409,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 200,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 404,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "GET",
+      "route": "/api/appointments/user",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/appointments/advisor",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "GET",
+      "route": "/api/advisors/:id/reviews",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts/:id/comments",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 409,
+      "expected": 409
+    },
+    {
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "DELETE",
+      "route": "/api/community/posts/:id",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "method": "DELETE",
+      "route": "/api/community/comments/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "DELETE",
+      "route": "/api/community/posts/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 413,
+      "expected": 413
+    },
+    {
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 201,
+      "expected": 400
+    }
+  ]
+}

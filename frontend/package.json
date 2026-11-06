@@ -1,0 +1,23 @@
+{
+  "name": "consultify-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node --test tests/client.test.js",
+    "test:e2e": "node scripts/run-isolated.cjs",
+    "test:e2e:pg17": "node scripts/run-isolated.cjs --docker"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.9.5"
+  },
+  "devDependencies": {
+    "vite": "^7.2.0",
+    "@playwright/test": "^1.56.1"
+  }
+}

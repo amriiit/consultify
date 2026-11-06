@@ -1,0 +1,4929 @@
+{
+  "database": "consultify_test_77b1d5315255e49a",
+  "postgres": "PostgreSQL 18.6 (Homebrew) on aarch64-apple-darwin25.6.0, compiled by Apple clang version 21.0.0 (clang-2100.1.1.101), 64-bit",
+  "node": "v24.18.1",
+  "temp": "/var/folders/l4/ww5_dwtn3d932jlxj7xxg4240000gn/T/consultify-test-xFO6sL",
+  "date": "2026-10-17T14:18:33.562Z",
+  "durationMs": 8890,
+  "total": 284,
+  "passed": 282,
+  "failed": 2,
+  "skipped": 0,
+  "constraints": [
+    {
+      "table_name": "advisor_profiles",
+      "conname": "advisor_profiles_bio_not_null",
+      "contype": "n",
+      "definition": "NOT NULL bio"
+    },
+    {
+      "table_name": "advisor_profiles",
+      "conname": "advisor_profiles_consultation_fee_check",
+      "contype": "c",
+      "definition": "CHECK ((consultation_fee >= (0)::numeric))"
+    },
+    {
+      "table_name": "advisor_profiles",
+      "conname": "advisor_profiles_consultation_fee_not_null",
+      "contype": "n",
+      "definition": "NOT NULL consultation_fee"
+    },
+    {
+      "table_name": "advisor_profiles",
+      "conname": "advisor_profiles_created_at_not_null",
+      "contype": "n",
+      "definition": "NOT NULL created_at"
+    },
+    {
+      "table_name": "advisor_profiles",
+      "conname": "advisor_profiles_domain_check",
+      "contype": "c",
+      "definition": "CHECK (((domain)::text = ANY ((ARRAY['FINANCE'::character varying, 'HEALTH'::character varying, 'ASTROLOGY'::character varying])::text[])))"
+    },
+    {
+      "table_name": "advisor_profiles",
+      "conname": "advisor_profiles_domain_not_null",
+      "contype": "n",
+      "definition": "NOT NULL domain"
+    },
+    {
+      "table_name": "advisor_profiles",
+      "conname": "advisor_profiles_experience_years_check",
+      "contype": "c",
+      "definition": "CHECK ((experience_years >= 0))"
+    },
+    {
+      "table_name": "advisor_profiles",
+      "conname": "advisor_profiles_experience_years_not_null",
+      "contype": "n",
+      "definition": "NOT NULL experience_years"
+    },
+    {
+      "table_name": "advisor_profiles",
+      "conname": "advisor_profiles_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL id"
+    },
+    {
+      "table_name": "advisor_profiles",
+      "conname": "advisor_profiles_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "advisor_profiles",
+      "conname": "advisor_profiles_specialization_not_null",
+      "contype": "n",
+      "definition": "NOT NULL specialization"
+    },
+    {
+      "table_name": "advisor_profiles",
+      "conname": "advisor_profiles_updated_at_not_null",
+      "contype": "n",
+      "definition": "NOT NULL updated_at"
+    },
+    {
+      "table_name": "advisor_profiles",
+      "conname": "advisor_profiles_user_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "advisor_profiles",
+      "conname": "advisor_profiles_user_id_key",
+      "contype": "u",
+      "definition": "UNIQUE (user_id)"
+    },
+    {
+      "table_name": "advisor_profiles",
+      "conname": "advisor_profiles_user_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL user_id"
+    },
+    {
+      "table_name": "appointments",
+      "conname": "appointments_advisor_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (advisor_id) REFERENCES advisor_profiles(id)"
+    },
+    {
+      "table_name": "appointments",
+      "conname": "appointments_advisor_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL advisor_id"
+    },
+    {
+      "table_name": "appointments",
+      "conname": "appointments_created_at_not_null",
+      "contype": "n",
+      "definition": "NOT NULL created_at"
+    },
+    {
+      "table_name": "appointments",
+      "conname": "appointments_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL id"
+    },
+    {
+      "table_name": "appointments",
+      "conname": "appointments_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "appointments",
+      "conname": "appointments_scheduled_at_not_null",
+      "contype": "n",
+      "definition": "NOT NULL scheduled_at"
+    },
+    {
+      "table_name": "appointments",
+      "conname": "appointments_status_check",
+      "contype": "c",
+      "definition": "CHECK (((status)::text = ANY ((ARRAY['PENDING'::character varying, 'CONFIRMED'::character varying, 'COMPLETED'::character varying, 'CANCELLED'::character varying])::text[])))"
+    },
+    {
+      "table_name": "appointments",
+      "conname": "appointments_status_not_null",
+      "contype": "n",
+      "definition": "NOT NULL status"
+    },
+    {
+      "table_name": "appointments",
+      "conname": "appointments_updated_at_not_null",
+      "contype": "n",
+      "definition": "NOT NULL updated_at"
+    },
+    {
+      "table_name": "appointments",
+      "conname": "appointments_user_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (user_id) REFERENCES users(id)"
+    },
+    {
+      "table_name": "appointments",
+      "conname": "appointments_user_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL user_id"
+    },
+    {
+      "table_name": "comments",
+      "conname": "comments_content_not_null",
+      "contype": "n",
+      "definition": "NOT NULL content"
+    },
+    {
+      "table_name": "comments",
+      "conname": "comments_created_at_not_null",
+      "contype": "n",
+      "definition": "NOT NULL created_at"
+    },
+    {
+      "table_name": "comments",
+      "conname": "comments_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL id"
+    },
+    {
+      "table_name": "comments",
+      "conname": "comments_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "comments",
+      "conname": "comments_post_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (post_id) REFERENCES community_posts(id) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "comments",
+      "conname": "comments_post_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL post_id"
+    },
+    {
+      "table_name": "comments",
+      "conname": "comments_updated_at_not_null",
+      "contype": "n",
+      "definition": "NOT NULL updated_at"
+    },
+    {
+      "table_name": "comments",
+      "conname": "comments_user_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (user_id) REFERENCES users(id)"
+    },
+    {
+      "table_name": "comments",
+      "conname": "comments_user_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL user_id"
+    },
+    {
+      "table_name": "community_posts",
+      "conname": "community_posts_content_not_null",
+      "contype": "n",
+      "definition": "NOT NULL content"
+    },
+    {
+      "table_name": "community_posts",
+      "conname": "community_posts_created_at_not_null",
+      "contype": "n",
+      "definition": "NOT NULL created_at"
+    },
+    {
+      "table_name": "community_posts",
+      "conname": "community_posts_domain_not_null",
+      "contype": "n",
+      "definition": "NOT NULL domain"
+    },
+    {
+      "table_name": "community_posts",
+      "conname": "community_posts_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL id"
+    },
+    {
+      "table_name": "community_posts",
+      "conname": "community_posts_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "community_posts",
+      "conname": "community_posts_title_not_null",
+      "contype": "n",
+      "definition": "NOT NULL title"
+    },
+    {
+      "table_name": "community_posts",
+      "conname": "community_posts_updated_at_not_null",
+      "contype": "n",
+      "definition": "NOT NULL updated_at"
+    },
+    {
+      "table_name": "community_posts",
+      "conname": "community_posts_user_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (user_id) REFERENCES users(id)"
+    },
+    {
+      "table_name": "community_posts",
+      "conname": "community_posts_user_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL user_id"
+    },
+    {
+      "table_name": "post_helpful",
+      "conname": "post_helpful_created_at_not_null",
+      "contype": "n",
+      "definition": "NOT NULL created_at"
+    },
+    {
+      "table_name": "post_helpful",
+      "conname": "post_helpful_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (post_id, user_id)"
+    },
+    {
+      "table_name": "post_helpful",
+      "conname": "post_helpful_post_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (post_id) REFERENCES community_posts(id) ON DELETE CASCADE"
+    },
+    {
+      "table_name": "post_helpful",
+      "conname": "post_helpful_post_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL post_id"
+    },
+    {
+      "table_name": "post_helpful",
+      "conname": "post_helpful_user_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (user_id) REFERENCES users(id)"
+    },
+    {
+      "table_name": "post_helpful",
+      "conname": "post_helpful_user_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL user_id"
+    },
+    {
+      "table_name": "reviews",
+      "conname": "reviews_appointment_id_fkey",
+      "contype": "f",
+      "definition": "FOREIGN KEY (appointment_id) REFERENCES appointments(id)"
+    },
+    {
+      "table_name": "reviews",
+      "conname": "reviews_appointment_id_key",
+      "contype": "u",
+      "definition": "UNIQUE (appointment_id)"
+    },
+    {
+      "table_name": "reviews",
+      "conname": "reviews_appointment_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL appointment_id"
+    },
+    {
+      "table_name": "reviews",
+      "conname": "reviews_created_at_not_null",
+      "contype": "n",
+      "definition": "NOT NULL created_at"
+    },
+    {
+      "table_name": "reviews",
+      "conname": "reviews_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL id"
+    },
+    {
+      "table_name": "reviews",
+      "conname": "reviews_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "reviews",
+      "conname": "reviews_rating_check",
+      "contype": "c",
+      "definition": "CHECK (((rating >= 1) AND (rating <= 5)))"
+    },
+    {
+      "table_name": "reviews",
+      "conname": "reviews_rating_not_null",
+      "contype": "n",
+      "definition": "NOT NULL rating"
+    },
+    {
+      "table_name": "reviews",
+      "conname": "reviews_updated_at_not_null",
+      "contype": "n",
+      "definition": "NOT NULL updated_at"
+    },
+    {
+      "table_name": "users",
+      "conname": "users_created_at_not_null",
+      "contype": "n",
+      "definition": "NOT NULL created_at"
+    },
+    {
+      "table_name": "users",
+      "conname": "users_email_key",
+      "contype": "u",
+      "definition": "UNIQUE (email)"
+    },
+    {
+      "table_name": "users",
+      "conname": "users_email_not_null",
+      "contype": "n",
+      "definition": "NOT NULL email"
+    },
+    {
+      "table_name": "users",
+      "conname": "users_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL id"
+    },
+    {
+      "table_name": "users",
+      "conname": "users_name_not_null",
+      "contype": "n",
+      "definition": "NOT NULL name"
+    },
+    {
+      "table_name": "users",
+      "conname": "users_password_hash_not_null",
+      "contype": "n",
+      "definition": "NOT NULL password_hash"
+    },
+    {
+      "table_name": "users",
+      "conname": "users_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "table_name": "users",
+      "conname": "users_role_check",
+      "contype": "c",
+      "definition": "CHECK (((role)::text = ANY ((ARRAY['USER'::character varying, 'ADVISOR'::character varying, 'ADMIN'::character varying])::text[])))"
+    },
+    {
+      "table_name": "users",
+      "conname": "users_role_not_null",
+      "contype": "n",
+      "definition": "NOT NULL role"
+    }
+  ],
+  "cases": [
+    {
+      "module": "Health",
+      "name": "real database connectivity",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER registration normalization role assignment bcrypt and safe me",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects missing name",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects blank name",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects object name",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects long name",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects bad email",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects missing email",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects long email",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects array email",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects short password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects multibyte password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects long password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects missing password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "USER rejects object password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR registration normalization role assignment bcrypt and safe me",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects missing name",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects blank name",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects object name",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects long name",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects bad email",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects missing email",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects long email",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects array email",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects short password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects multibyte password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects long password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects missing password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "ADVISOR rejects object password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "login wrong password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "login unknown email",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "login missing email",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "login missing password",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "login SQL injection email",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "missing JWT denied",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "invalid JWT denied",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "expired JWT denied",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "tampered JWT denied",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "unsigned JWT denied",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "me ignores identity spoofing",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "duplicate profile conflicts",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "POST denies USER",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "POST requires authentication",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "PATCH denies USER",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "PATCH requires authentication",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "create rejects domain",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "create rejects experience",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "create rejects decimal",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "create rejects fee",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "create rejects missing",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "create rejects object bio",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "create rejects blank bio",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "create rejects long specialization",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "create rejects huge experience",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "create rejects huge fee",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "partial update persists and cannot target another advisor",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "update rejects experienceYears {\"experienceYears\":-1}",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "update rejects consultationFee {\"consultationFee\":-2}",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "update rejects bio {\"bio\":{}}",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "update rejects bio {\"bio\":\" \"}",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "update rejects specialization {\"specialization\":\"xxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "update rejects consultationFee {\"consultationFee\":10000000000}",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "update rejects experienceYears {\"experienceYears\":2147483648}",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "public list and detail use correct users JOIN",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "nonexistent advisor",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "booking persisted with JWT owner ignoring spoofed owner and status",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "rejects missing advisor",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "rejects missing time",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "rejects unknown advisor",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "rejects account UUID instead of profile",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "rejects malformed advisor",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "rejects invalid time",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "rejects object time",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "rejects object notes",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "booking requires USER",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "booking requires JWT",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "private lists isolate both users and advisors with real JOINs",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "user list denies wrong role",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "user list requires JWT",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "advisor list denies wrong role",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "advisor list requires JWT",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "PENDING to CONFIRMED",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "CONFIRMED to COMPLETED",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "PENDING to COMPLETED",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "COMPLETED to CONFIRMED",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "COMPLETED to COMPLETED",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "CANCELLED to CONFIRMED",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "CANCELLED to COMPLETED",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "PENDING to INVALID",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "PENDING to undefined",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "status denies other advisor",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "status denies USER",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "status denies missing JWT",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "status denies invalid JWT",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "cancel PENDING",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "cancel CONFIRMED",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "cancel COMPLETED",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "cancel CANCELLED",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "cancel denies other USER",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "cancel denies ADVISOR",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "cancel denies missing JWT",
+      "status": "PASS"
+    },
+    {
+      "module": "Community",
+      "name": "create rejects unsupported",
+      "status": "PASS"
+    },
+    {
+      "module": "Community",
+      "name": "create rejects title",
+      "status": "PASS"
+    },
+    {
+      "module": "Community",
+      "name": "create rejects content",
+      "status": "PASS"
+    },
+    {
+      "module": "Community",
+      "name": "create rejects missing",
+      "status": "PASS"
+    },
+    {
+      "module": "Community",
+      "name": "create rejects number domain",
+      "status": "PASS"
+    },
+    {
+      "module": "Community",
+      "name": "create rejects object title",
+      "status": "PASS"
+    },
+    {
+      "module": "Community",
+      "name": "create rejects array content",
+      "status": "PASS"
+    },
+    {
+      "module": "Community",
+      "name": "create rejects long title",
+      "status": "PASS"
+    },
+    {
+      "module": "Community",
+      "name": "create requires JWT",
+      "status": "PASS"
+    },
+    {
+      "module": "Community",
+      "name": "author spoofing and public joins/counts",
+      "status": "PASS"
+    },
+    {
+      "module": "Community",
+      "name": "unknown post 404",
+      "status": "PASS"
+    },
+    {
+      "module": "Comments",
+      "name": "rejects content \"\"",
+      "status": "PASS"
+    },
+    {
+      "module": "Comments",
+      "name": "rejects content \" \"",
+      "status": "PASS"
+    },
+    {
+      "module": "Comments",
+      "name": "rejects content {}",
+      "status": "PASS"
+    },
+    {
+      "module": "Comments",
+      "name": "rejects content []",
+      "status": "PASS"
+    },
+    {
+      "module": "Comments",
+      "name": "rejects content 42",
+      "status": "PASS"
+    },
+    {
+      "module": "Comments",
+      "name": "unknown post comment rejected",
+      "status": "PASS"
+    },
+    {
+      "module": "Comments",
+      "name": "unknown post listing 404",
+      "status": "PASS"
+    },
+    {
+      "module": "Comments",
+      "name": "authors ownership order and deletion",
+      "status": "PASS"
+    },
+    {
+      "module": "Helpful",
+      "name": "duplicate votes counts ownership and cascade",
+      "status": "PASS"
+    },
+    {
+      "module": "Helpful",
+      "name": "unknown post 404",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "comments requires JWT",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "helpful requires JWT",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "invalid rating 0",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "invalid rating 6",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "invalid rating 1.5",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "invalid rating undefined",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "invalid rating true",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "invalid rating [5]",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "missing appointment",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "unknown appointment",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "invalid comment {}",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "invalid comment []",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "invalid comment 42",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "requires JWT",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "denies ADVISOR",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "rejects PENDING",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "rejects CONFIRMED",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "rejects CANCELLED",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "owner eligibility boundary ratings duplicate and DB association",
+      "status": "PASS"
+    },
+    {
+      "module": "Ratings",
+      "name": "fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments",
+      "status": "PASS"
+    },
+    {
+      "module": "Ratings",
+      "name": "unknown advisor 404",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "advisors returns matches",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "advisors?domain=FINANCE returns matches",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "advisors?search=investment returns matches",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "advisors?search=INVESTMENT returns matches",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "advisors?domain=finance&search=investment returns matches",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "advisors unsupported domain",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "advisors?search=3ecb93c9-15c2-4ae9-8c29-5da288e3b1cc empty safe result",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "advisors?search='%20OR%201%3D1%20-- empty safe result",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "advisors repeated query parameters safely rejected",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "community/posts returns matches",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "community/posts?domain=FINANCE returns matches",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "community/posts?search=investment returns matches",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "community/posts?search=INVESTMENT returns matches",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "community/posts?domain=finance&search=investment returns matches",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "community/posts unsupported domain",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "community/posts?search=689489aa-f9e8-48e9-92f7-9d9da30fe11d empty safe result",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "community/posts?search='%20OR%201%3D1%20-- empty safe result",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "community/posts repeated query parameters safely rejected",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "advisor name search",
+      "status": "PASS"
+    },
+    {
+      "module": "Search",
+      "name": "community title and content search",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID GET /api/advisors/bad",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID GET /api/advisors/bad/reviews",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID PATCH /api/appointments/bad/status",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID PATCH /api/appointments/bad/cancel",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID GET /api/community/posts/bad",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID GET /api/community/posts/bad/comments",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID POST /api/community/posts/bad/comments",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID POST /api/community/posts/bad/helpful",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID DELETE /api/community/posts/bad",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID DELETE /api/community/comments/bad",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "malformed UUID POST /api/reviews",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "malformed JSON /api/auth/login",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "missing JSON body /api/auth/login",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "malformed JSON /api/advisors/profile",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "missing JSON body /api/advisors/profile",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "malformed JSON /api/appointments",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "missing JSON body /api/appointments",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "malformed JSON /api/community/posts",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "missing JSON body /api/community/posts",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "malformed JSON /api/reviews",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "missing JSON body /api/reviews",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "SQL injection content round trip and legitimate request after rejection",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "catalog seven tables and constraint metadata plus fixtures",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "users primary key 23505",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "users.id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "users.name NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "users.email NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "users.password_hash NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "users.role NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "users.created_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles primary key 23505",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.user_id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.domain NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.bio NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.specialization NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.experience_years NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.consultation_fee NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.created_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.updated_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments primary key 23505",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments.id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments.user_id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments.advisor_id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments.scheduled_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments.status NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments.created_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments.updated_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "community_posts primary key 23505",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "community_posts.id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "community_posts.user_id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "community_posts.domain NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "community_posts.title NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "community_posts.content NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "community_posts.created_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "community_posts.updated_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "comments primary key 23505",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "comments.id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "comments.post_id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "comments.user_id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "comments.content NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "comments.created_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "comments.updated_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "post_helpful primary key 23505",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "post_helpful.post_id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "post_helpful.user_id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "post_helpful.created_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "reviews primary key 23505",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "reviews.id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "reviews.appointment_id NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "reviews.rating NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "reviews.created_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "reviews.updated_at NOT NULL 23502",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.user_id foreign key 23503",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments.user_id foreign key 23503",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments.advisor_id foreign key 23503",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "community_posts.user_id foreign key 23503",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "comments.post_id foreign key 23503",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "comments.user_id foreign key 23503",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "post_helpful.post_id foreign key 23503",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "post_helpful.user_id foreign key 23503",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "reviews.appointment_id foreign key 23503",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "users.email UNIQUE 23505",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.user_id UNIQUE 23505",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "reviews.appointment_id UNIQUE 23505",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "users.role CHECK OWNER 23514",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.domain CHECK OTHER 23514",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.experience_years CHECK -1 23514",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "advisor_profiles.consultation_fee CHECK -1 23514",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "appointments.status CHECK OTHER 23514",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "reviews.rating CHECK 0 23514",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "reviews.rating CHECK 6 23514",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "catalog matches exercised constraints and allowed enums",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "registration iteration 1",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "helpful iteration 1",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "review iteration 1",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "competing confirms and cancel iteration 1",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "complete versus cancel iteration 1",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "registration iteration 2",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "helpful iteration 2",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "review iteration 2",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "competing confirms and cancel iteration 2",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "complete versus cancel iteration 2",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "registration iteration 3",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "helpful iteration 3",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "review iteration 3",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "competing confirms and cancel iteration 3",
+      "status": "PASS"
+    },
+    {
+      "module": "Concurrency",
+      "name": "complete versus cancel iteration 3",
+      "status": "PASS"
+    },
+    {
+      "module": "E2E",
+      "name": "Professional consultation steps 1–23",
+      "status": "PASS"
+    },
+    {
+      "module": "E2E",
+      "name": "Community consultation steps 1–17",
+      "status": "PASS"
+    },
+    {
+      "module": "Database",
+      "name": "all nine foreign-key relationships have no orphans after negative/concurrent tests",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "oversized JSON returns safe 413",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "status missing body safely rejected",
+      "status": "PASS"
+    },
+    {
+      "module": "Security",
+      "name": "comment missing body safely rejected",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "blank profile on fresh advisor rejected without persistence",
+      "status": "PASS"
+    },
+    {
+      "module": "Authentication",
+      "name": "password boundaries 12 characters and 72 UTF8 bytes accepted",
+      "status": "PASS"
+    },
+    {
+      "module": "Reviews",
+      "name": "existing numeric string rating contract retained",
+      "status": "PASS"
+    },
+    {
+      "module": "Advisors",
+      "name": "missing profile update 404",
+      "status": "PASS"
+    },
+    {
+      "module": "Lifecycle",
+      "name": "unknown appointment status and cancellation 404",
+      "status": "PASS"
+    },
+    {
+      "module": "Appointments",
+      "name": "invalid calendar date rejected safely",
+      "status": "FAIL",
+      "error": "POST /api/appointments: expected 400, received 500"
+    },
+    {
+      "module": "Security",
+      "name": "malformed percent encoding returns safe 400",
+      "status": "FAIL",
+      "error": "GET /api/advisors/%: expected 400, received 500"
+    }
+  ],
+  "calls": [
+    {
+      "test": "fixture setup",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "fixture setup",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "fixture setup",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "fixture setup",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "fixture setup",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "fixture setup",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "fixture setup",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "fixture setup",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "fixture setup",
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "fixture setup",
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Health: real database connectivity",
+      "method": "GET",
+      "route": "/api/health",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Authentication: USER registration normalization role assignment bcrypt and safe me",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Authentication: USER registration normalization role assignment bcrypt and safe me",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Authentication: USER registration normalization role assignment bcrypt and safe me",
+      "method": "GET",
+      "route": "/api/auth/me",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Authentication: USER registration normalization role assignment bcrypt and safe me",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 409,
+      "expected": 409
+    },
+    {
+      "test": "Authentication: USER rejects missing name",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: USER rejects blank name",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: USER rejects object name",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: USER rejects long name",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: USER rejects bad email",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: USER rejects missing email",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: USER rejects long email",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: USER rejects array email",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: USER rejects short password",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: USER rejects multibyte password",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: USER rejects long password",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: USER rejects missing password",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: USER rejects object password",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: ADVISOR registration normalization role assignment bcrypt and safe me",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Authentication: ADVISOR registration normalization role assignment bcrypt and safe me",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Authentication: ADVISOR registration normalization role assignment bcrypt and safe me",
+      "method": "GET",
+      "route": "/api/auth/me",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Authentication: ADVISOR registration normalization role assignment bcrypt and safe me",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 409,
+      "expected": 409
+    },
+    {
+      "test": "Authentication: ADVISOR rejects missing name",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: ADVISOR rejects blank name",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: ADVISOR rejects object name",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: ADVISOR rejects long name",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: ADVISOR rejects bad email",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: ADVISOR rejects missing email",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: ADVISOR rejects long email",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: ADVISOR rejects array email",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: ADVISOR rejects short password",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: ADVISOR rejects multibyte password",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: ADVISOR rejects long password",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: ADVISOR rejects missing password",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: ADVISOR rejects object password",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: login wrong password",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Authentication: login unknown email",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Authentication: login missing email",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: login missing password",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: login SQL injection email",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Security: missing JWT denied",
+      "method": "GET",
+      "route": "/api/auth/me",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Security: invalid JWT denied",
+      "method": "GET",
+      "route": "/api/auth/me",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Security: expired JWT denied",
+      "method": "GET",
+      "route": "/api/auth/me",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Security: tampered JWT denied",
+      "method": "GET",
+      "route": "/api/auth/me",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Security: unsigned JWT denied",
+      "method": "GET",
+      "route": "/api/auth/me",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Security: me ignores identity spoofing",
+      "method": "GET",
+      "route": "/api/auth/me",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Advisors: duplicate profile conflicts",
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 409,
+      "expected": 409
+    },
+    {
+      "test": "Advisors: POST denies USER",
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "test": "Advisors: POST requires authentication",
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Advisors: PATCH denies USER",
+      "method": "PATCH",
+      "route": "/api/advisors/profile",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "test": "Advisors: PATCH requires authentication",
+      "method": "PATCH",
+      "route": "/api/advisors/profile",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Advisors: create rejects domain",
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Advisors: create rejects experience",
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Advisors: create rejects decimal",
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Advisors: create rejects fee",
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Advisors: create rejects missing",
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Advisors: create rejects object bio",
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Advisors: create rejects blank bio",
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Advisors: create rejects long specialization",
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Advisors: create rejects huge experience",
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Advisors: create rejects huge fee",
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Advisors: partial update persists and cannot target another advisor",
+      "method": "PATCH",
+      "route": "/api/advisors/profile",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Advisors: update rejects experienceYears {\"experienceYears\":-1}",
+      "method": "PATCH",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Advisors: update rejects consultationFee {\"consultationFee\":-2}",
+      "method": "PATCH",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Advisors: update rejects bio {\"bio\":{}}",
+      "method": "PATCH",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Advisors: update rejects bio {\"bio\":\" \"}",
+      "method": "PATCH",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Advisors: update rejects specialization {\"specialization\":\"xxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "method": "PATCH",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Advisors: update rejects consultationFee {\"consultationFee\":10000000000}",
+      "method": "PATCH",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Advisors: update rejects experienceYears {\"experienceYears\":2147483648}",
+      "method": "PATCH",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Advisors: public list and detail use correct users JOIN",
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Advisors: public list and detail use correct users JOIN",
+      "method": "GET",
+      "route": "/api/advisors/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Advisors: nonexistent advisor",
+      "method": "GET",
+      "route": "/api/advisors/:id",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Appointments: booking persisted with JWT owner ignoring spoofed owner and status",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Appointments: rejects missing advisor",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Appointments: rejects missing time",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Appointments: rejects unknown advisor",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Appointments: rejects account UUID instead of profile",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Appointments: rejects malformed advisor",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Appointments: rejects invalid time",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Appointments: rejects object time",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Appointments: rejects object notes",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Appointments: booking requires USER",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "test": "Appointments: booking requires JWT",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Appointments: private lists isolate both users and advisors with real JOINs",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Appointments: private lists isolate both users and advisors with real JOINs",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Appointments: private lists isolate both users and advisors with real JOINs",
+      "method": "GET",
+      "route": "/api/appointments/user",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Appointments: private lists isolate both users and advisors with real JOINs",
+      "method": "GET",
+      "route": "/api/appointments/user",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Appointments: private lists isolate both users and advisors with real JOINs",
+      "method": "GET",
+      "route": "/api/appointments/advisor",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Appointments: private lists isolate both users and advisors with real JOINs",
+      "method": "GET",
+      "route": "/api/appointments/advisor",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Appointments: user list denies wrong role",
+      "method": "GET",
+      "route": "/api/appointments/user",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "test": "Appointments: user list requires JWT",
+      "method": "GET",
+      "route": "/api/appointments/user",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Appointments: advisor list denies wrong role",
+      "method": "GET",
+      "route": "/api/appointments/advisor",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "test": "Appointments: advisor list requires JWT",
+      "method": "GET",
+      "route": "/api/appointments/advisor",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Lifecycle: PENDING to CONFIRMED",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Lifecycle: PENDING to CONFIRMED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Lifecycle: CONFIRMED to COMPLETED",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Lifecycle: CONFIRMED to COMPLETED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Lifecycle: CONFIRMED to COMPLETED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Lifecycle: PENDING to COMPLETED",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Lifecycle: PENDING to COMPLETED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Lifecycle: COMPLETED to CONFIRMED",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Lifecycle: COMPLETED to CONFIRMED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Lifecycle: COMPLETED to CONFIRMED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Lifecycle: COMPLETED to CONFIRMED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Lifecycle: COMPLETED to COMPLETED",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Lifecycle: COMPLETED to COMPLETED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Lifecycle: COMPLETED to COMPLETED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Lifecycle: COMPLETED to COMPLETED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Lifecycle: CANCELLED to CONFIRMED",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Lifecycle: CANCELLED to CONFIRMED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Lifecycle: CANCELLED to CONFIRMED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Lifecycle: CANCELLED to COMPLETED",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Lifecycle: CANCELLED to COMPLETED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Lifecycle: CANCELLED to COMPLETED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Lifecycle: PENDING to INVALID",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Lifecycle: PENDING to INVALID",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Lifecycle: PENDING to undefined",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Lifecycle: PENDING to undefined",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Lifecycle: status denies other advisor",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Lifecycle: status denies other advisor",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Lifecycle: status denies USER",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Lifecycle: status denies USER",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "test": "Lifecycle: status denies missing JWT",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Lifecycle: status denies missing JWT",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Lifecycle: status denies invalid JWT",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Lifecycle: status denies invalid JWT",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Lifecycle: cancel PENDING",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Lifecycle: cancel PENDING",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Lifecycle: cancel CONFIRMED",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Lifecycle: cancel CONFIRMED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Lifecycle: cancel CONFIRMED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Lifecycle: cancel COMPLETED",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Lifecycle: cancel COMPLETED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Lifecycle: cancel COMPLETED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Lifecycle: cancel COMPLETED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Lifecycle: cancel CANCELLED",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Lifecycle: cancel CANCELLED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Lifecycle: cancel CANCELLED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Lifecycle: cancel denies other USER",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Lifecycle: cancel denies other USER",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Lifecycle: cancel denies ADVISOR",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Lifecycle: cancel denies ADVISOR",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "test": "Lifecycle: cancel denies missing JWT",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Lifecycle: cancel denies missing JWT",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Community: create rejects unsupported",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Community: create rejects title",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Community: create rejects content",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Community: create rejects missing",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Community: create rejects number domain",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Community: create rejects object title",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Community: create rejects array content",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Community: create rejects long title",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Community: create requires JWT",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Community: author spoofing and public joins/counts",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Community: author spoofing and public joins/counts",
+      "method": "GET",
+      "route": "/api/community/posts/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Community: author spoofing and public joins/counts",
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Community: unknown post 404",
+      "method": "GET",
+      "route": "/api/community/posts/:id",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Comments: rejects content \"\"",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Comments: rejects content \"\"",
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Comments: rejects content \" \"",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Comments: rejects content \" \"",
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Comments: rejects content {}",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Comments: rejects content {}",
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Comments: rejects content []",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Comments: rejects content []",
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Comments: rejects content 42",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Comments: rejects content 42",
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Comments: unknown post comment rejected",
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Comments: unknown post listing 404",
+      "method": "GET",
+      "route": "/api/community/posts/:id/comments",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Comments: authors ownership order and deletion",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Comments: authors ownership order and deletion",
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Comments: authors ownership order and deletion",
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Comments: authors ownership order and deletion",
+      "method": "GET",
+      "route": "/api/community/posts/:id/comments",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Comments: authors ownership order and deletion",
+      "method": "GET",
+      "route": "/api/community/posts/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Comments: authors ownership order and deletion",
+      "method": "DELETE",
+      "route": "/api/community/comments/:id",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Comments: authors ownership order and deletion",
+      "method": "DELETE",
+      "route": "/api/community/comments/:id",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Comments: authors ownership order and deletion",
+      "method": "DELETE",
+      "route": "/api/community/comments/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Comments: authors ownership order and deletion",
+      "method": "GET",
+      "route": "/api/community/posts/:id/comments",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Helpful: duplicate votes counts ownership and cascade",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Helpful: duplicate votes counts ownership and cascade",
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Helpful: duplicate votes counts ownership and cascade",
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Helpful: duplicate votes counts ownership and cascade",
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Helpful: duplicate votes counts ownership and cascade",
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 409,
+      "expected": 409
+    },
+    {
+      "test": "Helpful: duplicate votes counts ownership and cascade",
+      "method": "GET",
+      "route": "/api/community/posts/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Helpful: duplicate votes counts ownership and cascade",
+      "method": "DELETE",
+      "route": "/api/community/posts/:id",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Helpful: duplicate votes counts ownership and cascade",
+      "method": "DELETE",
+      "route": "/api/community/posts/:id",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Helpful: duplicate votes counts ownership and cascade",
+      "method": "DELETE",
+      "route": "/api/community/posts/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Helpful: duplicate votes counts ownership and cascade",
+      "method": "GET",
+      "route": "/api/community/posts/:id",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Helpful: unknown post 404",
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Security: comments requires JWT",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Security: comments requires JWT",
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Security: helpful requires JWT",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Security: helpful requires JWT",
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Reviews: invalid rating 0",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Reviews: invalid rating 6",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Reviews: invalid rating 1.5",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Reviews: invalid rating undefined",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Reviews: invalid rating true",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Reviews: invalid rating [5]",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Reviews: missing appointment",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Reviews: unknown appointment",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Reviews: invalid comment {}",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Reviews: invalid comment []",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Reviews: invalid comment 42",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Reviews: requires JWT",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "test": "Reviews: denies ADVISOR",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "test": "Reviews: rejects PENDING",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Reviews: rejects PENDING",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Reviews: rejects CONFIRMED",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Reviews: rejects CONFIRMED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Reviews: rejects CONFIRMED",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Reviews: rejects CANCELLED",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Reviews: rejects CANCELLED",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Reviews: rejects CANCELLED",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Reviews: owner eligibility boundary ratings duplicate and DB association",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Reviews: owner eligibility boundary ratings duplicate and DB association",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Reviews: owner eligibility boundary ratings duplicate and DB association",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Reviews: owner eligibility boundary ratings duplicate and DB association",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "test": "Reviews: owner eligibility boundary ratings duplicate and DB association",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Reviews: owner eligibility boundary ratings duplicate and DB association",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 409,
+      "expected": 409
+    },
+    {
+      "test": "Reviews: owner eligibility boundary ratings duplicate and DB association",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Reviews: owner eligibility boundary ratings duplicate and DB association",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Reviews: owner eligibility boundary ratings duplicate and DB association",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Reviews: owner eligibility boundary ratings duplicate and DB association",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 403,
+      "expected": 403
+    },
+    {
+      "test": "Reviews: owner eligibility boundary ratings duplicate and DB association",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Reviews: owner eligibility boundary ratings duplicate and DB association",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 409,
+      "expected": 409
+    },
+    {
+      "test": "Ratings: fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Ratings: fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Ratings: fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments",
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Ratings: fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments",
+      "method": "GET",
+      "route": "/api/advisors/:id/reviews",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Ratings: fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Ratings: fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Ratings: fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Ratings: fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Ratings: fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Ratings: fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Ratings: fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Ratings: fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Ratings: fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments",
+      "method": "GET",
+      "route": "/api/advisors/:id/reviews",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Ratings: fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Ratings: fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Ratings: fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Ratings: fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Ratings: fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments",
+      "method": "GET",
+      "route": "/api/advisors/:id/reviews",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Ratings: unknown advisor 404",
+      "method": "GET",
+      "route": "/api/advisors/:id/reviews",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Search: advisors returns matches",
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Search: advisors?domain=FINANCE returns matches",
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Search: advisors?search=investment returns matches",
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Search: advisors?search=INVESTMENT returns matches",
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Search: advisors?domain=finance&search=investment returns matches",
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Search: advisors unsupported domain",
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Search: advisors?search=3ecb93c9-15c2-4ae9-8c29-5da288e3b1cc empty safe result",
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Search: advisors?search='%20OR%201%3D1%20-- empty safe result",
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Search: advisors repeated query parameters safely rejected",
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Search: community/posts returns matches",
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Search: community/posts?domain=FINANCE returns matches",
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Search: community/posts?search=investment returns matches",
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Search: community/posts?search=INVESTMENT returns matches",
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Search: community/posts?domain=finance&search=investment returns matches",
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Search: community/posts unsupported domain",
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Search: community/posts?search=689489aa-f9e8-48e9-92f7-9d9da30fe11d empty safe result",
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Search: community/posts?search='%20OR%201%3D1%20-- empty safe result",
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Search: community/posts repeated query parameters safely rejected",
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Search: advisor name search",
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Search: community title and content search",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Search: community title and content search",
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Search: community title and content search",
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Security: malformed UUID GET /api/advisors/bad",
+      "method": "GET",
+      "route": "/api/advisors/bad",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: malformed UUID GET /api/advisors/bad/reviews",
+      "method": "GET",
+      "route": "/api/advisors/bad/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: malformed UUID PATCH /api/appointments/bad/status",
+      "method": "PATCH",
+      "route": "/api/appointments/bad/status",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: malformed UUID PATCH /api/appointments/bad/cancel",
+      "method": "PATCH",
+      "route": "/api/appointments/bad/cancel",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: malformed UUID GET /api/community/posts/bad",
+      "method": "GET",
+      "route": "/api/community/posts/bad",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: malformed UUID GET /api/community/posts/bad/comments",
+      "method": "GET",
+      "route": "/api/community/posts/bad/comments",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: malformed UUID POST /api/community/posts/bad/comments",
+      "method": "POST",
+      "route": "/api/community/posts/bad/comments",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: malformed UUID POST /api/community/posts/bad/helpful",
+      "method": "POST",
+      "route": "/api/community/posts/bad/helpful",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: malformed UUID DELETE /api/community/posts/bad",
+      "method": "DELETE",
+      "route": "/api/community/posts/bad",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: malformed UUID DELETE /api/community/comments/bad",
+      "method": "DELETE",
+      "route": "/api/community/comments/bad",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: malformed UUID POST /api/reviews",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: malformed JSON /api/auth/login",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: missing JSON body /api/auth/login",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: malformed JSON /api/advisors/profile",
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: missing JSON body /api/advisors/profile",
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: malformed JSON /api/appointments",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: missing JSON body /api/appointments",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: malformed JSON /api/community/posts",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: missing JSON body /api/community/posts",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: malformed JSON /api/reviews",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: missing JSON body /api/reviews",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: SQL injection content round trip and legitimate request after rejection",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Security: SQL injection content round trip and legitimate request after rejection",
+      "method": "GET",
+      "route": "/api/community/posts/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Security: SQL injection content round trip and legitimate request after rejection",
+      "method": "GET",
+      "route": "/api/auth/me",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Database: catalog seven tables and constraint metadata plus fixtures",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Database: catalog seven tables and constraint metadata plus fixtures",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Database: catalog seven tables and constraint metadata plus fixtures",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Database: catalog seven tables and constraint metadata plus fixtures",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Database: catalog seven tables and constraint metadata plus fixtures",
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Database: catalog seven tables and constraint metadata plus fixtures",
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Database: catalog seven tables and constraint metadata plus fixtures",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Database: catalog seven tables and constraint metadata plus fixtures",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Database: catalog seven tables and constraint metadata plus fixtures",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Database: catalog seven tables and constraint metadata plus fixtures",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Database: catalog seven tables and constraint metadata plus fixtures",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Database: catalog seven tables and constraint metadata plus fixtures",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Concurrency: registration iteration 1",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 201,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "test": "Concurrency: registration iteration 1",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 409,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "test": "Concurrency: helpful iteration 1",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Concurrency: helpful iteration 1",
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 201,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "test": "Concurrency: helpful iteration 1",
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 409,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "test": "Concurrency: review iteration 1",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Concurrency: review iteration 1",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Concurrency: review iteration 1",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Concurrency: review iteration 1",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 201,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "test": "Concurrency: review iteration 1",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 409,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "test": "Concurrency: competing confirms and cancel iteration 1",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Concurrency: competing confirms and cancel iteration 1",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "test": "Concurrency: competing confirms and cancel iteration 1",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "test": "Concurrency: competing confirms and cancel iteration 1",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 200,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "test": "Concurrency: competing confirms and cancel iteration 1",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Concurrency: complete versus cancel iteration 1",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Concurrency: complete versus cancel iteration 1",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Concurrency: complete versus cancel iteration 1",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "test": "Concurrency: complete versus cancel iteration 1",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 404,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "test": "Concurrency: registration iteration 2",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 201,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "test": "Concurrency: registration iteration 2",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 409,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "test": "Concurrency: helpful iteration 2",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Concurrency: helpful iteration 2",
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 201,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "test": "Concurrency: helpful iteration 2",
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 409,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "test": "Concurrency: review iteration 2",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Concurrency: review iteration 2",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Concurrency: review iteration 2",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Concurrency: review iteration 2",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 201,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "test": "Concurrency: review iteration 2",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 409,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "test": "Concurrency: competing confirms and cancel iteration 2",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Concurrency: competing confirms and cancel iteration 2",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "test": "Concurrency: competing confirms and cancel iteration 2",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "test": "Concurrency: competing confirms and cancel iteration 2",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 200,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "test": "Concurrency: competing confirms and cancel iteration 2",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Concurrency: complete versus cancel iteration 2",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Concurrency: complete versus cancel iteration 2",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Concurrency: complete versus cancel iteration 2",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "test": "Concurrency: complete versus cancel iteration 2",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 404,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "test": "Concurrency: registration iteration 3",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 201,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "test": "Concurrency: registration iteration 3",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 409,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "test": "Concurrency: helpful iteration 3",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Concurrency: helpful iteration 3",
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 201,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "test": "Concurrency: helpful iteration 3",
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 409,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "test": "Concurrency: review iteration 3",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Concurrency: review iteration 3",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Concurrency: review iteration 3",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Concurrency: review iteration 3",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 201,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "test": "Concurrency: review iteration 3",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 409,
+      "expected": [
+        201,
+        409
+      ]
+    },
+    {
+      "test": "Concurrency: competing confirms and cancel iteration 3",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Concurrency: competing confirms and cancel iteration 3",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "test": "Concurrency: competing confirms and cancel iteration 3",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "test": "Concurrency: competing confirms and cancel iteration 3",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 200,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "test": "Concurrency: competing confirms and cancel iteration 3",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Concurrency: complete versus cancel iteration 3",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Concurrency: complete versus cancel iteration 3",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Concurrency: complete versus cancel iteration 3",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "test": "Concurrency: complete versus cancel iteration 3",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 404,
+      "expected": [
+        200,
+        404
+      ]
+    },
+    {
+      "test": "E2E: Professional consultation steps 1–23",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "E2E: Professional consultation steps 1–23",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "E2E: Professional consultation steps 1–23",
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "E2E: Professional consultation steps 1–23",
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "E2E: Professional consultation steps 1–23",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "E2E: Professional consultation steps 1–23",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "E2E: Professional consultation steps 1–23",
+      "method": "GET",
+      "route": "/api/advisors",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "E2E: Professional consultation steps 1–23",
+      "method": "GET",
+      "route": "/api/advisors/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "E2E: Professional consultation steps 1–23",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "E2E: Professional consultation steps 1–23",
+      "method": "GET",
+      "route": "/api/appointments/user",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "E2E: Professional consultation steps 1–23",
+      "method": "GET",
+      "route": "/api/appointments/advisor",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "E2E: Professional consultation steps 1–23",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "E2E: Professional consultation steps 1–23",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "E2E: Professional consultation steps 1–23",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "E2E: Professional consultation steps 1–23",
+      "method": "GET",
+      "route": "/api/advisors/:id/reviews",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "E2E: Community consultation steps 1–17",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "E2E: Community consultation steps 1–17",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "E2E: Community consultation steps 1–17",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "E2E: Community consultation steps 1–17",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "E2E: Community consultation steps 1–17",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "E2E: Community consultation steps 1–17",
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "E2E: Community consultation steps 1–17",
+      "method": "GET",
+      "route": "/api/community/posts/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "E2E: Community consultation steps 1–17",
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "E2E: Community consultation steps 1–17",
+      "method": "GET",
+      "route": "/api/community/posts/:id/comments",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "E2E: Community consultation steps 1–17",
+      "method": "GET",
+      "route": "/api/community/posts/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "E2E: Community consultation steps 1–17",
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "E2E: Community consultation steps 1–17",
+      "method": "GET",
+      "route": "/api/community/posts/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "E2E: Community consultation steps 1–17",
+      "method": "POST",
+      "route": "/api/community/posts/:id/helpful",
+      "status": 409,
+      "expected": 409
+    },
+    {
+      "test": "E2E: Community consultation steps 1–17",
+      "method": "GET",
+      "route": "/api/community/posts",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "E2E: Community consultation steps 1–17",
+      "method": "DELETE",
+      "route": "/api/community/posts/:id",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "E2E: Community consultation steps 1–17",
+      "method": "DELETE",
+      "route": "/api/community/comments/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "E2E: Community consultation steps 1–17",
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "E2E: Community consultation steps 1–17",
+      "method": "DELETE",
+      "route": "/api/community/posts/:id",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Security: oversized JSON returns safe 413",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 413,
+      "expected": 413
+    },
+    {
+      "test": "Security: status missing body safely rejected",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Security: status missing body safely rejected",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Security: comment missing body safely rejected",
+      "method": "POST",
+      "route": "/api/community/posts",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Security: comment missing body safely rejected",
+      "method": "POST",
+      "route": "/api/community/posts/:id/comments",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Advisors: blank profile on fresh advisor rejected without persistence",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Advisors: blank profile on fresh advisor rejected without persistence",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Advisors: blank profile on fresh advisor rejected without persistence",
+      "method": "POST",
+      "route": "/api/advisors/profile",
+      "status": 400,
+      "expected": 400
+    },
+    {
+      "test": "Authentication: password boundaries 12 characters and 72 UTF8 bytes accepted",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Authentication: password boundaries 12 characters and 72 UTF8 bytes accepted",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Authentication: password boundaries 12 characters and 72 UTF8 bytes accepted",
+      "method": "POST",
+      "route": "/api/auth/register",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Authentication: password boundaries 12 characters and 72 UTF8 bytes accepted",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Reviews: existing numeric string rating contract retained",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Reviews: existing numeric string rating contract retained",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Reviews: existing numeric string rating contract retained",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Reviews: existing numeric string rating contract retained",
+      "method": "POST",
+      "route": "/api/reviews",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Advisors: missing profile update 404",
+      "method": "POST",
+      "route": "/api/auth/register/advisor",
+      "status": 201,
+      "expected": 201
+    },
+    {
+      "test": "Advisors: missing profile update 404",
+      "method": "POST",
+      "route": "/api/auth/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "test": "Advisors: missing profile update 404",
+      "method": "PATCH",
+      "route": "/api/advisors/profile",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Lifecycle: unknown appointment status and cancellation 404",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/status",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Lifecycle: unknown appointment status and cancellation 404",
+      "method": "PATCH",
+      "route": "/api/appointments/:id/cancel",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "test": "Appointments: invalid calendar date rejected safely",
+      "method": "POST",
+      "route": "/api/appointments",
+      "status": 500,
+      "expected": 400
+    },
+    {
+      "test": "Security: malformed percent encoding returns safe 400",
+      "method": "GET",
+      "route": "/api/advisors/%",
+      "status": 500,
+      "expected": 400
+    }
+  ]
+}

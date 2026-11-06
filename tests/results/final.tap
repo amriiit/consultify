@@ -1,0 +1,1723 @@
+Isolated database: consultify_test_d06c4a4e46a74e3a; PostgreSQL 18.6 (Homebrew)
+TAP version 13
+# Subtest: Health: real database connectivity
+ok 1 - Health: real database connectivity
+  ---
+  duration_ms: 1642.499666
+  type: 'test'
+  ...
+# Subtest: Authentication: USER registration normalization role assignment bcrypt and safe me
+ok 2 - Authentication: USER registration normalization role assignment bcrypt and safe me
+  ---
+  duration_ms: 604.10975
+  type: 'test'
+  ...
+# Subtest: Authentication: USER rejects missing name
+ok 3 - Authentication: USER rejects missing name
+  ---
+  duration_ms: 0.535458
+  type: 'test'
+  ...
+# Subtest: Authentication: USER rejects blank name
+ok 4 - Authentication: USER rejects blank name
+  ---
+  duration_ms: 1.658
+  type: 'test'
+  ...
+# Subtest: Authentication: USER rejects object name
+ok 5 - Authentication: USER rejects object name
+  ---
+  duration_ms: 1.686333
+  type: 'test'
+  ...
+# Subtest: Authentication: USER rejects long name
+ok 6 - Authentication: USER rejects long name
+  ---
+  duration_ms: 1.6555
+  type: 'test'
+  ...
+# Subtest: Authentication: USER rejects bad email
+ok 7 - Authentication: USER rejects bad email
+  ---
+  duration_ms: 1.699375
+  type: 'test'
+  ...
+# Subtest: Authentication: USER rejects missing email
+ok 8 - Authentication: USER rejects missing email
+  ---
+  duration_ms: 1.653166
+  type: 'test'
+  ...
+# Subtest: Authentication: USER rejects long email
+ok 9 - Authentication: USER rejects long email
+  ---
+  duration_ms: 0.481833
+  type: 'test'
+  ...
+# Subtest: Authentication: USER rejects array email
+ok 10 - Authentication: USER rejects array email
+  ---
+  duration_ms: 1.679292
+  type: 'test'
+  ...
+# Subtest: Authentication: USER rejects short password
+ok 11 - Authentication: USER rejects short password
+  ---
+  duration_ms: 1.654834
+  type: 'test'
+  ...
+# Subtest: Authentication: USER rejects multibyte password
+ok 12 - Authentication: USER rejects multibyte password
+  ---
+  duration_ms: 1.656708
+  type: 'test'
+  ...
+# Subtest: Authentication: USER rejects long password
+ok 13 - Authentication: USER rejects long password
+  ---
+  duration_ms: 1.643875
+  type: 'test'
+  ...
+# Subtest: Authentication: USER rejects missing password
+ok 14 - Authentication: USER rejects missing password
+  ---
+  duration_ms: 1.601583
+  type: 'test'
+  ...
+# Subtest: Authentication: USER rejects object password
+ok 15 - Authentication: USER rejects object password
+  ---
+  duration_ms: 1.631167
+  type: 'test'
+  ...
+# Subtest: Authentication: ADVISOR registration normalization role assignment bcrypt and safe me
+ok 16 - Authentication: ADVISOR registration normalization role assignment bcrypt and safe me
+  ---
+  duration_ms: 604.59925
+  type: 'test'
+  ...
+# Subtest: Authentication: ADVISOR rejects missing name
+ok 17 - Authentication: ADVISOR rejects missing name
+  ---
+  duration_ms: 0.450541
+  type: 'test'
+  ...
+# Subtest: Authentication: ADVISOR rejects blank name
+ok 18 - Authentication: ADVISOR rejects blank name
+  ---
+  duration_ms: 1.640958
+  type: 'test'
+  ...
+# Subtest: Authentication: ADVISOR rejects object name
+ok 19 - Authentication: ADVISOR rejects object name
+  ---
+  duration_ms: 1.618875
+  type: 'test'
+  ...
+# Subtest: Authentication: ADVISOR rejects long name
+ok 20 - Authentication: ADVISOR rejects long name
+  ---
+  duration_ms: 1.370042
+  type: 'test'
+  ...
+# Subtest: Authentication: ADVISOR rejects bad email
+ok 21 - Authentication: ADVISOR rejects bad email
+  ---
+  duration_ms: 1.694709
+  type: 'test'
+  ...
+# Subtest: Authentication: ADVISOR rejects missing email
+ok 22 - Authentication: ADVISOR rejects missing email
+  ---
+  duration_ms: 1.594459
+  type: 'test'
+  ...
+# Subtest: Authentication: ADVISOR rejects long email
+ok 23 - Authentication: ADVISOR rejects long email
+  ---
+  duration_ms: 1.594583
+  type: 'test'
+  ...
+# Subtest: Authentication: ADVISOR rejects array email
+ok 24 - Authentication: ADVISOR rejects array email
+  ---
+  duration_ms: 1.609084
+  type: 'test'
+  ...
+# Subtest: Authentication: ADVISOR rejects short password
+ok 25 - Authentication: ADVISOR rejects short password
+  ---
+  duration_ms: 1.616125
+  type: 'test'
+  ...
+# Subtest: Authentication: ADVISOR rejects multibyte password
+ok 26 - Authentication: ADVISOR rejects multibyte password
+  ---
+  duration_ms: 1.629541
+  type: 'test'
+  ...
+# Subtest: Authentication: ADVISOR rejects long password
+ok 27 - Authentication: ADVISOR rejects long password
+  ---
+  duration_ms: 1.580167
+  type: 'test'
+  ...
+# Subtest: Authentication: ADVISOR rejects missing password
+ok 28 - Authentication: ADVISOR rejects missing password
+  ---
+  duration_ms: 1.581666
+  type: 'test'
+  ...
+# Subtest: Authentication: ADVISOR rejects object password
+ok 29 - Authentication: ADVISOR rejects object password
+  ---
+  duration_ms: 1.594959
+  type: 'test'
+  ...
+# Subtest: Authentication: login wrong password
+ok 30 - Authentication: login wrong password
+  ---
+  duration_ms: 200.000541
+  type: 'test'
+  ...
+# Subtest: Authentication: login unknown email
+ok 31 - Authentication: login unknown email
+  ---
+  duration_ms: 1.888375
+  type: 'test'
+  ...
+# Subtest: Authentication: login missing email
+ok 32 - Authentication: login missing email
+  ---
+  duration_ms: 1.607583
+  type: 'test'
+  ...
+# Subtest: Authentication: login missing password
+ok 33 - Authentication: login missing password
+  ---
+  duration_ms: 1.6435
+  type: 'test'
+  ...
+# Subtest: Authentication: login SQL injection email
+ok 34 - Authentication: login SQL injection email
+  ---
+  duration_ms: 1.797542
+  type: 'test'
+  ...
+# Subtest: Security: missing JWT denied
+ok 35 - Security: missing JWT denied
+  ---
+  duration_ms: 1.653583
+  type: 'test'
+  ...
+# Subtest: Security: invalid JWT denied
+ok 36 - Security: invalid JWT denied
+  ---
+  duration_ms: 1.785291
+  type: 'test'
+  ...
+# Subtest: Security: expired JWT denied
+ok 37 - Security: expired JWT denied
+  ---
+  duration_ms: 1.7015
+  type: 'test'
+  ...
+# Subtest: Security: tampered JWT denied
+ok 38 - Security: tampered JWT denied
+  ---
+  duration_ms: 1.614625
+  type: 'test'
+  ...
+# Subtest: Security: unsigned JWT denied
+ok 39 - Security: unsigned JWT denied
+  ---
+  duration_ms: 1.606375
+  type: 'test'
+  ...
+# Subtest: Security: me ignores identity spoofing
+ok 40 - Security: me ignores identity spoofing
+  ---
+  duration_ms: 1.857333
+  type: 'test'
+  ...
+# Create advisor profile error: duplicate key value violates unique constraint "advisor_profiles_user_id_key"
+# Subtest: Advisors: duplicate profile conflicts
+ok 41 - Advisors: duplicate profile conflicts
+  ---
+  duration_ms: 1.07525
+  type: 'test'
+  ...
+# Subtest: Advisors: POST denies USER
+ok 42 - Advisors: POST denies USER
+  ---
+  duration_ms: 2.332958
+  type: 'test'
+  ...
+# Subtest: Advisors: POST requires authentication
+ok 43 - Advisors: POST requires authentication
+  ---
+  duration_ms: 1.713125
+  type: 'test'
+  ...
+# Subtest: Advisors: PATCH denies USER
+ok 44 - Advisors: PATCH denies USER
+  ---
+  duration_ms: 1.619167
+  type: 'test'
+  ...
+# Subtest: Advisors: PATCH requires authentication
+ok 45 - Advisors: PATCH requires authentication
+  ---
+  duration_ms: 1.635167
+  type: 'test'
+  ...
+# Subtest: Advisors: create rejects domain
+ok 46 - Advisors: create rejects domain
+  ---
+  duration_ms: 1.679375
+  type: 'test'
+  ...
+# Subtest: Advisors: create rejects experience
+ok 47 - Advisors: create rejects experience
+  ---
+  duration_ms: 1.643458
+  type: 'test'
+  ...
+# Subtest: Advisors: create rejects decimal
+ok 48 - Advisors: create rejects decimal
+  ---
+  duration_ms: 1.6465
+  type: 'test'
+  ...
+# Subtest: Advisors: create rejects fee
+ok 49 - Advisors: create rejects fee
+  ---
+  duration_ms: 1.678167
+  type: 'test'
+  ...
+# Subtest: Advisors: create rejects missing
+ok 50 - Advisors: create rejects missing
+  ---
+  duration_ms: 1.621125
+  type: 'test'
+  ...
+# Subtest: Advisors: create rejects object bio
+ok 51 - Advisors: create rejects object bio
+  ---
+  duration_ms: 1.547708
+  type: 'test'
+  ...
+# Subtest: Advisors: create rejects blank bio
+ok 52 - Advisors: create rejects blank bio
+  ---
+  duration_ms: 1.691708
+  type: 'test'
+  ...
+# Subtest: Advisors: create rejects long specialization
+ok 53 - Advisors: create rejects long specialization
+  ---
+  duration_ms: 0.366583
+  type: 'test'
+  ...
+# Subtest: Advisors: create rejects huge experience
+ok 54 - Advisors: create rejects huge experience
+  ---
+  duration_ms: 1.54
+  type: 'test'
+  ...
+# Subtest: Advisors: create rejects huge fee
+ok 55 - Advisors: create rejects huge fee
+  ---
+  duration_ms: 0.417083
+  type: 'test'
+  ...
+# Subtest: Advisors: partial update persists and cannot target another advisor
+ok 56 - Advisors: partial update persists and cannot target another advisor
+  ---
+  duration_ms: 4.866959
+  type: 'test'
+  ...
+# Subtest: Advisors: update rejects experienceYears {"experienceYears":-1}
+ok 57 - Advisors: update rejects experienceYears {"experienceYears":-1}
+  ---
+  duration_ms: 1.869292
+  type: 'test'
+  ...
+# Subtest: Advisors: update rejects consultationFee {"consultationFee":-2}
+ok 58 - Advisors: update rejects consultationFee {"consultationFee":-2}
+  ---
+  duration_ms: 1.784
+  type: 'test'
+  ...
+# Subtest: Advisors: update rejects bio {"bio":{}}
+ok 59 - Advisors: update rejects bio {"bio":{}}
+  ---
+  duration_ms: 0.452333
+  type: 'test'
+  ...
+# Subtest: Advisors: update rejects bio {"bio":" "}
+ok 60 - Advisors: update rejects bio {"bio":" "}
+  ---
+  duration_ms: 1.642833
+  type: 'test'
+  ...
+# Subtest: Advisors: update rejects specialization {"specialization":"xxxxxxxxxxxxxxxxxxxxxxxxxx
+ok 61 - Advisors: update rejects specialization {"specialization":"xxxxxxxxxxxxxxxxxxxxxxxxxx
+  ---
+  duration_ms: 1.637375
+  type: 'test'
+  ...
+# Subtest: Advisors: update rejects consultationFee {"consultationFee":10000000000}
+ok 62 - Advisors: update rejects consultationFee {"consultationFee":10000000000}
+  ---
+  duration_ms: 1.622125
+  type: 'test'
+  ...
+# Subtest: Advisors: update rejects experienceYears {"experienceYears":2147483648}
+ok 63 - Advisors: update rejects experienceYears {"experienceYears":2147483648}
+  ---
+  duration_ms: 1.712291
+  type: 'test'
+  ...
+# Subtest: Advisors: public list and detail use correct users JOIN
+ok 64 - Advisors: public list and detail use correct users JOIN
+  ---
+  duration_ms: 4.164167
+  type: 'test'
+  ...
+# Subtest: Advisors: nonexistent advisor
+ok 65 - Advisors: nonexistent advisor
+  ---
+  duration_ms: 1.765875
+  type: 'test'
+  ...
+# Subtest: Appointments: booking persisted with JWT owner ignoring spoofed owner and status
+ok 66 - Appointments: booking persisted with JWT owner ignoring spoofed owner and status
+  ---
+  duration_ms: 2.644708
+  type: 'test'
+  ...
+# Subtest: Appointments: rejects missing advisor
+ok 67 - Appointments: rejects missing advisor
+  ---
+  duration_ms: 1.632167
+  type: 'test'
+  ...
+# Subtest: Appointments: rejects missing time
+ok 68 - Appointments: rejects missing time
+  ---
+  duration_ms: 1.634167
+  type: 'test'
+  ...
+# Subtest: Appointments: rejects unknown advisor
+ok 69 - Appointments: rejects unknown advisor
+  ---
+  duration_ms: 0.555042
+  type: 'test'
+  ...
+# Subtest: Appointments: rejects account UUID instead of profile
+ok 70 - Appointments: rejects account UUID instead of profile
+  ---
+  duration_ms: 1.794792
+  type: 'test'
+  ...
+# Subtest: Appointments: rejects malformed advisor
+ok 71 - Appointments: rejects malformed advisor
+  ---
+  duration_ms: 1.822333
+  type: 'test'
+  ...
+# Subtest: Appointments: rejects invalid time
+ok 72 - Appointments: rejects invalid time
+  ---
+  duration_ms: 2.163541
+  type: 'test'
+  ...
+# Subtest: Appointments: rejects object time
+ok 73 - Appointments: rejects object time
+  ---
+  duration_ms: 1.7025
+  type: 'test'
+  ...
+# Subtest: Appointments: rejects object notes
+ok 74 - Appointments: rejects object notes
+  ---
+  duration_ms: 1.766584
+  type: 'test'
+  ...
+# Subtest: Appointments: booking requires USER
+ok 75 - Appointments: booking requires USER
+  ---
+  duration_ms: 1.69975
+  type: 'test'
+  ...
+# Subtest: Appointments: booking requires JWT
+ok 76 - Appointments: booking requires JWT
+  ---
+  duration_ms: 1.589416
+  type: 'test'
+  ...
+# Subtest: Appointments: private lists isolate both users and advisors with real JOINs
+ok 77 - Appointments: private lists isolate both users and advisors with real JOINs
+  ---
+  duration_ms: 14.731541
+  type: 'test'
+  ...
+# Subtest: Appointments: user list denies wrong role
+ok 78 - Appointments: user list denies wrong role
+  ---
+  duration_ms: 1.572625
+  type: 'test'
+  ...
+# Subtest: Appointments: user list requires JWT
+ok 79 - Appointments: user list requires JWT
+  ---
+  duration_ms: 1.505709
+  type: 'test'
+  ...
+# Subtest: Appointments: advisor list denies wrong role
+ok 80 - Appointments: advisor list denies wrong role
+  ---
+  duration_ms: 1.554041
+  type: 'test'
+  ...
+# Subtest: Appointments: advisor list requires JWT
+ok 81 - Appointments: advisor list requires JWT
+  ---
+  duration_ms: 1.556292
+  type: 'test'
+  ...
+# Subtest: Lifecycle: PENDING to CONFIRMED
+ok 82 - Lifecycle: PENDING to CONFIRMED
+  ---
+  duration_ms: 4.500084
+  type: 'test'
+  ...
+# Subtest: Lifecycle: CONFIRMED to COMPLETED
+ok 83 - Lifecycle: CONFIRMED to COMPLETED
+  ---
+  duration_ms: 5.92925
+  type: 'test'
+  ...
+# Subtest: Lifecycle: PENDING to COMPLETED
+ok 84 - Lifecycle: PENDING to COMPLETED
+  ---
+  duration_ms: 4.210083
+  type: 'test'
+  ...
+# Subtest: Lifecycle: COMPLETED to CONFIRMED
+ok 85 - Lifecycle: COMPLETED to CONFIRMED
+  ---
+  duration_ms: 7.695792
+  type: 'test'
+  ...
+# Subtest: Lifecycle: COMPLETED to COMPLETED
+ok 86 - Lifecycle: COMPLETED to COMPLETED
+  ---
+  duration_ms: 7.606375
+  type: 'test'
+  ...
+# Subtest: Lifecycle: CANCELLED to CONFIRMED
+ok 87 - Lifecycle: CANCELLED to CONFIRMED
+  ---
+  duration_ms: 6.072541
+  type: 'test'
+  ...
+# Subtest: Lifecycle: CANCELLED to COMPLETED
+ok 88 - Lifecycle: CANCELLED to COMPLETED
+  ---
+  duration_ms: 5.978667
+  type: 'test'
+  ...
+# Subtest: Lifecycle: PENDING to INVALID
+ok 89 - Lifecycle: PENDING to INVALID
+  ---
+  duration_ms: 3.818583
+  type: 'test'
+  ...
+# Subtest: Lifecycle: PENDING to undefined
+ok 90 - Lifecycle: PENDING to undefined
+  ---
+  duration_ms: 3.887
+  type: 'test'
+  ...
+# Subtest: Lifecycle: status denies other advisor
+ok 91 - Lifecycle: status denies other advisor
+  ---
+  duration_ms: 2.910459
+  type: 'test'
+  ...
+# Subtest: Lifecycle: status denies USER
+ok 92 - Lifecycle: status denies USER
+  ---
+  duration_ms: 3.997792
+  type: 'test'
+  ...
+# Subtest: Lifecycle: status denies missing JWT
+ok 93 - Lifecycle: status denies missing JWT
+  ---
+  duration_ms: 3.857625
+  type: 'test'
+  ...
+# Subtest: Lifecycle: status denies invalid JWT
+ok 94 - Lifecycle: status denies invalid JWT
+  ---
+  duration_ms: 3.780125
+  type: 'test'
+  ...
+# Subtest: Lifecycle: cancel PENDING
+ok 95 - Lifecycle: cancel PENDING
+  ---
+  duration_ms: 4.285
+  type: 'test'
+  ...
+# Subtest: Lifecycle: cancel CONFIRMED
+ok 96 - Lifecycle: cancel CONFIRMED
+  ---
+  duration_ms: 6.416083
+  type: 'test'
+  ...
+# Subtest: Lifecycle: cancel COMPLETED
+ok 97 - Lifecycle: cancel COMPLETED
+  ---
+  duration_ms: 8.134292
+  type: 'test'
+  ...
+# Subtest: Lifecycle: cancel CANCELLED
+ok 98 - Lifecycle: cancel CANCELLED
+  ---
+  duration_ms: 5.864
+  type: 'test'
+  ...
+# Subtest: Lifecycle: cancel denies other USER
+ok 99 - Lifecycle: cancel denies other USER
+  ---
+  duration_ms: 3.9235
+  type: 'test'
+  ...
+# Subtest: Lifecycle: cancel denies ADVISOR
+ok 100 - Lifecycle: cancel denies ADVISOR
+  ---
+  duration_ms: 3.824458
+  type: 'test'
+  ...
+# Subtest: Lifecycle: cancel denies missing JWT
+ok 101 - Lifecycle: cancel denies missing JWT
+  ---
+  duration_ms: 3.745125
+  type: 'test'
+  ...
+# Subtest: Community: create rejects unsupported
+ok 102 - Community: create rejects unsupported
+  ---
+  duration_ms: 1.775708
+  type: 'test'
+  ...
+# Subtest: Community: create rejects title
+ok 103 - Community: create rejects title
+  ---
+  duration_ms: 1.743333
+  type: 'test'
+  ...
+# Subtest: Community: create rejects content
+ok 104 - Community: create rejects content
+  ---
+  duration_ms: 1.663916
+  type: 'test'
+  ...
+# Subtest: Community: create rejects missing
+ok 105 - Community: create rejects missing
+  ---
+  duration_ms: 1.644625
+  type: 'test'
+  ...
+# Subtest: Community: create rejects number domain
+ok 106 - Community: create rejects number domain
+  ---
+  duration_ms: 1.651167
+  type: 'test'
+  ...
+# Subtest: Community: create rejects object title
+ok 107 - Community: create rejects object title
+  ---
+  duration_ms: 1.63375
+  type: 'test'
+  ...
+# Subtest: Community: create rejects array content
+ok 108 - Community: create rejects array content
+  ---
+  duration_ms: 0.456083
+  type: 'test'
+  ...
+# Subtest: Community: create rejects long title
+ok 109 - Community: create rejects long title
+  ---
+  duration_ms: 1.648459
+  type: 'test'
+  ...
+# Subtest: Community: create requires JWT
+ok 110 - Community: create requires JWT
+  ---
+  duration_ms: 1.605667
+  type: 'test'
+  ...
+# Subtest: Community: author spoofing and public joins/counts
+ok 111 - Community: author spoofing and public joins/counts
+  ---
+  duration_ms: 6.622667
+  type: 'test'
+  ...
+# Subtest: Community: unknown post 404
+ok 112 - Community: unknown post 404
+  ---
+  duration_ms: 1.824959
+  type: 'test'
+  ...
+# Subtest: Comments: rejects content ""
+ok 113 - Comments: rejects content ""
+  ---
+  duration_ms: 3.718625
+  type: 'test'
+  ...
+# Subtest: Comments: rejects content " "
+ok 114 - Comments: rejects content " "
+  ---
+  duration_ms: 2.3575
+  type: 'test'
+  ...
+# Subtest: Comments: rejects content {}
+ok 115 - Comments: rejects content {}
+  ---
+  duration_ms: 3.477042
+  type: 'test'
+  ...
+# Subtest: Comments: rejects content []
+ok 116 - Comments: rejects content []
+  ---
+  duration_ms: 3.415583
+  type: 'test'
+  ...
+# Subtest: Comments: rejects content 42
+ok 117 - Comments: rejects content 42
+  ---
+  duration_ms: 3.72375
+  type: 'test'
+  ...
+# Subtest: Comments: unknown post comment rejected
+ok 118 - Comments: unknown post comment rejected
+  ---
+  duration_ms: 1.951334
+  type: 'test'
+  ...
+# Subtest: Comments: unknown post listing 404
+ok 119 - Comments: unknown post listing 404
+  ---
+  duration_ms: 0.558292
+  type: 'test'
+  ...
+# Subtest: Comments: authors ownership order and deletion
+ok 120 - Comments: authors ownership order and deletion
+  ---
+  duration_ms: 17.700125
+  type: 'test'
+  ...
+# Subtest: Helpful: duplicate votes counts ownership and cascade
+ok 121 - Helpful: duplicate votes counts ownership and cascade
+  ---
+  duration_ms: 18.723458
+  type: 'test'
+  ...
+# Subtest: Helpful: unknown post 404
+ok 122 - Helpful: unknown post 404
+  ---
+  duration_ms: 0.691959
+  type: 'test'
+  ...
+# Subtest: Security: comments requires JWT
+ok 123 - Security: comments requires JWT
+  ---
+  duration_ms: 3.509166
+  type: 'test'
+  ...
+# Subtest: Security: helpful requires JWT
+ok 124 - Security: helpful requires JWT
+  ---
+  duration_ms: 3.52725
+  type: 'test'
+  ...
+# Subtest: Reviews: invalid rating 0
+ok 125 - Reviews: invalid rating 0
+  ---
+  duration_ms: 1.894375
+  type: 'test'
+  ...
+# Subtest: Reviews: invalid rating 6
+ok 126 - Reviews: invalid rating 6
+  ---
+  duration_ms: 1.743416
+  type: 'test'
+  ...
+# Subtest: Reviews: invalid rating 1.5
+ok 127 - Reviews: invalid rating 1.5
+  ---
+  duration_ms: 1.715084
+  type: 'test'
+  ...
+# Subtest: Reviews: invalid rating undefined
+ok 128 - Reviews: invalid rating undefined
+  ---
+  duration_ms: 1.712833
+  type: 'test'
+  ...
+# Subtest: Reviews: invalid rating true
+ok 129 - Reviews: invalid rating true
+  ---
+  duration_ms: 0.669791
+  type: 'test'
+  ...
+# Subtest: Reviews: invalid rating [5]
+ok 130 - Reviews: invalid rating [5]
+  ---
+  duration_ms: 1.779792
+  type: 'test'
+  ...
+# Subtest: Reviews: missing appointment
+ok 131 - Reviews: missing appointment
+  ---
+  duration_ms: 1.769875
+  type: 'test'
+  ...
+# Subtest: Reviews: unknown appointment
+ok 132 - Reviews: unknown appointment
+  ---
+  duration_ms: 1.943584
+  type: 'test'
+  ...
+# Subtest: Reviews: invalid comment {}
+ok 133 - Reviews: invalid comment {}
+  ---
+  duration_ms: 1.780375
+  type: 'test'
+  ...
+# Subtest: Reviews: invalid comment []
+ok 134 - Reviews: invalid comment []
+  ---
+  duration_ms: 0.563458
+  type: 'test'
+  ...
+# Subtest: Reviews: invalid comment 42
+ok 135 - Reviews: invalid comment 42
+  ---
+  duration_ms: 1.72425
+  type: 'test'
+  ...
+# Subtest: Reviews: requires JWT
+ok 136 - Reviews: requires JWT
+  ---
+  duration_ms: 1.682959
+  type: 'test'
+  ...
+# Subtest: Reviews: denies ADVISOR
+ok 137 - Reviews: denies ADVISOR
+  ---
+  duration_ms: 1.696084
+  type: 'test'
+  ...
+# Subtest: Reviews: rejects PENDING
+ok 138 - Reviews: rejects PENDING
+  ---
+  duration_ms: 4.5595
+  type: 'test'
+  ...
+# Subtest: Reviews: rejects CONFIRMED
+ok 139 - Reviews: rejects CONFIRMED
+  ---
+  duration_ms: 9.667458
+  type: 'test'
+  ...
+# Subtest: Reviews: rejects CANCELLED
+ok 140 - Reviews: rejects CANCELLED
+  ---
+  duration_ms: 4.51175
+  type: 'test'
+  ...
+# Subtest: Reviews: owner eligibility boundary ratings duplicate and DB association
+ok 141 - Reviews: owner eligibility boundary ratings duplicate and DB association
+  ---
+  duration_ms: 22.823417
+  type: 'test'
+  ...
+# Subtest: Ratings: fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments
+ok 142 - Ratings: fresh advisor zero then 5+4 average 4.5 count 2 then multiple appointments
+  ---
+  duration_ms: 440.579875
+  type: 'test'
+  ...
+# Subtest: Ratings: unknown advisor 404
+ok 143 - Ratings: unknown advisor 404
+  ---
+  duration_ms: 1.608625
+  type: 'test'
+  ...
+# Subtest: Search: advisors returns matches
+ok 144 - Search: advisors returns matches
+  ---
+  duration_ms: 1.819834
+  type: 'test'
+  ...
+# Subtest: Search: advisors?domain=FINANCE returns matches
+ok 145 - Search: advisors?domain=FINANCE returns matches
+  ---
+  duration_ms: 1.774041
+  type: 'test'
+  ...
+# Subtest: Search: advisors?search=investment returns matches
+ok 146 - Search: advisors?search=investment returns matches
+  ---
+  duration_ms: 1.675875
+  type: 'test'
+  ...
+# Subtest: Search: advisors?search=INVESTMENT returns matches
+ok 147 - Search: advisors?search=INVESTMENT returns matches
+  ---
+  duration_ms: 1.674917
+  type: 'test'
+  ...
+# Subtest: Search: advisors?domain=finance&search=investment returns matches
+ok 148 - Search: advisors?domain=finance&search=investment returns matches
+  ---
+  duration_ms: 1.644125
+  type: 'test'
+  ...
+# Subtest: Search: advisors unsupported domain
+ok 149 - Search: advisors unsupported domain
+  ---
+  duration_ms: 1.464
+  type: 'test'
+  ...
+# Subtest: Search: advisors?search=84ffc2c0-41fb-4f1a-9c5c-2b9ac1600f6d empty safe result
+ok 150 - Search: advisors?search=84ffc2c0-41fb-4f1a-9c5c-2b9ac1600f6d empty safe result
+  ---
+  duration_ms: 1.635125
+  type: 'test'
+  ...
+# Subtest: Search: advisors?search='%20OR%201%3D1%20-- empty safe result
+ok 151 - Search: advisors?search='%20OR%201%3D1%20-- empty safe result
+  ---
+  duration_ms: 1.632041
+  type: 'test'
+  ...
+# Subtest: Search: advisors repeated query parameters safely rejected
+ok 152 - Search: advisors repeated query parameters safely rejected
+  ---
+  duration_ms: 1.548917
+  type: 'test'
+  ...
+# Subtest: Search: community/posts returns matches
+ok 153 - Search: community/posts returns matches
+  ---
+  duration_ms: 1.841917
+  type: 'test'
+  ...
+# Subtest: Search: community/posts?domain=FINANCE returns matches
+ok 154 - Search: community/posts?domain=FINANCE returns matches
+  ---
+  duration_ms: 1.794583
+  type: 'test'
+  ...
+# Subtest: Search: community/posts?search=investment returns matches
+ok 155 - Search: community/posts?search=investment returns matches
+  ---
+  duration_ms: 1.778334
+  type: 'test'
+  ...
+# Subtest: Search: community/posts?search=INVESTMENT returns matches
+ok 156 - Search: community/posts?search=INVESTMENT returns matches
+  ---
+  duration_ms: 1.740625
+  type: 'test'
+  ...
+# Subtest: Search: community/posts?domain=finance&search=investment returns matches
+ok 157 - Search: community/posts?domain=finance&search=investment returns matches
+  ---
+  duration_ms: 1.745375
+  type: 'test'
+  ...
+# Subtest: Search: community/posts unsupported domain
+ok 158 - Search: community/posts unsupported domain
+  ---
+  duration_ms: 1.467333
+  type: 'test'
+  ...
+# Subtest: Search: community/posts?search=7ccd6dd8-73ed-4d47-a27a-5a4bb9656925 empty safe result
+ok 159 - Search: community/posts?search=7ccd6dd8-73ed-4d47-a27a-5a4bb9656925 empty safe result
+  ---
+  duration_ms: 1.654875
+  type: 'test'
+  ...
+# Subtest: Search: community/posts?search='%20OR%201%3D1%20-- empty safe result
+ok 160 - Search: community/posts?search='%20OR%201%3D1%20-- empty safe result
+  ---
+  duration_ms: 1.656208
+  type: 'test'
+  ...
+# Subtest: Search: community/posts repeated query parameters safely rejected
+ok 161 - Search: community/posts repeated query parameters safely rejected
+  ---
+  duration_ms: 1.457208
+  type: 'test'
+  ...
+# Subtest: Search: advisor name search
+ok 162 - Search: advisor name search
+  ---
+  duration_ms: 1.701
+  type: 'test'
+  ...
+# Subtest: Search: community title and content search
+ok 163 - Search: community title and content search
+  ---
+  duration_ms: 5.270666
+  type: 'test'
+  ...
+# Subtest: Security: malformed UUID GET /api/advisors/bad
+ok 164 - Security: malformed UUID GET /api/advisors/bad
+  ---
+  duration_ms: 1.705917
+  type: 'test'
+  ...
+# Subtest: Security: malformed UUID GET /api/advisors/bad/reviews
+ok 165 - Security: malformed UUID GET /api/advisors/bad/reviews
+  ---
+  duration_ms: 3.189375
+  type: 'test'
+  ...
+# Subtest: Security: malformed UUID PATCH /api/appointments/bad/status
+ok 166 - Security: malformed UUID PATCH /api/appointments/bad/status
+  ---
+  duration_ms: 3.63625
+  type: 'test'
+  ...
+# Subtest: Security: malformed UUID PATCH /api/appointments/bad/cancel
+ok 167 - Security: malformed UUID PATCH /api/appointments/bad/cancel
+  ---
+  duration_ms: 3.631291
+  type: 'test'
+  ...
+# Subtest: Security: malformed UUID GET /api/community/posts/bad
+ok 168 - Security: malformed UUID GET /api/community/posts/bad
+  ---
+  duration_ms: 2.129291
+  type: 'test'
+  ...
+# Subtest: Security: malformed UUID GET /api/community/posts/bad/comments
+ok 169 - Security: malformed UUID GET /api/community/posts/bad/comments
+  ---
+  duration_ms: 1.857292
+  type: 'test'
+  ...
+# Subtest: Security: malformed UUID POST /api/community/posts/bad/comments
+ok 170 - Security: malformed UUID POST /api/community/posts/bad/comments
+  ---
+  duration_ms: 2.305
+  type: 'test'
+  ...
+# Mark post helpful error: invalid input syntax for type uuid: "bad"
+# Subtest: Security: malformed UUID POST /api/community/posts/bad/helpful
+ok 171 - Security: malformed UUID POST /api/community/posts/bad/helpful
+  ---
+  duration_ms: 3.398875
+  type: 'test'
+  ...
+# Delete community post error: invalid input syntax for type uuid: "bad"
+# Subtest: Security: malformed UUID DELETE /api/community/posts/bad
+ok 172 - Security: malformed UUID DELETE /api/community/posts/bad
+  ---
+  duration_ms: 3.509167
+  type: 'test'
+  ...
+# Delete comment error: invalid input syntax for type uuid: "bad"
+# Subtest: Security: malformed UUID DELETE /api/community/comments/bad
+ok 173 - Security: malformed UUID DELETE /api/community/comments/bad
+  ---
+  duration_ms: 3.398834
+  type: 'test'
+  ...
+# Subtest: Security: malformed UUID POST /api/reviews
+ok 174 - Security: malformed UUID POST /api/reviews
+  ---
+  duration_ms: 3.877208
+  type: 'test'
+  ...
+# Subtest: Security: malformed JSON /api/auth/login
+ok 175 - Security: malformed JSON /api/auth/login
+  ---
+  duration_ms: 2.132833
+  type: 'test'
+  ...
+# Subtest: Security: missing JSON body /api/auth/login
+ok 176 - Security: missing JSON body /api/auth/login
+  ---
+  duration_ms: 1.618666
+  type: 'test'
+  ...
+# Subtest: Security: malformed JSON /api/advisors/profile
+ok 177 - Security: malformed JSON /api/advisors/profile
+  ---
+  duration_ms: 1.644209
+  type: 'test'
+  ...
+# Subtest: Security: missing JSON body /api/advisors/profile
+ok 178 - Security: missing JSON body /api/advisors/profile
+  ---
+  duration_ms: 1.581916
+  type: 'test'
+  ...
+# Subtest: Security: malformed JSON /api/appointments
+ok 179 - Security: malformed JSON /api/appointments
+  ---
+  duration_ms: 1.623917
+  type: 'test'
+  ...
+# Subtest: Security: missing JSON body /api/appointments
+ok 180 - Security: missing JSON body /api/appointments
+  ---
+  duration_ms: 1.533708
+  type: 'test'
+  ...
+# Subtest: Security: malformed JSON /api/community/posts
+ok 181 - Security: malformed JSON /api/community/posts
+  ---
+  duration_ms: 1.595416
+  type: 'test'
+  ...
+# Subtest: Security: missing JSON body /api/community/posts
+ok 182 - Security: missing JSON body /api/community/posts
+  ---
+  duration_ms: 1.502333
+  type: 'test'
+  ...
+# Subtest: Security: malformed JSON /api/reviews
+ok 183 - Security: malformed JSON /api/reviews
+  ---
+  duration_ms: 1.592167
+  type: 'test'
+  ...
+# Subtest: Security: missing JSON body /api/reviews
+ok 184 - Security: missing JSON body /api/reviews
+  ---
+  duration_ms: 1.510125
+  type: 'test'
+  ...
+# Subtest: Security: SQL injection content round trip and legitimate request after rejection
+ok 185 - Security: SQL injection content round trip and legitimate request after rejection
+  ---
+  duration_ms: 7.577333
+  type: 'test'
+  ...
+# Subtest: Database: catalog seven tables and constraint metadata plus fixtures
+ok 186 - Database: catalog seven tables and constraint metadata plus fixtures
+  ---
+  duration_ms: 426.054
+  type: 'test'
+  ...
+# Subtest: Database: users primary key 23505
+ok 187 - Database: users primary key 23505
+  ---
+  duration_ms: 0.905917
+  type: 'test'
+  ...
+# Subtest: Database: users.id NOT NULL 23502
+ok 188 - Database: users.id NOT NULL 23502
+  ---
+  duration_ms: 0.599542
+  type: 'test'
+  ...
+# Subtest: Database: users.name NOT NULL 23502
+ok 189 - Database: users.name NOT NULL 23502
+  ---
+  duration_ms: 0.533333
+  type: 'test'
+  ...
+# Subtest: Database: users.email NOT NULL 23502
+ok 190 - Database: users.email NOT NULL 23502
+  ---
+  duration_ms: 0.580708
+  type: 'test'
+  ...
+# Subtest: Database: users.password_hash NOT NULL 23502
+ok 191 - Database: users.password_hash NOT NULL 23502
+  ---
+  duration_ms: 0.524667
+  type: 'test'
+  ...
+# Subtest: Database: users.role NOT NULL 23502
+ok 192 - Database: users.role NOT NULL 23502
+  ---
+  duration_ms: 0.5145
+  type: 'test'
+  ...
+# Subtest: Database: users.created_at NOT NULL 23502
+ok 193 - Database: users.created_at NOT NULL 23502
+  ---
+  duration_ms: 0.465208
+  type: 'test'
+  ...
+# Subtest: Database: advisor_profiles primary key 23505
+ok 194 - Database: advisor_profiles primary key 23505
+  ---
+  duration_ms: 0.538041
+  type: 'test'
+  ...
+# Subtest: Database: advisor_profiles.id NOT NULL 23502
+ok 195 - Database: advisor_profiles.id NOT NULL 23502
+  ---
+  duration_ms: 0.485833
+  type: 'test'
+  ...
+# Subtest: Database: advisor_profiles.user_id NOT NULL 23502
+ok 196 - Database: advisor_profiles.user_id NOT NULL 23502
+  ---
+  duration_ms: 0.42025
+  type: 'test'
+  ...
+# Subtest: Database: advisor_profiles.domain NOT NULL 23502
+ok 197 - Database: advisor_profiles.domain NOT NULL 23502
+  ---
+  duration_ms: 0.463625
+  type: 'test'
+  ...
+# Subtest: Database: advisor_profiles.bio NOT NULL 23502
+ok 198 - Database: advisor_profiles.bio NOT NULL 23502
+  ---
+  duration_ms: 0.408208
+  type: 'test'
+  ...
+# Subtest: Database: advisor_profiles.specialization NOT NULL 23502
+ok 199 - Database: advisor_profiles.specialization NOT NULL 23502
+  ---
+  duration_ms: 0.397959
+  type: 'test'
+  ...
+# Subtest: Database: advisor_profiles.experience_years NOT NULL 23502
+ok 200 - Database: advisor_profiles.experience_years NOT NULL 23502
+  ---
+  duration_ms: 0.357833
+  type: 'test'
+  ...
+# Subtest: Database: advisor_profiles.consultation_fee NOT NULL 23502
+ok 201 - Database: advisor_profiles.consultation_fee NOT NULL 23502
+  ---
+  duration_ms: 0.40875
+  type: 'test'
+  ...
+# Subtest: Database: advisor_profiles.created_at NOT NULL 23502
+ok 202 - Database: advisor_profiles.created_at NOT NULL 23502
+  ---
+  duration_ms: 0.374792
+  type: 'test'
+  ...
+# Subtest: Database: advisor_profiles.updated_at NOT NULL 23502
+ok 203 - Database: advisor_profiles.updated_at NOT NULL 23502
+  ---
+  duration_ms: 0.347334
+  type: 'test'
+  ...
+# Subtest: Database: appointments primary key 23505
+ok 204 - Database: appointments primary key 23505
+  ---
+  duration_ms: 0.414875
+  type: 'test'
+  ...
+# Subtest: Database: appointments.id NOT NULL 23502
+ok 205 - Database: appointments.id NOT NULL 23502
+  ---
+  duration_ms: 0.421875
+  type: 'test'
+  ...
+# Subtest: Database: appointments.user_id NOT NULL 23502
+ok 206 - Database: appointments.user_id NOT NULL 23502
+  ---
+  duration_ms: 0.344625
+  type: 'test'
+  ...
+# Subtest: Database: appointments.advisor_id NOT NULL 23502
+ok 207 - Database: appointments.advisor_id NOT NULL 23502
+  ---
+  duration_ms: 0.358
+  type: 'test'
+  ...
+# Subtest: Database: appointments.scheduled_at NOT NULL 23502
+ok 208 - Database: appointments.scheduled_at NOT NULL 23502
+  ---
+  duration_ms: 0.328166
+  type: 'test'
+  ...
+# Subtest: Database: appointments.status NOT NULL 23502
+ok 209 - Database: appointments.status NOT NULL 23502
+  ---
+  duration_ms: 0.391875
+  type: 'test'
+  ...
+# Subtest: Database: appointments.created_at NOT NULL 23502
+ok 210 - Database: appointments.created_at NOT NULL 23502
+  ---
+  duration_ms: 0.37375
+  type: 'test'
+  ...
+# Subtest: Database: appointments.updated_at NOT NULL 23502
+ok 211 - Database: appointments.updated_at NOT NULL 23502
+  ---
+  duration_ms: 0.383
+  type: 'test'
+  ...
+# Subtest: Database: community_posts primary key 23505
+ok 212 - Database: community_posts primary key 23505
+  ---
+  duration_ms: 0.425042
+  type: 'test'
+  ...
+# Subtest: Database: community_posts.id NOT NULL 23502
+ok 213 - Database: community_posts.id NOT NULL 23502
+  ---
+  duration_ms: 0.423
+  type: 'test'
+  ...
+# Subtest: Database: community_posts.user_id NOT NULL 23502
+ok 214 - Database: community_posts.user_id NOT NULL 23502
+  ---
+  duration_ms: 0.424417
+  type: 'test'
+  ...
+# Subtest: Database: community_posts.domain NOT NULL 23502
+ok 215 - Database: community_posts.domain NOT NULL 23502
+  ---
+  duration_ms: 0.427625
+  type: 'test'
+  ...
+# Subtest: Database: community_posts.title NOT NULL 23502
+ok 216 - Database: community_posts.title NOT NULL 23502
+  ---
+  duration_ms: 0.43675
+  type: 'test'
+  ...
+# Subtest: Database: community_posts.content NOT NULL 23502
+ok 217 - Database: community_posts.content NOT NULL 23502
+  ---
+  duration_ms: 0.4215
+  type: 'test'
+  ...
+# Subtest: Database: community_posts.created_at NOT NULL 23502
+ok 218 - Database: community_posts.created_at NOT NULL 23502
+  ---
+  duration_ms: 0.414291
+  type: 'test'
+  ...
+# Subtest: Database: community_posts.updated_at NOT NULL 23502
+ok 219 - Database: community_posts.updated_at NOT NULL 23502
+  ---
+  duration_ms: 0.408375
+  type: 'test'
+  ...
+# Subtest: Database: comments primary key 23505
+ok 220 - Database: comments primary key 23505
+  ---
+  duration_ms: 0.425625
+  type: 'test'
+  ...
+# Subtest: Database: comments.id NOT NULL 23502
+ok 221 - Database: comments.id NOT NULL 23502
+  ---
+  duration_ms: 0.382292
+  type: 'test'
+  ...
+# Subtest: Database: comments.post_id NOT NULL 23502
+ok 222 - Database: comments.post_id NOT NULL 23502
+  ---
+  duration_ms: 0.410292
+  type: 'test'
+  ...
+# Subtest: Database: comments.user_id NOT NULL 23502
+ok 223 - Database: comments.user_id NOT NULL 23502
+  ---
+  duration_ms: 0.390292
+  type: 'test'
+  ...
+# Subtest: Database: comments.content NOT NULL 23502
+ok 224 - Database: comments.content NOT NULL 23502
+  ---
+  duration_ms: 0.421875
+  type: 'test'
+  ...
+# Subtest: Database: comments.created_at NOT NULL 23502
+ok 225 - Database: comments.created_at NOT NULL 23502
+  ---
+  duration_ms: 0.403417
+  type: 'test'
+  ...
+# Subtest: Database: comments.updated_at NOT NULL 23502
+ok 226 - Database: comments.updated_at NOT NULL 23502
+  ---
+  duration_ms: 0.375375
+  type: 'test'
+  ...
+# Subtest: Database: post_helpful primary key 23505
+ok 227 - Database: post_helpful primary key 23505
+  ---
+  duration_ms: 0.374625
+  type: 'test'
+  ...
+# Subtest: Database: post_helpful.post_id NOT NULL 23502
+ok 228 - Database: post_helpful.post_id NOT NULL 23502
+  ---
+  duration_ms: 0.363917
+  type: 'test'
+  ...
+# Subtest: Database: post_helpful.user_id NOT NULL 23502
+ok 229 - Database: post_helpful.user_id NOT NULL 23502
+  ---
+  duration_ms: 0.36725
+  type: 'test'
+  ...
+# Subtest: Database: post_helpful.created_at NOT NULL 23502
+ok 230 - Database: post_helpful.created_at NOT NULL 23502
+  ---
+  duration_ms: 0.349334
+  type: 'test'
+  ...
+# Subtest: Database: reviews primary key 23505
+ok 231 - Database: reviews primary key 23505
+  ---
+  duration_ms: 0.398666
+  type: 'test'
+  ...
+# Subtest: Database: reviews.id NOT NULL 23502
+ok 232 - Database: reviews.id NOT NULL 23502
+  ---
+  duration_ms: 0.362084
+  type: 'test'
+  ...
+# Subtest: Database: reviews.appointment_id NOT NULL 23502
+ok 233 - Database: reviews.appointment_id NOT NULL 23502
+  ---
+  duration_ms: 0.394333
+  type: 'test'
+  ...
+# Subtest: Database: reviews.rating NOT NULL 23502
+ok 234 - Database: reviews.rating NOT NULL 23502
+  ---
+  duration_ms: 0.399
+  type: 'test'
+  ...
+# Subtest: Database: reviews.created_at NOT NULL 23502
+ok 235 - Database: reviews.created_at NOT NULL 23502
+  ---
+  duration_ms: 0.367917
+  type: 'test'
+  ...
+# Subtest: Database: reviews.updated_at NOT NULL 23502
+ok 236 - Database: reviews.updated_at NOT NULL 23502
+  ---
+  duration_ms: 0.375792
+  type: 'test'
+  ...
+# Subtest: Database: advisor_profiles.user_id foreign key 23503
+ok 237 - Database: advisor_profiles.user_id foreign key 23503
+  ---
+  duration_ms: 0.489791
+  type: 'test'
+  ...
+# Subtest: Database: appointments.user_id foreign key 23503
+ok 238 - Database: appointments.user_id foreign key 23503
+  ---
+  duration_ms: 0.416584
+  type: 'test'
+  ...
+# Subtest: Database: appointments.advisor_id foreign key 23503
+ok 239 - Database: appointments.advisor_id foreign key 23503
+  ---
+  duration_ms: 0.434667
+  type: 'test'
+  ...
+# Subtest: Database: community_posts.user_id foreign key 23503
+ok 240 - Database: community_posts.user_id foreign key 23503
+  ---
+  duration_ms: 0.372416
+  type: 'test'
+  ...
+# Subtest: Database: comments.post_id foreign key 23503
+ok 241 - Database: comments.post_id foreign key 23503
+  ---
+  duration_ms: 0.361
+  type: 'test'
+  ...
+# Subtest: Database: comments.user_id foreign key 23503
+ok 242 - Database: comments.user_id foreign key 23503
+  ---
+  duration_ms: 0.317958
+  type: 'test'
+  ...
+# Subtest: Database: post_helpful.post_id foreign key 23503
+ok 243 - Database: post_helpful.post_id foreign key 23503
+  ---
+  duration_ms: 0.305667
+  type: 'test'
+  ...
+# Subtest: Database: post_helpful.user_id foreign key 23503
+ok 244 - Database: post_helpful.user_id foreign key 23503
+  ---
+  duration_ms: 0.293167
+  type: 'test'
+  ...
+# Subtest: Database: reviews.appointment_id foreign key 23503
+ok 245 - Database: reviews.appointment_id foreign key 23503
+  ---
+  duration_ms: 0.428042
+  type: 'test'
+  ...
+# Subtest: Database: users.email UNIQUE 23505
+ok 246 - Database: users.email UNIQUE 23505
+  ---
+  duration_ms: 0.340958
+  type: 'test'
+  ...
+# Subtest: Database: advisor_profiles.user_id UNIQUE 23505
+ok 247 - Database: advisor_profiles.user_id UNIQUE 23505
+  ---
+  duration_ms: 0.358958
+  type: 'test'
+  ...
+# Subtest: Database: reviews.appointment_id UNIQUE 23505
+ok 248 - Database: reviews.appointment_id UNIQUE 23505
+  ---
+  duration_ms: 0.303583
+  type: 'test'
+  ...
+# Subtest: Database: users.role CHECK OWNER 23514
+ok 249 - Database: users.role CHECK OWNER 23514
+  ---
+  duration_ms: 0.318209
+  type: 'test'
+  ...
+# Subtest: Database: advisor_profiles.domain CHECK OTHER 23514
+ok 250 - Database: advisor_profiles.domain CHECK OTHER 23514
+  ---
+  duration_ms: 0.313667
+  type: 'test'
+  ...
+# Subtest: Database: advisor_profiles.experience_years CHECK -1 23514
+ok 251 - Database: advisor_profiles.experience_years CHECK -1 23514
+  ---
+  duration_ms: 0.311292
+  type: 'test'
+  ...
+# Subtest: Database: advisor_profiles.consultation_fee CHECK -1 23514
+ok 252 - Database: advisor_profiles.consultation_fee CHECK -1 23514
+  ---
+  duration_ms: 0.314292
+  type: 'test'
+  ...
+# Subtest: Database: appointments.status CHECK OTHER 23514
+ok 253 - Database: appointments.status CHECK OTHER 23514
+  ---
+  duration_ms: 0.306667
+  type: 'test'
+  ...
+# Subtest: Database: reviews.rating CHECK 0 23514
+ok 254 - Database: reviews.rating CHECK 0 23514
+  ---
+  duration_ms: 0.256084
+  type: 'test'
+  ...
+# Subtest: Database: reviews.rating CHECK 6 23514
+ok 255 - Database: reviews.rating CHECK 6 23514
+  ---
+  duration_ms: 0.343417
+  type: 'test'
+  ...
+# Subtest: Database: catalog matches exercised constraints and allowed enums
+ok 256 - Database: catalog matches exercised constraints and allowed enums
+  ---
+  duration_ms: 0.881834
+  type: 'test'
+  ...
+# Registration error: duplicate key value violates unique constraint "users_email_key"
+# Subtest: Concurrency: registration iteration 1
+ok 257 - Concurrency: registration iteration 1
+  ---
+  duration_ms: 210.069958
+  type: 'test'
+  ...
+# Subtest: Concurrency: helpful iteration 1
+ok 258 - Concurrency: helpful iteration 1
+  ---
+  duration_ms: 3.888875
+  type: 'test'
+  ...
+# Subtest: Concurrency: review iteration 1
+ok 259 - Concurrency: review iteration 1
+  ---
+  duration_ms: 9.163417
+  type: 'test'
+  ...
+# Subtest: Concurrency: competing confirms and cancel iteration 1
+ok 260 - Concurrency: competing confirms and cancel iteration 1
+  ---
+  duration_ms: 4.384583
+  type: 'test'
+  ...
+# Subtest: Concurrency: complete versus cancel iteration 1
+ok 261 - Concurrency: complete versus cancel iteration 1
+  ---
+  duration_ms: 5.606417
+  type: 'test'
+  ...
+# Registration error: duplicate key value violates unique constraint "users_email_key"
+# Subtest: Concurrency: registration iteration 2
+ok 262 - Concurrency: registration iteration 2
+  ---
+  duration_ms: 206.448083
+  type: 'test'
+  ...
+# Subtest: Concurrency: helpful iteration 2
+ok 263 - Concurrency: helpful iteration 2
+  ---
+  duration_ms: 5.916666
+  type: 'test'
+  ...
+# Subtest: Concurrency: review iteration 2
+ok 264 - Concurrency: review iteration 2
+  ---
+  duration_ms: 9.541333
+  type: 'test'
+  ...
+# Subtest: Concurrency: competing confirms and cancel iteration 2
+ok 265 - Concurrency: competing confirms and cancel iteration 2
+  ---
+  duration_ms: 8.19375
+  type: 'test'
+  ...
+# Subtest: Concurrency: complete versus cancel iteration 2
+ok 266 - Concurrency: complete versus cancel iteration 2
+  ---
+  duration_ms: 5.861584
+  type: 'test'
+  ...
+# Registration error: duplicate key value violates unique constraint "users_email_key"
+# Subtest: Concurrency: registration iteration 3
+ok 267 - Concurrency: registration iteration 3
+  ---
+  duration_ms: 220.383041
+  type: 'test'
+  ...
+# Subtest: Concurrency: helpful iteration 3
+ok 268 - Concurrency: helpful iteration 3
+  ---
+  duration_ms: 7.940042
+  type: 'test'
+  ...
+# Subtest: Concurrency: review iteration 3
+ok 269 - Concurrency: review iteration 3
+  ---
+  duration_ms: 7.953167
+  type: 'test'
+  ...
+# Subtest: Concurrency: competing confirms and cancel iteration 3
+ok 270 - Concurrency: competing confirms and cancel iteration 3
+  ---
+  duration_ms: 8.538625
+  type: 'test'
+  ...
+# Subtest: Concurrency: complete versus cancel iteration 3
+ok 271 - Concurrency: complete versus cancel iteration 3
+  ---
+  duration_ms: 4.55725
+  type: 'test'
+  ...
+# Subtest: E2E: Professional consultation steps 1–23
+ok 272 - E2E: Professional consultation steps 1–23
+  ---
+  duration_ms: 830.923875
+  type: 'test'
+  ...
+# Subtest: E2E: Community consultation steps 1–17
+ok 273 - E2E: Community consultation steps 1–17
+  ---
+  duration_ms: 834.623875
+  type: 'test'
+  ...
+# Subtest: Database: all nine foreign-key relationships have no orphans after negative/concurrent tests
+ok 274 - Database: all nine foreign-key relationships have no orphans after negative/concurrent tests
+  ---
+  duration_ms: 1.010125
+  type: 'test'
+  ...
+# Subtest: Security: oversized JSON returns safe 413
+ok 275 - Security: oversized JSON returns safe 413
+  ---
+  duration_ms: 2.10925
+  type: 'test'
+  ...
+# Subtest: Security: status missing body safely rejected
+ok 276 - Security: status missing body safely rejected
+  ---
+  duration_ms: 3.39725
+  type: 'test'
+  ...
+# Subtest: Security: comment missing body safely rejected
+ok 277 - Security: comment missing body safely rejected
+  ---
+  duration_ms: 3.238708
+  type: 'test'
+  ...
+# Subtest: Advisors: blank profile on fresh advisor rejected without persistence
+ok 278 - Advisors: blank profile on fresh advisor rejected without persistence
+  ---
+  duration_ms: 405.117458
+  type: 'test'
+  ...
+# Subtest: Authentication: password boundaries 12 characters and 72 UTF8 bytes accepted
+ok 279 - Authentication: password boundaries 12 characters and 72 UTF8 bytes accepted
+  ---
+  duration_ms: 1213.084542
+  type: 'test'
+  ...
+# Subtest: Reviews: existing numeric string rating contract retained
+ok 280 - Reviews: existing numeric string rating contract retained
+  ---
+  duration_ms: 8.285417
+  type: 'test'
+  ...
+# Subtest: Advisors: missing profile update 404
+ok 281 - Advisors: missing profile update 404
+  ---
+  duration_ms: 408.859459
+  type: 'test'
+  ...
+# Subtest: Lifecycle: unknown appointment status and cancellation 404
+ok 282 - Lifecycle: unknown appointment status and cancellation 404
+  ---
+  duration_ms: 3.541292
+  type: 'test'
+  ...
+# Subtest: Appointments: invalid calendar date rejected safely
+ok 283 - Appointments: invalid calendar date rejected safely
+  ---
+  duration_ms: 2.7705
+  type: 'test'
+  ...
+# Subtest: Security: malformed percent encoding returns safe 400
+ok 284 - Security: malformed percent encoding returns safe 400
+  ---
+  duration_ms: 0.919666
+  type: 'test'
+  ...
+1..284
+# tests 284
+# suites 0
+# pass 284
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8971.746208
+Disposable cluster stopped; retained evidence directory: /var/folders/l4/ww5_dwtn3d932jlxj7xxg4240000gn/T/consultify-test-ShxUyP
